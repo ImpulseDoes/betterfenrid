@@ -1,18 +1,25 @@
 :root,
 .dark {
-  --background: #0b0b0d;
-  --foreground: #f2f3f5;
-  --server-sidebar: #060607;
-  --channel-sidebar: #0b0b0d;
-  --main-chat-area: #111113;
-  --message-embed-background: #18181b;
-  --member-list: #0b0b0d;
-  --popups-and-modals: #141416;
-  --borders-and-separators: #232327;
+  --onyx-base: #09090b;
+  --onyx-raised: #121214;
+  --onyx-raised-2: #1b1b1f;
+  --onyx-raised-3: #27272c;
+  --onyx-line: #1e1e22;
+  --onyx-line-strong: #2e2e34;
+
+  --background: var(--onyx-base);
+  --foreground: var(--text-primary);
+  --server-sidebar: var(--onyx-base);
+  --channel-sidebar: var(--onyx-base);
+  --main-chat-area: var(--onyx-base);
+  --member-list: var(--onyx-base);
+  --message-embed-background: var(--onyx-raised);
+  --popups-and-modals: var(--onyx-raised);
+  --borders-and-separators: var(--onyx-line);
+  --secondary-button: var(--onyx-raised-2);
+  --secondary-button-hover: var(--onyx-raised-3);
   --primary-action: #5865f2;
   --primary-hover: #4752c4;
-  --secondary-button: #26262b;
-  --secondary-button-hover: #313138;
   --danger-button: #da373c;
   --danger-button-hover: #a12828;
   --danger-button-foreground: #fff;
@@ -24,39 +31,26 @@
   --error-red: #da373c;
   --warning-yellow: #f0b232;
   --text-primary: #f2f3f5;
-  --text-secondary: #b5bac1;
-  --text-muted: #80848e;
+  --text-secondary: #b5b5ba;
+  --text-muted: #808085;
   --interactive-hover: #f2f3f5;
-  --hover-overlay: #ffffff0d;
-  --active-overlay: #ffffff14;
+  --hover-overlay: #ffffff0a;
+  --active-overlay: #ffffff12;
   --primary-foreground: #fff;
   --sidebar-primary-foreground: #fff;
+  --muted: var(--onyx-raised);
+  --accent: var(--onyx-raised);
+  --sidebar: var(--onyx-base);
   color-scheme: dark;
 }
 
-.bg-\[\#090a0d\] {
-  background-color: #060607;
+.dark .ProseMirror :not(pre)>code {
+  background: var(--onyx-raised-2);
 }
 
-.bg-\[\#101116\],
-.bg-\[\#111214\] {
-  background-color: #0b0b0d;
-}
-
-.bg-\[\#17181f\],
-.bg-\[\#181b21\],
-.bg-\[\#181b22\],
-.bg-\[\#191c22\] {
-  background-color: #141416;
-}
-
-.hover\:bg-\[\#191c22\]:hover,
-.focus\:bg-\[\#191c22\]:focus,
-.data-\[highlighted\]\:bg-\[\#191c22\][data-highlighted] {
-  background-color: #232327;
-}
-
-.bg-\[\#24242c\],
-.bg-\[\#27292f\] {
-  background-color: #26262b;
+.dark .chat-app .ProseMirror pre,
+.dark .ProseMirror pre,
+.dark .ProseMirror codeBlock {
+  border-color: var(--onyx-line);
+  background: var(--onyx-raised) !important;
 }

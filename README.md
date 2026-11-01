@@ -38,6 +38,7 @@ npm install
 npm run build      # builds dist/betterfenrid.user.js and dist/betterfenrid.js
 npm run watch      # rebuilds on every change
 npm run typecheck
+npm run themes     # regenerates Onyx's overrides for colors Fenrid hardcodes
 ```
 
 To try changes, install `dist/betterfenrid.user.js` in your userscript manager. Violentmonkey can track the local file and reload it on changes.

@@ -1,9 +1,10 @@
 import onyx from '../themes/onyx.css'
+import onyxHardcoded from '../themes/onyx.generated.css'
 import { settings } from './settings'
 import { createStyle } from './styles'
 
 export const THEMES = [
-  { id: 'onyx', name: 'Onyx', css: onyx },
+  { id: 'onyx', name: 'Onyx', css: `${onyx}\n${onyxHardcoded}` },
   { id: 'fenrid', name: 'Fenrid default', css: '' },
 ]
 

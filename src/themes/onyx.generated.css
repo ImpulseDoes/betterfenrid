@@ -1,0 +1,611 @@
+.\!border-\[\#2e3034\] {
+    border-color: var(--onyx-line) !important
+}
+
+.border-\[\#1a1d3a\] {
+    border-color: var(--onyx-line)
+}
+
+.border-\[\#2b3350\] {
+    border-color: var(--onyx-line-strong)
+}
+
+.border-\[\#3a3f4b\] {
+    border-color: var(--onyx-line-strong)
+}
+
+.border-\[\#3b3d45\] {
+    border-color: var(--onyx-line-strong)
+}
+
+.border-\[\#3d4658\] {
+    border-color: var(--onyx-line-strong)
+}
+
+.border-\[\#343a48\] {
+    border-color: var(--onyx-line-strong)
+}
+
+.border-\[\#20242d\] {
+    border-color: var(--onyx-line)
+}
+
+.border-\[\#30323b\] {
+    border-color: var(--onyx-line-strong)
+}
+
+.border-\[\#41495c\] {
+    border-color: var(--onyx-line-strong)
+}
+
+.border-\[\#303647\] {
+    border-color: var(--onyx-line-strong)
+}
+
+.border-\[\#343641\] {
+    border-color: var(--onyx-line-strong)
+}
+
+.border-\[\#404655\] {
+    border-color: var(--onyx-line-strong)
+}
+
+.border-\[hsl\(240\,12\%\,20\%\)\] {
+    border-color: var(--onyx-line)
+}
+
+.border-\[hsl\(240_18\%_5\%\)\] {
+    border-color: var(--onyx-line)
+}
+
+.\!bg-\[\#111214\] {
+    background-color: var(--onyx-raised) !important
+}
+
+.bg-\[\#0b102b\] {
+    background-color: var(--onyx-raised)
+}
+
+.bg-\[\#0d0e14\] {
+    background-color: var(--onyx-raised)
+}
+
+.bg-\[\#1a1d3a\] {
+    background-color: var(--onyx-raised-2)
+}
+
+.bg-\[\#1b202a\] {
+    background-color: var(--onyx-raised-2)
+}
+
+.bg-\[\#1d1f26\] {
+    background-color: var(--onyx-raised-2)
+}
+
+.bg-\[\#1e2026\] {
+    background-color: var(--onyx-raised-2)
+}
+
+.bg-\[\#1f232d\] {
+    background-color: var(--onyx-raised-2)
+}
+
+.bg-\[\#2a3040\] {
+    background-color: var(--onyx-raised-3)
+}
+
+.bg-\[\#2c3240\] {
+    background-color: var(--onyx-raised-3)
+}
+
+.bg-\[\#2f3541\] {
+    background-color: var(--onyx-raised-3)
+}
+
+.bg-\[\#3a4150\] {
+    background-color: var(--onyx-raised-3)
+}
+
+.bg-\[\#3b50cc\] {
+    background-color: var(--primary-action)
+}
+
+.bg-\[\#050b1d\] {
+    background-color: var(--onyx-base)
+}
+
+.bg-\[\#050b1d\]\/35 {
+    background-color: color-mix(in srgb, var(--onyx-base) 35%, transparent)
+}
+
+.bg-\[\#090a0d\] {
+    background-color: var(--onyx-base)
+}
+
+.bg-\[\#090a0f\] {
+    background-color: var(--onyx-base)
+}
+
+.bg-\[\#171a21\] {
+    background-color: var(--onyx-raised)
+}
+
+.bg-\[\#171a22\] {
+    background-color: var(--onyx-raised)
+}
+
+.bg-\[\#181b21\] {
+    background-color: var(--onyx-raised)
+}
+
+.bg-\[\#181b22\] {
+    background-color: var(--onyx-raised)
+}
+
+.bg-\[\#181b24\] {
+    background-color: var(--onyx-raised)
+}
+
+.bg-\[\#191a20\] {
+    background-color: var(--onyx-raised)
+}
+
+.bg-\[\#191c22\] {
+    background-color: var(--onyx-raised)
+}
+
+.bg-\[\#191c22\]\/60 {
+    background-color: color-mix(in srgb, var(--onyx-raised) 60%, transparent)
+}
+
+.bg-\[\#191c22\]\/80 {
+    background-color: color-mix(in srgb, var(--onyx-raised) 80%, transparent)
+}
+
+.bg-\[\#252a33\] {
+    background-color: var(--onyx-raised-2)
+}
+
+.bg-\[\#272e3b\] {
+    background-color: var(--onyx-raised-3)
+}
+
+.bg-\[\#3149c4\] {
+    background-color: var(--primary-action)
+}
+
+.bg-\[\#10131a\] {
+    background-color: var(--onyx-raised)
+}
+
+.bg-\[\#15171d\] {
+    background-color: var(--onyx-raised)
+}
+
+.bg-\[\#17171d\] {
+    background-color: var(--onyx-raised)
+}
+
+.bg-\[\#17181f\] {
+    background-color: var(--onyx-raised)
+}
+
+.bg-\[\#17191f\] {
+    background-color: var(--onyx-raised)
+}
+
+.bg-\[\#20222b\] {
+    background-color: var(--onyx-raised-2)
+}
+
+.bg-\[\#20232b\] {
+    background-color: var(--onyx-raised-2)
+}
+
+.bg-\[\#20232c\] {
+    background-color: var(--onyx-raised-2)
+}
+
+.bg-\[\#25262d\] {
+    background-color: var(--onyx-raised-2)
+}
+
+.bg-\[\#27292f\] {
+    background-color: var(--onyx-raised-2)
+}
+
+.bg-\[\#101116\] {
+    background-color: var(--onyx-raised)
+}
+
+.bg-\[\#111214\] {
+    background-color: var(--onyx-raised)
+}
+
+.bg-\[\#111218\] {
+    background-color: var(--onyx-raised)
+}
+
+.bg-\[\#111219\] {
+    background-color: var(--onyx-raised)
+}
+
+.bg-\[\#151820\] {
+    background-color: var(--onyx-raised)
+}
+
+.bg-\[\#171820\] {
+    background-color: var(--onyx-raised)
+}
+
+.bg-\[\#202127\] {
+    background-color: var(--onyx-raised-2)
+}
+
+.bg-\[\#202128\] {
+    background-color: var(--onyx-raised-2)
+}
+
+.bg-\[\#242833\] {
+    background-color: var(--onyx-raised-2)
+}
+
+.bg-\[hsl\(235_12\%_17\%\)\] {
+    background-color: var(--onyx-raised-2)
+}
+
+.bg-\[hsl\(240\,10\%\,25\%\)\] {
+    background-color: var(--onyx-raised-3)
+}
+
+.bg-\[hsl\(240_18\%_5\%\)\] {
+    background-color: var(--onyx-base)
+}
+
+.bg-gray-900\/10 {
+    background-color: color-mix(in srgb, var(--onyx-raised) 10%, transparent)
+}
+
+.from-\[\#0b102b\] {
+    --tw-gradient-from: var(--onyx-raised)
+}
+
+.from-\[\#191c22\] {
+    --tw-gradient-from: var(--onyx-raised)
+}
+
+.from-\[\#020817\]\/80 {
+    --tw-gradient-from: color-mix(in srgb, var(--onyx-base) 80%, transparent)
+}
+
+.via-\[\#0b102b\]\/50 {
+    --tw-gradient-via: color-mix(in srgb, var(--onyx-raised) 50%, transparent)
+}
+
+.\!text-\[\#b5bac1\] {
+    color: var(--text-secondary) !important
+}
+
+.text-\[\#8c95a8\] {
+    color: var(--text-muted)
+}
+
+.text-\[\#9aa3b5\] {
+    color: var(--text-secondary)
+}
+
+.text-\[\#929aa8\] {
+    color: var(--text-secondary)
+}
+
+.text-\[\#949ba8\] {
+    color: var(--text-secondary)
+}
+
+.text-\[\#a8afbd\] {
+    color: var(--text-secondary)
+}
+
+.text-\[\#aeb6c7\] {
+    color: var(--text-secondary)
+}
+
+.text-\[\#aeb7c8\] {
+    color: var(--text-secondary)
+}
+
+.text-\[\#b5bac7\] {
+    color: var(--text-secondary)
+}
+
+.text-\[\#b8c0d0\] {
+    color: var(--text-secondary)
+}
+
+.text-\[\#c7ccd7\] {
+    color: var(--text-primary)
+}
+
+.outline-\[\#4a5060\] {
+    outline-color: var(--onyx-line-strong)
+}
+
+.placeholder\:text-\[\#8c95a8\]::placeholder {
+    color: var(--text-muted)
+}
+
+.placeholder\:text-\[\#858b98\]::placeholder {
+    color: var(--text-muted)
+}
+
+.hover\:bg-\[\#2d3340\]:hover {
+    background-color: var(--onyx-raised-3)
+}
+
+.hover\:bg-\[\#191c22\]:hover {
+    background-color: var(--onyx-raised-2)
+}
+
+.hover\:bg-\[\#252a33\]:hover {
+    background-color: var(--onyx-raised-3)
+}
+
+.hover\:bg-\[\#333c4d\]:hover {
+    background-color: var(--onyx-raised-3)
+}
+
+.hover\:bg-\[\#3246be\]:hover {
+    background-color: var(--primary-action)
+}
+
+.hover\:bg-\[\#20232b\]:hover {
+    background-color: var(--onyx-raised-3)
+}
+
+.hover\:bg-\[\#24242c\]:hover {
+    background-color: var(--onyx-raised-3)
+}
+
+.hover\:bg-\[\#32343a\]:hover {
+    background-color: var(--onyx-raised-3)
+}
+
+.hover\:bg-\[\#313846\]:hover {
+    background-color: var(--onyx-raised-3)
+}
+
+.hover\:bg-\[hsl\(240\,10\%\,30\%\)\]:hover {
+    background-color: var(--onyx-raised-3)
+}
+
+.focus\:bg-\[\#191c22\]:focus {
+    background-color: var(--onyx-raised-2)
+}
+
+.focus-visible\:bg-\[\#24242c\]:focus-visible {
+    background-color: var(--onyx-raised-3)
+}
+
+.data-\[highlighted\]\:bg-\[\#191c22\][data-highlighted] {
+    background-color: var(--onyx-raised-2)
+}
+
+.data-\[state\=open\]\:bg-\[\#191c22\][data-state=open] {
+    background-color: var(--onyx-raised-2)
+}
+
+.md\:bg-\[\#443ee9\] {
+    background-color: var(--primary-action)
+}
+
+:where(.dark\:divide-\[\#1a2235\]:is(.dark *)>:not(:last-child)) {
+    border-color: var(--onyx-line)
+}
+
+.dark\:border-\[\#0a1630\]:is(.dark *) {
+    border-color: var(--onyx-line)
+}
+
+.dark\:border-\[\#1a1d3a\]:is(.dark *) {
+    border-color: var(--onyx-line)
+}
+
+.dark\:border-\[\#1a2235\]:is(.dark *) {
+    border-color: var(--onyx-line)
+}
+
+.dark\:border-\[\#25304a\]:is(.dark *) {
+    border-color: var(--onyx-line)
+}
+
+.dark\:border-gray-700\/50:is(.dark *) {
+    border-color: color-mix(in srgb, var(--onyx-line-strong) 50%, transparent)
+}
+
+.dark\:bg-\[\#0a0d1f\]:is(.dark *) {
+    background-color: var(--onyx-base)
+}
+
+.dark\:bg-\[\#0a0d1f\]\/50:is(.dark *) {
+    background-color: color-mix(in srgb, var(--onyx-base) 50%, transparent)
+}
+
+.dark\:bg-\[\#0a1024\]:is(.dark *) {
+    background-color: var(--onyx-raised)
+}
+
+.dark\:bg-\[\#0b0e1e\]:is(.dark *) {
+    background-color: var(--onyx-raised)
+}
+
+.dark\:bg-\[\#0b102b\]:is(.dark *) {
+    background-color: var(--onyx-raised)
+}
+
+.dark\:bg-\[\#0b102b\]\/60:is(.dark *) {
+    background-color: color-mix(in srgb, var(--onyx-raised) 60%, transparent)
+}
+
+.dark\:bg-\[\#0d152e\]:is(.dark *) {
+    background-color: var(--onyx-raised)
+}
+
+.dark\:bg-\[\#0d1224\]:is(.dark *) {
+    background-color: var(--onyx-raised)
+}
+
+.dark\:bg-\[\#1a1d3a\]:is(.dark *) {
+    background-color: var(--onyx-raised-2)
+}
+
+.dark\:bg-\[\#1a1d3a\]\/50:is(.dark *) {
+    background-color: color-mix(in srgb, var(--onyx-raised-2) 50%, transparent)
+}
+
+.dark\:bg-\[\#1a1f40\]:is(.dark *) {
+    background-color: var(--onyx-raised-2)
+}
+
+.dark\:bg-\[\#1a2235\]:is(.dark *) {
+    background-color: var(--onyx-raised-2)
+}
+
+.dark\:bg-\[\#050b1d\]:is(.dark *) {
+    background-color: var(--onyx-base)
+}
+
+.dark\:bg-\[\#080c24\]:is(.dark *) {
+    background-color: var(--onyx-base)
+}
+
+.dark\:bg-\[\#101a34\]:is(.dark *) {
+    background-color: var(--onyx-raised)
+}
+
+.dark\:bg-\[\#131b31\]:is(.dark *) {
+    background-color: var(--onyx-raised)
+}
+
+.dark\:bg-\[\#131b36\]:is(.dark *) {
+    background-color: var(--onyx-raised)
+}
+
+.dark\:bg-\[\#151b3b\]:is(.dark *) {
+    background-color: var(--onyx-raised)
+}
+
+.dark\:bg-\[\#151b3b\]\/30:is(.dark *) {
+    background-color: color-mix(in srgb, var(--onyx-raised) 30%, transparent)
+}
+
+.dark\:bg-\[\#151b3b\]\/50:is(.dark *) {
+    background-color: color-mix(in srgb, var(--onyx-raised) 50%, transparent)
+}
+
+.dark\:bg-\[\#11142b\]:is(.dark *) {
+    background-color: var(--onyx-raised)
+}
+
+.dark\:bg-\[\#11142b\]\/60:is(.dark *) {
+    background-color: color-mix(in srgb, var(--onyx-raised) 60%, transparent)
+}
+
+.dark\:bg-\[\#18181b\]:is(.dark *) {
+    background-color: var(--onyx-raised)
+}
+
+.dark\:bg-\[\#020410\]:is(.dark *) {
+    background-color: var(--onyx-base)
+}
+
+.dark\:bg-\[\#020817\]:is(.dark *) {
+    background-color: var(--onyx-base)
+}
+
+.dark\:bg-\[\#071022\]:is(.dark *) {
+    background-color: var(--onyx-raised)
+}
+
+.dark\:bg-gray-800\/50:is(.dark *) {
+    background-color: color-mix(in srgb, var(--onyx-raised-2) 50%, transparent)
+}
+
+.dark\:bg-gray-900\/20:is(.dark *) {
+    background-color: color-mix(in srgb, var(--onyx-raised) 20%, transparent)
+}
+
+.dark\:bg-gray-900\/30:is(.dark *) {
+    background-color: color-mix(in srgb, var(--onyx-raised) 30%, transparent)
+}
+
+.dark\:from-\[\#11142b\]:is(.dark *) {
+    --tw-gradient-from: var(--onyx-raised)
+}
+
+.dark\:from-\[\#020410\]:is(.dark *) {
+    --tw-gradient-from: var(--onyx-base)
+}
+
+.dark\:via-\[\#050c22\]:is(.dark *) {
+    --tw-gradient-via: var(--onyx-base)
+}
+
+.dark\:to-\[\#0a0d1f\]:is(.dark *) {
+    --tw-gradient-to: var(--onyx-base)
+}
+
+.dark\:to-\[\#0b0e1e\]:is(.dark *) {
+    --tw-gradient-to: var(--onyx-raised)
+}
+
+.dark\:to-\[\#11142b\]:is(.dark *) {
+    --tw-gradient-to: var(--onyx-raised)
+}
+
+.dark\:to-\[\#020410\]:is(.dark *) {
+    --tw-gradient-to: var(--onyx-base)
+}
+
+.dark\:hover\:bg-\[\#0a1530\]:is(.dark *):hover {
+    background-color: var(--onyx-raised-2)
+}
+
+.dark\:hover\:bg-\[\#0d152e\]:is(.dark *):hover {
+    background-color: var(--onyx-raised-2)
+}
+
+.dark\:hover\:bg-\[\#1a2235\]:is(.dark *):hover {
+    background-color: var(--onyx-raised-3)
+}
+
+.dark\:hover\:bg-\[\#131b31\]:is(.dark *):hover {
+    background-color: var(--onyx-raised-2)
+}
+
+.dark\:hover\:bg-\[\#151b3b\]:is(.dark *):hover {
+    background-color: var(--onyx-raised-2)
+}
+
+.dark\:hover\:bg-\[\#151f3a\]:is(.dark *):hover {
+    background-color: var(--onyx-raised-3)
+}
+
+.dark\:focus\:bg-\[\#0b102b\]:is(.dark *):focus {
+    background-color: var(--onyx-raised-2)
+}
+
+.dark\:\[\&_pre\]\:\!bg-\[\#18181b\]:is(.dark *) pre {
+    background-color: var(--onyx-raised) !important
+}
+
+.dark\:\[\&_pre\]\:bg-\[\#18181b\]:is(.dark *) pre {
+    background-color: var(--onyx-raised)
+}
+
+.\[\&\>button\]\:text-\[\#929bad\]>button {
+    color: var(--text-secondary)
+}
+
+.\[\&\>button\]\:ring-offset-\[\#171a22\]>button {
+    --tw-ring-offset-color: var(--onyx-raised)
+}
