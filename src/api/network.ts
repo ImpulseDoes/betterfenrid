@@ -1,0 +1,188 @@
+import { createLogger } from '../core/logger'
+import { Selectors } from '../core/selectors'
+
+export interface GatewayFrame {
+  op: number
+  t: string
+  s: number | null
+  d: any
+}
+
+export interface ApiRequest {
+  url: URL
+  method: string
+}
+
+export interface ApiResult extends ApiRequest {
+  ok: boolean
+}
+
+type GatewayHook = (frame: GatewayFrame) => void
+type RequestHook = (request: ApiRequest) => void
+type ResultHook = (result: ApiResult) => void
+// Return a new body to replace what Fenrid receives
+type ResponseHook = (url: URL, body: any) => unknown
+
+const log = createLogger('Network')
+const gatewayHooks = new Set<GatewayHook>()
+const requestHooks = new Set<RequestHook>()
+const resultHooks = new Set<ResultHook>()
+const responseHooks = new Set<ResponseHook>()
+
+const WATCHED_FRAME = /"t"\s*:\s*"(READY|GUILD_|CHANNEL_|MEMBER_|MESSAGE_)/
+
+let gatewaySeen = false
+let dispatchOp = 0
+let deliverFrame: ((data: string) => void) | null = null
+
+function subscribe<T>(hooks: Set<T>, hook: T): () => void {
+
+  hooks.add(hook)
+
+  return () => hooks.delete(hook)
+}
+
+export const onGatewayFrame = (hook: GatewayHook) => subscribe(gatewayHooks, hook)
+export const onApiRequest = (hook: RequestHook) => subscribe(requestHooks, hook)
+export const onApiResult = (hook: ResultHook) => subscribe(resultHooks, hook)
+export const onApiResponse = (hook: ResponseHook) => subscribe(responseHooks, hook)
+
+/** False when the mod was injected too late, or outside the page's own JS context */
+export function isGatewaySeen(): boolean {
+  return gatewaySeen
+}
+
+/** Hands Fenrid an event of our own. Without a sequence number it can't look like a gap */
+export function injectGatewayEvent(t: string, topic: string, payload: object) {
+
+  deliverFrame?.(JSON.stringify({ op: dispatchOp, t, d: { topic, payload } }))
+}
+
+function rewriteFrame(event: MessageEvent): MessageEvent {
+
+  if (typeof event.data !== 'string' || !WATCHED_FRAME.test(event.data)) return event
+
+  try {
+
+    const frame = JSON.parse(event.data) as GatewayFrame
+    const original = frame.t
+
+    dispatchOp = frame.op
+
+    for (const hook of gatewayHooks) hook(frame)
+
+    if (frame.t !== original) return new MessageEvent('message', { data: JSON.stringify(frame) })
+
+  } catch (err) {
+
+    log.error('Gateway hook failed', err)
+
+  }
+
+  return event
+}
+
+function hookWebSocket() {
+
+  const Native = window.WebSocket
+
+  window.WebSocket = class extends Native {
+
+    constructor(url: string | URL, protocols?: string | string[]) {
+
+      super(url, protocols)
+
+      if (!String(url).includes(Selectors.gatewayHost)) return
+
+      gatewaySeen = true
+
+      let handler: ((event: MessageEvent) => void) | null = null
+
+      // Fenrid only ever assigns onmessage, so it's the one path to guard
+      Object.defineProperty(this, 'onmessage', {
+        configurable: true,
+        get: () => handler,
+        set: (next) => {
+          handler = next
+        },
+      })
+
+      this.addEventListener('message', (event) => handler?.call(this, rewriteFrame(event)))
+
+      deliverFrame = (data) => handler?.call(this, new MessageEvent('message', { data }))
+    }
+  }
+}
+
+async function tapResponse(url: URL, response: Response): Promise<Response> {
+
+  if (!response.ok || !response.headers.get('content-type')?.includes('json')) return response
+
+  try {
+
+    const body = await response.clone().json()
+
+    let next = body
+
+    for (const hook of responseHooks) next = hook(url, next) ?? next
+
+    if (next === body) return response
+
+    const headers = new Headers(response.headers)
+
+    headers.delete('content-length')
+    headers.delete('content-encoding')
+
+    return new Response(JSON.stringify(next), { status: response.status, statusText: response.statusText, headers })
+
+  } catch (err) {
+
+    log.error('API hook failed', err)
+
+    return response
+  }
+}
+
+function apiUrl(input: RequestInfo | URL): URL | null {
+
+  try {
+
+    const url = new URL(input instanceof Request ? input.url : String(input), location.href)
+
+    return url.origin === location.origin && url.pathname.startsWith('/api/') ? url : null
+
+  } catch {
+
+    return null
+
+  }
+}
+
+function hookFetch() {
+
+  const native = window.fetch.bind(window)
+
+  window.fetch = async (input, init) => {
+
+    const url = apiUrl(input)
+
+    if (!url) return native(input, init)
+
+    const method = (init?.method ?? (input instanceof Request ? input.method : 'GET')).toUpperCase()
+
+    for (const hook of requestHooks) hook({ url, method })
+
+    const response = await native(input, init)
+
+    for (const hook of resultHooks) hook({ url, method, ok: response.ok })
+
+    return method === 'GET' ? tapResponse(url, response) : response
+  }
+}
+
+// Must run before Fenrid's own scripts, which keep the first socket they open
+export function installNetworkHooks() {
+
+  hookWebSocket()
+  hookFetch()
+}

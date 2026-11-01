@@ -19,7 +19,7 @@ export default definePlugin({
 
   start(ctx) {
 
-    ctx.addMessageMenuItem({
+    ctx.addContextMenuItem({
       id: 'quote',
       label: 'Quote Message',
       icon: 'quote',

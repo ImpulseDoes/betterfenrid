@@ -1,4 +1,4 @@
-import { addMessageMenuItem, type MessageMenuItem } from '../api/messageMenu'
+import { addContextMenuItem, type ContextMenuItem } from '../api/contextMenu'
 import { onDomChange } from './dom'
 import { createLogger, type Logger } from './logger'
 import { settings } from './settings'
@@ -39,7 +39,7 @@ export interface PluginContext<S extends SettingsSchema = SettingsSchema> {
   setSetting<K extends keyof S>(key: K, value: S[K]['default']): void
   log: Logger
   // Everything registered through these helpers is cleaned up when the plugin stops
-  addMessageMenuItem(item: MessageMenuItem): void
+  addContextMenuItem(item: ContextMenuItem): void
   addStyle(css: string): ManagedStyle
   onDomChange(handler: (added: Element[]) => void): void
   onSettingsChange(handler: (values: SettingsValues<S>) => void): void
@@ -54,6 +54,8 @@ export interface Plugin<S extends SettingsSchema = SettingsSchema> {
   authors: string[]
   enabledByDefault?: boolean
   settings?: S
+  // Extra controls shown under the plugin's settings. Available while it's stopped too
+  panel?(): Node
   start(ctx: PluginContext<S>): void | (() => void)
 }
 
@@ -113,7 +115,7 @@ function makeContext(plugin: Plugin, disposers: (() => void)[]): PluginContext {
     settings: values,
     setSetting: (key, value) => setPluginSetting(plugin, key as string, value),
     log: createLogger(plugin.name),
-    addMessageMenuItem: (item) => disposers.push(addMessageMenuItem({ ...item, id: `${plugin.id}.${item.id}` })),
+    addContextMenuItem: (item) => disposers.push(addContextMenuItem({ ...item, id: `${plugin.id}.${item.id}` })),
     addStyle: (css) => {
       const style = createStyle(css)
       disposers.push(() => style.remove())

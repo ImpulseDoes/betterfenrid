@@ -25,7 +25,8 @@ export function createStyle(css = ''): ManagedStyle {
 
   el.textContent = css
 
-  document.head.append(el)
+  // There's no <head> yet at document-start
+  ;(document.head ?? document.documentElement).append(el)
 
   return {
     set: (next) => {

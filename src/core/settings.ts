@@ -6,6 +6,7 @@ export interface CoreSettings {
 }
 
 export interface ThemeSettings {
+  preset: string
   enabled: boolean
   css: string
 }
@@ -23,7 +24,7 @@ export interface Settings {
 
 const DEFAULTS: Settings = {
   core: { debug: false, showFooterVersion: true },
-  theme: { enabled: true, css: '' },
+  theme: { preset: 'onyx', enabled: true, css: '' },
   plugins: {},
 }
 

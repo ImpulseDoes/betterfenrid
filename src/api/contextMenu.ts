@@ -3,30 +3,37 @@ import { createLogger } from '../core/logger'
 import { Selectors } from '../core/selectors'
 import { icon, isIconName, type IconName } from '../ui/icons'
 
-export interface MessageContext {
+export type MenuKind = keyof typeof Selectors.contextMenus
+
+export interface MenuTarget {
+  kind: MenuKind
   element: HTMLElement | null
   id: string | null
   text: string
 }
 
-export interface MessageMenuItem {
+export interface ContextMenuItem {
   id: string
   label: string
   icon?: IconName | (string & {})
   danger?: boolean
-  visible?(msg: MessageContext): boolean
-  action(msg: MessageContext): void
+  // Which menus get this item (defaults to the message menu)
+  kinds?: MenuKind[]
+  visible?(target: MenuTarget): boolean
+  action(target: MenuTarget): void
 }
 
-const log = createLogger('MessageMenu')
-const items = new Map<string, MessageMenuItem>()
+const log = createLogger('ContextMenu')
+const items = new Map<string, ContextMenuItem>()
 const MARK = 'data-bf-menu-item'
 const SNOWFLAKE = /\b\d{15,20}\b/
+const KINDS = Object.keys(Selectors.contextMenus) as MenuKind[]
+const MARKERS = KINDS.flatMap((kind) => [...Selectors.contextMenus[kind].anchors, ...Selectors.contextMenus[kind].markers])
 
 let lastTarget: Element | null = null
 let started = false
 
-export function addMessageMenuItem(item: MessageMenuItem): () => void {
+export function addContextMenuItem(item: ContextMenuItem): () => void {
 
   items.set(item.id, item)
 
@@ -62,7 +69,7 @@ function ensureStarted() {
 
       const text = el.textContent ?? ''
 
-      if (!Selectors.messageMenu.markers.some((m) => text.includes(m))) continue
+      if (!MARKERS.some((m) => text.includes(m))) continue
 
       // Items can be appended to an already open menu, so look at the whole menu
       inject(el.closest('[role="menu"]') ?? el.parentElement ?? el)
@@ -70,7 +77,11 @@ function ensureStarted() {
   })
 }
 
-function findMessage(from: Element | null): MessageContext {
+function findMessage(from: Element | null): MenuTarget {
+
+  const message = from?.closest<HTMLElement>(Selectors.message)
+
+  if (message) return { kind: 'message', element: message, id: message.dataset.messageId ?? null, text: extractText(message) }
 
   for (let n = from; n && n !== document.body; n = n.parentElement) {
 
@@ -80,16 +91,16 @@ function findMessage(from: Element | null): MessageContext {
 
       const match = attr.value.match(SNOWFLAKE)
 
-      if (match) return { element: n as HTMLElement, id: match[0], text: extractText(n) }
+      if (match) return { kind: 'message', element: n as HTMLElement, id: match[0], text: extractText(n) }
     }
   }
 
   const element = (from?.closest('article, li, [role="article"], [role="listitem"]') as HTMLElement | null) ?? null
 
-  return { element, id: null, text: extractText(element) }
+  return { kind: 'message', element, id: null, text: extractText(element) }
 }
 
-function extractText(el: Element | null): string {
+export function extractText(el: Element | null): string {
 
   if (!el) return ''
 
@@ -98,17 +109,64 @@ function extractText(el: Element | null): string {
   return ((content ?? el) as HTMLElement).innerText.trim()
 }
 
+function detectMenu(root: Element): { kind: MenuKind; anchorLabel: string } | null {
+
+  for (const kind of KINDS) {
+
+    const { anchors, markers } = Selectors.contextMenus[kind]
+    const anchorLabel = anchors.find((label) => findTextNode(root, label))
+
+    if (!anchorLabel) continue
+
+    // A chat message that happens to say "Copy Text" isn't a menu: require a second known label
+    const known = new Set<string>([...anchors, ...markers])
+
+    if (root.matches('[role="menu"]') || [...known].filter((label) => findTextNode(root, label)).length >= 2) {
+
+      return { kind, anchorLabel }
+
+    }
+  }
+
+  return null
+}
+
+/**
+ * Channels and users have no id in the DOM, so press Fenrid's own "Copy ... ID"
+ * item and catch what it writes to the clipboard. This also closes the menu
+ */
+async function readNativeId(anchor: HTMLElement): Promise<string | null> {
+
+  const clipboard = navigator.clipboard as Clipboard & { writeText: Clipboard['writeText'] }
+
+  let id: string | null = null
+
+  clipboard.writeText = async (text) => {
+    id = text
+  }
+
+  try {
+
+    anchor.click()
+
+    for (let i = 0; i < 10 && id === null; i++) await new Promise((resolve) => setTimeout(resolve, 30))
+
+  } finally {
+
+    delete (clipboard as Partial<Clipboard>).writeText
+
+  }
+
+  return id
+}
+
 function inject(root: Element) {
 
-  const anchorLabel = Selectors.messageMenu.anchors.find((label) => findTextNode(root, label))
+  const menu = detectMenu(root)
 
-  if (!anchorLabel) return
+  if (!menu) return
 
-  // A chat message that happens to say "Copy Text" isn't a menu: require a second known label
-  const labels = new Set<string>([...Selectors.messageMenu.anchors, ...Selectors.messageMenu.markers])
-
-  if ([...labels].filter((label) => findTextNode(root, label)).length < 2) return
-
+  const { kind, anchorLabel } = menu
   const anchor = findClickableByText(root, anchorLabel)
 
   if (!anchor?.parentElement) return
@@ -117,12 +175,12 @@ function inject(root: Element) {
 
   if (container.querySelector(`[${MARK}]`)) return
 
-  const msg = findMessage(lastTarget)
-  const visible = [...items.values()].filter((item) => item.visible?.(msg) ?? true)
+  const target: MenuTarget = kind === 'message' ? findMessage(lastTarget) : { kind, element: null, id: null, text: '' }
+  const visible = [...items.values()].filter((item) => (item.kinds ?? ['message']).includes(kind) && (item.visible?.(target) ?? true))
 
   if (!visible.length) return
 
-  log.debug('Injecting into message menu', msg)
+  log.debug(`Injecting into ${kind} menu`, target)
 
   const nodes: Element[] = []
   const separator = (anchor.closest('[role="menu"]') ?? container).querySelector('[role="separator"], hr')
@@ -151,13 +209,15 @@ function inject(root: Element) {
 
     el.addEventListener(
       'click',
-      (e) => {
+      async (e) => {
         e.preventDefault()
         e.stopPropagation()
-        closeMenu(anchor)
         try {
 
-          item.action(msg)
+          const id = target.id ?? (await readNativeId(anchor))
+
+          closeMenu(anchor)
+          item.action({ ...target, id })
 
         } catch (err) {
 
@@ -174,6 +234,8 @@ function inject(root: Element) {
 }
 
 function closeMenu(anchor: Element) {
+
+  if (!anchor.isConnected) return
 
   const opts = { key: 'Escape', code: 'Escape', keyCode: 27, bubbles: true, cancelable: true }
 

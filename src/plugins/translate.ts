@@ -24,7 +24,7 @@ export default definePlugin({
 
   start(ctx) {
 
-    ctx.addMessageMenuItem({
+    ctx.addContextMenuItem({
       id: 'translate',
       label: 'Translate',
       icon: '',

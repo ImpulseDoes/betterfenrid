@@ -46,7 +46,9 @@ function PluginCard(plugin: Plugin): Node {
   const schema = Object.entries(plugin.settings ?? {})
   const card = h('div', { class: 'bf-option' })
 
-  const expand = schema.length
+  const hasSettings = schema.length > 0 || !!plugin.panel
+
+  const expand = hasSettings
     ? h(
       'button',
       {
@@ -74,13 +76,14 @@ function PluginCard(plugin: Plugin): Node {
     ),
   )
 
-  if (schema.length) {
+  if (hasSettings) {
 
     card.append(
       h(
         'div',
         { class: 'bf-option-settings' },
         ...schema.map(([key, def]) => SettingControl(def, getPluginSetting(plugin, key), (v) => setPluginSetting(plugin, key, v))),
+        plugin.panel?.(),
       ),
     )
   }

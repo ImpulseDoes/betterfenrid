@@ -1,19 +1,19 @@
 .bf-root,
 .bf-panel,
 .bf-toasts {
-  --bf-accent: #3f56f5;
-  --bf-accent-hover: #5267f7;
+  --bf-accent: var(--primary-action, #3f56f5);
+  --bf-accent-hover: var(--primary-hover, #5267f7);
   --bf-danger: #e5484d;
   --bf-success: #2fb67c;
   --bf-link: #3ab8f7;
-  --bf-bg: #18191e;
-  --bf-bg-card: #1c1d23;
-  --bf-bg-input: #111216;
-  --bf-bg-secondary: #2b2d33;
+  --bf-bg: var(--main-chat-area, #18191e);
+  --bf-bg-card: var(--message-embed-background, #1c1d23);
+  --bf-bg-input: var(--channel-sidebar, #111216);
+  --bf-bg-secondary: var(--secondary-button, #2b2d33);
   --bf-border: rgba(255, 255, 255, 0.08);
-  --bf-text: #f2f3f5;
-  --bf-text-soft: #d4d6db;
-  --bf-text-muted: #8b8f98;
+  --bf-text: var(--text-primary, #f2f3f5);
+  --bf-text-soft: var(--text-secondary, #d4d6db);
+  --bf-text-muted: var(--text-muted, #8b8f98);
   --bf-radius: 12px;
   font-family: inherit;
   color: var(--bf-text);
@@ -419,6 +419,8 @@
 }
 
 .bf-pre {
+  max-height: 60vh;
+  overflow: auto;
   margin: 0;
   padding: 12px 14px;
   border: 1px solid var(--bf-border);
@@ -426,6 +428,25 @@
   background: var(--bf-bg-input);
   font-family: ui-monospace, 'Cascadia Code', Consolas, monospace;
   font-size: 13px;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.bf-log {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.bf-log-item {
+  padding: 10px 14px;
+  border: 1px solid var(--bf-border);
+  border-radius: var(--bf-radius);
+  background: var(--bf-bg-card);
+}
+
+.bf-log-text {
+  margin-top: 4px;
   white-space: pre-wrap;
   word-break: break-word;
 }

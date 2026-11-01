@@ -15,8 +15,10 @@ const userscriptHeader = `// ==UserScript==
 // @icon         https://fenrid.com/favicon.ico
 // @homepageURL  https://github.com/ImpulseDoes/betterfenrid
 // @supportURL   https://github.com/ImpulseDoes/betterfenrid/issues
-// @run-at       document-end
+// @run-at       document-start
 // @grant        none
+// @inject-into  page
+// @sandbox      raw
 // ==/UserScript==
 `
 

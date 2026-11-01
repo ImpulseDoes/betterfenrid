@@ -1,6 +1,7 @@
 import { h } from '../../core/dom'
 import { settings } from '../../core/settings'
-import { Section, SwitchRow } from '../components'
+import { THEMES } from '../../core/theme'
+import { Section, SettingControl, SwitchRow } from '../components'
 
 const PLACEHOLDER = `/* Your CSS goes here. It applies live as you type. */
 
@@ -44,6 +45,20 @@ export function ThemesPage(): Node {
   return h(
     'div',
     {},
+    Section(
+      'Theme',
+      'Recolors all of Fenrid. Your custom CSS below is applied on top of it.',
+      SettingControl(
+        {
+          type: 'select',
+          label: 'Theme',
+          default: 'onyx',
+          options: THEMES.map((t) => ({ label: t.name, value: t.id })),
+        },
+        theme.preset,
+        (v) => settings.update((s) => { s.theme.preset = String(v) }),
+      ),
+    ),
     Section(
       'Custom CSS',
       'Restyle Fenrid with your own CSS. Changes apply as you type.',
