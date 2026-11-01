@@ -432,6 +432,13 @@
   word-break: break-word;
 }
 
+.bf-timeout-badge {
+  display: inline-flex;
+  align-items: center;
+  margin-left: 4px;
+  color: #e5484d;
+}
+
 .bf-log {
   display: flex;
   flex-direction: column;

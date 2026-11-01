@@ -31,6 +31,10 @@ const ownDeletes = new Map<string, string>()
 
 let onLogChange: (() => void) | null = null
 
+export function isDeletedMessage(id: string): boolean {
+  return logged.has(id)
+}
+
 function loadLog(): Map<string, LoggedMessage> {
 
   try {

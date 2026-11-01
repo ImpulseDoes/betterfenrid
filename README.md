@@ -17,8 +17,10 @@ A client mod for [Fenrid](https://fenrid.com). It adds plugins, custom themes an
 | Plugin | What it does |
 | --- | --- |
 | Deleted Messages | Keeps deleted messages in the chat, marked in red, your own included, and saves them to a history you can open from the plugin's settings. Stored only in your browser. |
+| Double Click To Edit | Double click one of your messages in a server channel to edit it. |
 | Quote Message | Adds *Quote Message* to the message menu: pastes the message into your message box as a quote. |
 | View Raw | Adds *View Raw* to the message, channel and user menus: shows the raw JSON, with a copy button. |
+| Show Hidden Things | Shows a clock next to members who are timed out, which Fenrid has the data for but doesn't display. |
 | Translate | Adds *Translate* to the message menu: opens the message in Google Translate. |
 
 ## Install
@@ -55,6 +57,7 @@ src/
 │  ├─ settings.ts        settings store (localStorage)
 │  ├─ entities.ts        raw messages, channels and users seen on the network
 │  ├─ dom.ts             DOM helpers and the shared MutationObserver
+│  ├─ react.ts           reads props from Fenrid's React components
 │  ├─ styles.ts          stylesheet helper
 │  ├─ theme.ts           theme presets and custom CSS
 │  └─ logger.ts

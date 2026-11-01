@@ -20,6 +20,7 @@ export const Selectors = {
     },
   },
   message: '[data-message-id]',
+  profileTrigger: '[data-profile-preview-trigger]',
   composer: '[contenteditable="true"][role="textbox"], textarea',
   gatewayHost: 'gateway.fenrid.com',
 } as const
