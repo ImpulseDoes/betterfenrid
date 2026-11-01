@@ -120,6 +120,9 @@ export function openPanel(content: Element, title: string, page: Node) {
     target = content
     panel = h('div', { class: 'bf-root bf-panel', role: 'region', 'aria-label': 'Better Fenrid' })
 
+    // An attribute, because React rewrites className. See-through themes would otherwise show the page below
+    target.setAttribute('data-bf-covered', '')
+
     const bg = backgroundOf(content)
 
     if (bg) panel.style.setProperty('--bf-panel-bg', bg)
@@ -162,6 +165,7 @@ export function openPanel(content: Element, title: string, page: Node) {
 
 export function closePanel() {
 
+  target?.removeAttribute('data-bf-covered')
   panel?.remove()
   resizeObserver?.disconnect()
 

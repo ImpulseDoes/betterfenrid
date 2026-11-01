@@ -27,7 +27,7 @@ const common = {
   bundle: true,
   format: 'iife',
   target: 'es2022',
-  loader: { '.css': 'text' },
+  loader: { '.css': 'text', '.jpg': 'dataurl' },
   define: { __BF_VERSION__: JSON.stringify(pkg.version) },
   legalComments: 'none',
   logLevel: 'info',

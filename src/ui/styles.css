@@ -6,7 +6,7 @@
   --bf-danger: #e5484d;
   --bf-success: #2fb67c;
   --bf-link: #3ab8f7;
-  --bf-bg: var(--main-chat-area, #18191e);
+  --bf-bg: var(--popups-and-modals, #18191e);
   --bf-bg-card: var(--message-embed-background, #1c1d23);
   --bf-bg-input: var(--channel-sidebar, #111216);
   --bf-bg-secondary: var(--secondary-button, #2b2d33);
@@ -17,6 +17,10 @@
   --bf-radius: 12px;
   font-family: inherit;
   color: var(--bf-text);
+}
+
+[data-bf-covered] {
+  visibility: hidden;
 }
 
 /* Same as Fenrid */

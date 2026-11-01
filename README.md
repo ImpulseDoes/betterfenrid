@@ -8,7 +8,7 @@ A client mod for [Fenrid](https://fenrid.com). It adds plugins, custom themes an
 
 - **Settings section**: a *Better Fenrid* section in Fenrid's settings sidebar, with Settings, Plugins and Themes pages.
 - **Plugins**: turn them on and off instantly, with no reload. Each plugin can have its own settings.
-- **Themes**: comes with Onyx, a near-black theme like Discord's, on by default. You can switch back to Fenrid's own look and add custom CSS on top, applied live.
+- **Themes**: comes with Onyx, a near-black theme like Discord's, on by default, and Impulse's Default, an anime background behind glass panels. You can switch back to Fenrid's own look and add custom CSS on top, applied live.
 - **Context menu items**: plugins can add their own items to the message, channel and user right-click menus.
 - **Backup**: export, import and reset your settings.
 
