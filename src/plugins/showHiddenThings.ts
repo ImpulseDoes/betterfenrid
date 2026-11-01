@@ -46,7 +46,7 @@ function setEnd(badge: Element, end: number) {
 
 function Badge(end: number): Element {
 
-  const badge = h('span', { class: BADGE }, icon('clock', 14), h('span', {}))
+  const badge = h('span', { class: BADGE }, icon('clock', 15), h('span', { class: `${BADGE}-label` }, 'Timed out'), h('span', {}))
 
   setEnd(badge, end)
 

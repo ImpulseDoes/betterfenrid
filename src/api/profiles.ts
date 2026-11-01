@@ -60,7 +60,6 @@ export function mentionTextOf(trigger: Element): Element | null {
   return isMention(trigger) ? firstTextParent(trigger) : null
 }
 
-/** Adds, keeps or removes a badge right after a name. Avatars have no text, so they're skipped */
 /** Badges sit beside the name, which can be the trigger itself, so the search starts at its parent */
 export function findNameBadge(trigger: Element, className: string): Element | null {
   return firstTextParent(trigger)?.parentElement?.querySelector(`:scope > .${className}`) ?? null
