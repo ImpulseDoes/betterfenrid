@@ -1,6 +1,6 @@
 # Better Fenrid
 
-A client mod for [Fenrid](https://fenrid.com). It adds plugins, custom themes and its own settings section to the official web app, without replacing it
+A client mod for [Fenrid](https://fenrid.com). It adds plugins, custom themes and its own settings section to the official web app, without replacing it, our fenrid server -> https://fenrid.com/FzyW30IO
 
 > Better Fenrid is a community project and isn't made by the Fenrid team. Use at your own risk.
 
