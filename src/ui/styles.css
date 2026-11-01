@@ -1,0 +1,487 @@
+.bf-root,
+.bf-panel,
+.bf-toasts {
+  --bf-accent: #3f56f5;
+  --bf-accent-hover: #5267f7;
+  --bf-danger: #e5484d;
+  --bf-success: #2fb67c;
+  --bf-link: #3ab8f7;
+  --bf-bg: #18191e;
+  --bf-bg-card: #1c1d23;
+  --bf-bg-input: #111216;
+  --bf-bg-secondary: #2b2d33;
+  --bf-border: rgba(255, 255, 255, 0.08);
+  --bf-text: #f2f3f5;
+  --bf-text-soft: #d4d6db;
+  --bf-text-muted: #8b8f98;
+  --bf-radius: 12px;
+  font-family: inherit;
+  color: var(--bf-text);
+}
+
+/* Same as Fenrid */
+
+.bf-panel {
+  position: fixed;
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  background: var(--bf-panel-bg, var(--bf-bg));
+  overflow: hidden;
+  animation: bf-fade-in 120ms ease-out;
+}
+
+.bf-panel-header {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: space-between;
+  height: 69px;
+  padding: 0 16px 0 24px;
+  border-bottom: 1px solid var(--bf-border);
+  box-sizing: border-box;
+}
+
+.bf-panel-title {
+  margin: 0;
+  font-family: var(--bf-heading-font, inherit);
+  font-size: 20px;
+  font-weight: 800;
+}
+
+.bf-panel-scroll {
+  flex: 1;
+  overflow-y: auto;
+  padding: 16px 80px 80px;
+}
+
+.bf-panel-inner {
+  max-width: 920px;
+  margin: 0 auto;
+}
+
+.bf-section {
+  padding: 24px 0;
+}
+
+.bf-section+.bf-section {
+  border-top: 1px solid var(--bf-border);
+}
+
+.bf-section-title {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 700;
+}
+
+.bf-section-desc {
+  margin: 6px 0 12px;
+  color: var(--bf-text-soft);
+  font-size: 15px;
+  line-height: 1.45;
+}
+
+.bf-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  padding: 14px 0;
+}
+
+.bf-row-text {
+  min-width: 0;
+}
+
+.bf-row-label {
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.bf-row-desc {
+  margin-top: 4px;
+  color: var(--bf-text-muted);
+  font-size: 13px;
+  line-height: 1.45;
+}
+
+.bf-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 14px 0;
+}
+
+.bf-link {
+  color: var(--bf-link);
+  text-decoration: none;
+}
+
+.bf-link:hover {
+  text-decoration: underline;
+}
+
+.bf-switch {
+  position: relative;
+  flex-shrink: 0;
+  width: 40px;
+  height: 24px;
+  cursor: pointer;
+}
+
+.bf-switch-input {
+  position: absolute;
+  inset: 0;
+  margin: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.bf-switch-track {
+  position: absolute;
+  inset: 0;
+  border-radius: 999px;
+  background: #3a3c43;
+  transition: background 150ms;
+  pointer-events: none;
+}
+
+.bf-switch-track::after {
+  content: '';
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #fff;
+  transition: transform 150ms;
+}
+
+.bf-switch-input:checked+.bf-switch-track {
+  background: var(--bf-accent);
+}
+
+.bf-switch-input:checked+.bf-switch-track::after {
+  transform: translateX(16px);
+}
+
+.bf-switch-input:focus-visible+.bf-switch-track {
+  outline: 2px solid var(--bf-accent);
+  outline-offset: 2px;
+}
+
+.bf-btn {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 40px;
+  padding: 0 16px;
+  border: 0;
+  border-radius: 8px;
+  font: inherit;
+  font-size: 15px;
+  font-weight: 500;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: background 120ms, filter 120ms;
+}
+
+.bf-btn-primary {
+  background: var(--bf-accent);
+  color: #fff;
+}
+
+.bf-btn-primary:hover {
+  background: var(--bf-accent-hover);
+}
+
+.bf-btn-secondary {
+  background: var(--bf-bg-secondary);
+  color: var(--bf-text);
+}
+
+.bf-btn-secondary:hover {
+  filter: brightness(1.2);
+}
+
+.bf-btn-danger {
+  background: var(--bf-danger);
+  color: #fff;
+}
+
+.bf-btn-danger:hover {
+  filter: brightness(1.1);
+}
+
+.bf-icon-btn {
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--bf-text-muted);
+  cursor: pointer;
+}
+
+.bf-icon-btn:hover {
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--bf-text);
+}
+
+.bf-input {
+  box-sizing: border-box;
+  width: 100%;
+  min-height: 44px;
+  padding: 10px 14px;
+  border: 1px solid var(--bf-border);
+  border-radius: var(--bf-radius);
+  background: var(--bf-bg-input);
+  color: var(--bf-text);
+  font: inherit;
+  font-size: 15px;
+  outline: none;
+}
+
+.bf-input:focus {
+  border-color: var(--bf-accent);
+}
+
+.bf-input-number {
+  width: 110px;
+}
+
+.bf-select {
+  width: auto;
+  min-width: 180px;
+}
+
+.bf-code {
+  min-height: 380px;
+  margin-top: 4px;
+  resize: vertical;
+  font-family: ui-monospace, 'Cascadia Code', Consolas, monospace;
+  font-size: 13px;
+  line-height: 1.55;
+  tab-size: 2;
+}
+
+.bf-search {
+  position: relative;
+  margin: 4px 0 12px;
+}
+
+.bf-search svg {
+  position: absolute;
+  top: 50%;
+  left: 14px;
+  transform: translateY(-50%);
+  color: var(--bf-text-muted);
+}
+
+.bf-search .bf-input {
+  padding-left: 42px;
+}
+
+.bf-options {
+  display: grid;
+  gap: 12px;
+}
+
+.bf-option {
+  border: 1px solid var(--bf-border);
+  border-radius: var(--bf-radius);
+  background: var(--bf-bg-card);
+}
+
+.bf-option-head {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 64px;
+  padding: 12px 16px;
+  box-sizing: border-box;
+}
+
+.bf-option-text {
+  flex: 1;
+  min-width: 0;
+}
+
+.bf-option-title {
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.bf-option-desc {
+  margin-top: 3px;
+  color: var(--bf-text-muted);
+  font-size: 13px;
+  line-height: 1.4;
+}
+
+.bf-option-expand svg {
+  transition: transform 150ms;
+}
+
+.bf-option.bf-open .bf-option-expand svg {
+  transform: rotate(180deg);
+}
+
+.bf-option-settings {
+  display: none;
+  padding: 0 16px 4px;
+  border-top: 1px solid var(--bf-border);
+}
+
+.bf-option.bf-open .bf-option-settings {
+  display: block;
+}
+
+.bf-option-settings .bf-row-label {
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.bf-empty {
+  padding: 32px;
+  color: var(--bf-text-muted);
+  text-align: center;
+}
+
+.bf-emoji-icon {
+  display: inline-flex;
+  justify-content: center;
+  width: 20px;
+  font-size: 15px;
+  line-height: 1;
+}
+
+[data-bf-menu-item].bf-danger {
+  color: var(--bf-danger, #e5484d) !important;
+}
+
+[data-bf-nav] {
+  cursor: pointer;
+}
+
+.bf-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 10000;
+  display: grid;
+  place-items: center;
+  background: rgba(0, 0, 0, 0.6);
+  animation: bf-fade-in 120ms ease-out;
+}
+
+.bf-modal {
+  display: flex;
+  flex-direction: column;
+  width: min(560px, calc(100vw - 32px));
+  max-height: calc(100vh - 64px);
+  border: 1px solid var(--bf-border);
+  border-radius: 14px;
+  background: var(--bf-bg);
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.5);
+  animation: bf-pop-in 140ms ease-out;
+}
+
+.bf-modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 16px 8px 24px;
+}
+
+.bf-modal-header h2 {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.bf-modal-body {
+  overflow: auto;
+  padding: 8px 24px 20px;
+}
+
+.bf-modal-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  padding: 14px 24px;
+  border-top: 1px solid var(--bf-border);
+}
+
+.bf-pre {
+  margin: 0;
+  padding: 12px 14px;
+  border: 1px solid var(--bf-border);
+  border-radius: var(--bf-radius);
+  background: var(--bf-bg-input);
+  font-family: ui-monospace, 'Cascadia Code', Consolas, monospace;
+  font-size: 13px;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.bf-toasts {
+  position: fixed;
+  bottom: 24px;
+  left: 50%;
+  z-index: 10001;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  transform: translateX(-50%);
+  pointer-events: none;
+}
+
+.bf-toast {
+  padding: 10px 16px;
+  border: 1px solid var(--bf-border);
+  border-radius: 10px;
+  background: var(--bf-bg-card);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.45);
+  font-size: 14px;
+  font-weight: 500;
+  animation: bf-pop-in 140ms ease-out;
+}
+
+.bf-toast-success {
+  border-color: var(--bf-success);
+}
+
+.bf-toast-error {
+  border-color: var(--bf-danger);
+}
+
+.bf-toast-out {
+  animation: bf-fade-out 160ms ease-in forwards;
+}
+
+@keyframes bf-fade-in {
+  from {
+    opacity: 0;
+  }
+}
+
+@keyframes bf-fade-out {
+  to {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+}
+
+@keyframes bf-pop-in {
+  from {
+    opacity: 0;
+    transform: scale(0.96);
+  }
+}

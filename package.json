@@ -1,0 +1,34 @@
+{
+  "name": "better-fenrid",
+  "version": "0.1.0",
+  "author": "impulsedoes",
+  "description": "A client mod for Fenrid: plugins, themes and settings, injected into the official web app.",
+  "private": true,
+  "license": "MIT",
+  "type": "module",
+  "scripts": {
+    "build": "node scripts/build.mjs",
+    "watch": "node scripts/build.mjs --watch",
+    "typecheck": "tsc --noEmit"
+  },
+  "keywords": [
+    "fenrid",
+    "client-mod",
+    "userscript",
+    "tampermonkey",
+    "plugins",
+    "themes"
+  ],
+  "engines": {
+    "node": ">=20"
+  },
+  "devDependencies": {
+    "esbuild": "^0.28.2",
+    "typescript": "^7.0.2"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ImpulseDoes/betterfenrid.git"
+  },
+  "homepage": "https://github.com/ImpulseDoes/betterfenrid"
+}
