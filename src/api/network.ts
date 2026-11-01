@@ -8,6 +8,11 @@ export interface GatewayFrame {
   d: any
 }
 
+export const GatewayOp = {
+  CLIENT_EVENT: 103,
+  REQUEST_SERVER_STATS: 106,
+}
+
 export interface ApiRequest {
   url: URL
   method: string
@@ -18,6 +23,8 @@ export interface ApiResult extends ApiRequest {
 }
 
 type GatewayHook = (frame: GatewayFrame) => void
+// Return false to stop a frame from reaching the server
+type GatewaySendHook = (frame: { op: number; d?: any }) => boolean | void
 type RequestHook = (request: ApiRequest) => void
 type ResultHook = (result: ApiResult) => void
 // Return a new body to replace what Fenrid receives
@@ -25,15 +32,17 @@ type ResponseHook = (url: URL, body: any) => unknown
 
 const log = createLogger('Network')
 const gatewayHooks = new Set<GatewayHook>()
+const sendHooks = new Set<GatewaySendHook>()
 const requestHooks = new Set<RequestHook>()
 const resultHooks = new Set<ResultHook>()
 const responseHooks = new Set<ResponseHook>()
 
-const WATCHED_FRAME = /"t"\s*:\s*"(READY|GUILD_|CHANNEL_|MEMBER_|MESSAGE_)/
+const WATCHED_FRAME = /"t"\s*:\s*"(READY|GUILD_|CHANNEL_|MEMBER_|MESSAGE_|SERVER_)/
 
 let gatewaySeen = false
 let dispatchOp = 0
 let deliverFrame: ((data: string) => void) | null = null
+let gatewaySend: ((data: string) => void) | null = null
 
 function subscribe<T>(hooks: Set<T>, hook: T): () => void {
 
@@ -43,6 +52,7 @@ function subscribe<T>(hooks: Set<T>, hook: T): () => void {
 }
 
 export const onGatewayFrame = (hook: GatewayHook) => subscribe(gatewayHooks, hook)
+export const onGatewaySend = (hook: GatewaySendHook) => subscribe(sendHooks, hook)
 export const onApiRequest = (hook: RequestHook) => subscribe(requestHooks, hook)
 export const onApiResult = (hook: ResultHook) => subscribe(resultHooks, hook)
 export const onApiResponse = (hook: ResponseHook) => subscribe(responseHooks, hook)
@@ -56,6 +66,47 @@ export function isGatewaySeen(): boolean {
 export function injectGatewayEvent(t: string, topic: string, payload: object) {
 
   deliverFrame?.(JSON.stringify({ op: dispatchOp, t, d: { topic, payload } }))
+}
+
+/** Sends a frame of our own. False when the connection isn't open */
+export function sendGatewayFrame(frame: { op: number; d?: unknown }): boolean {
+
+  if (!gatewaySend) return false
+
+  try {
+
+    gatewaySend(JSON.stringify(frame))
+
+    return true
+
+  } catch {
+
+    return false
+
+  }
+}
+
+function isBlocked(data: unknown): boolean {
+
+  if (!sendHooks.size || typeof data !== 'string') return false
+
+  try {
+
+    const frame = JSON.parse(data)
+
+    for (const hook of sendHooks) {
+
+      if (hook(frame) === false) return true
+
+    }
+
+  } catch (err) {
+
+    log.error('Gateway send hook failed', err)
+
+  }
+
+  return false
 }
 
 function rewriteFrame(event: MessageEvent): MessageEvent {
@@ -88,6 +139,8 @@ function hookWebSocket() {
 
   window.WebSocket = class extends Native {
 
+    #gateway = false
+
     constructor(url: string | URL, protocols?: string | string[]) {
 
       super(url, protocols)
@@ -95,6 +148,7 @@ function hookWebSocket() {
       if (!String(url).includes(Selectors.gatewayHost)) return
 
       gatewaySeen = true
+      this.#gateway = true
 
       let handler: ((event: MessageEvent) => void) | null = null
 
@@ -110,6 +164,13 @@ function hookWebSocket() {
       this.addEventListener('message', (event) => handler?.call(this, rewriteFrame(event)))
 
       deliverFrame = (data) => handler?.call(this, new MessageEvent('message', { data }))
+      gatewaySend = (data) => super.send(data)
+    }
+
+    send(data: Parameters<WebSocket['send']>[0]) {
+
+      if (!this.#gateway || !isBlocked(data)) super.send(data)
+
     }
   }
 }

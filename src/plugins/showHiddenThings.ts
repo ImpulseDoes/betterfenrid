@@ -1,43 +1,16 @@
+import { isMention, memberOf, setNameBadge, watchProfileTriggers } from '../api/profiles'
 import { h } from '../core/dom'
 import { definePlugin } from '../core/plugins'
-import { findProps } from '../core/react'
-import { Selectors } from '../core/selectors'
 import { icon } from '../ui/icons'
 
 const BADGE = 'bf-timeout-badge'
-const RECHECK_MS = 15_000
 
 function timeoutEnd(trigger: Element): Date | null {
 
-  const member = findProps(trigger, (props) => !!props.member)?.member
-  const until = member?.communication_disabled_until
+  const until = memberOf(trigger)?.communication_disabled_until
   const end = until ? new Date(until) : null
 
   return end && end.getTime() > Date.now() ? end : null
-}
-
-function updateTrigger(trigger: Element) {
-
-  const next = trigger.nextElementSibling
-  const badge = next?.classList.contains(BADGE) ? next : null
-  const end = trigger.textContent?.trim() ? timeoutEnd(trigger) : null
-
-  if (!end) {
-
-    badge?.remove()
-
-    return
-  }
-
-  const title = `Timed out until ${end.toLocaleString()}`
-
-  if (badge) badge.setAttribute('title', title)
-  else trigger.after(h('span', { class: BADGE, title, 'aria-label': title }, icon('clock', 14)))
-}
-
-function triggersIn(root: Element): Element[] {
-
-  return [...(root.matches(Selectors.profileTrigger) ? [root] : []), ...root.querySelectorAll(Selectors.profileTrigger)]
 }
 
 export default definePlugin({
@@ -49,20 +22,19 @@ export default definePlugin({
 
   start(ctx) {
 
-    const updateAll = () => triggersIn(document.body).forEach(updateTrigger)
+    watchProfileTriggers(ctx, (trigger) => {
 
-    ctx.onDomChange((added) => added.flatMap(triggersIn).forEach(updateTrigger))
+      const end = isMention(trigger) ? null : timeoutEnd(trigger)
 
-    // Nothing on the page changes when a timeout starts or runs out
-    const timer = setInterval(updateAll, RECHECK_MS)
+      if (!end) return setNameBadge(trigger, BADGE, null)
 
-    if (document.body) updateAll()
+      const title = `Timed out until ${end.toLocaleString()}`
 
-    ctx.onStop(() => {
+      trigger.querySelector(`.${BADGE}`)?.setAttribute('title', title)
 
-      clearInterval(timer)
-      document.querySelectorAll(`.${BADGE}`).forEach((badge) => badge.remove())
-
+      setNameBadge(trigger, BADGE, () => h('span', { class: BADGE, title, 'aria-label': title }, icon('clock', 14)))
     })
+
+    ctx.onStop(() => document.querySelectorAll(`.${BADGE}`).forEach((badge) => badge.remove()))
   },
 })
