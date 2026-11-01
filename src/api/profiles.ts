@@ -15,7 +15,7 @@ function triggersIn(root: Element): Element[] {
  * the member list, avatars and mentions. Nothing on the page changes when the
  * data behind them does, so they're also rechecked on a timer
  */
-export function watchProfileTriggers(ctx: PluginContext<any>, update: (trigger: Element) => void) {
+export function watchProfileTriggers(ctx: PluginContext<any>, update: (trigger: Element) => void): () => void {
 
   const updateAll = () => {
 
@@ -30,6 +30,8 @@ export function watchProfileTriggers(ctx: PluginContext<any>, update: (trigger: 
   ctx.onStop(() => clearInterval(timer))
 
   updateAll()
+
+  return updateAll
 }
 
 export function memberOf(trigger: Element): Record<string, any> | null {
@@ -59,9 +61,15 @@ export function mentionTextOf(trigger: Element): Element | null {
 }
 
 /** Adds, keeps or removes a badge right after a name. Avatars have no text, so they're skipped */
+/** Badges sit beside the name, which can be the trigger itself, so the search starts at its parent */
+export function findNameBadge(trigger: Element, className: string): Element | null {
+  return firstTextParent(trigger)?.parentElement?.querySelector(`:scope > .${className}`) ?? null
+}
+
+/** Adds, keeps or removes a badge right after a name. Avatars have no text, so they're skipped */
 export function setNameBadge(trigger: Element, className: string, create: (() => Element) | null) {
 
-  const existing = trigger.querySelector(`.${className}`)
+  const existing = findNameBadge(trigger, className)
 
   if (!create) {
 

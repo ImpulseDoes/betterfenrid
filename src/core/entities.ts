@@ -27,10 +27,26 @@ function createCache() {
 const messages = createCache()
 const channels = createCache()
 const users = createCache()
+const memberTimeouts = new Map<string, string | null>()
 
 export const getMessage = (id: string) => messages.get(id)
 export const getChannel = (id: string) => channels.get(id)
 export const getUser = (id: string) => users.get(id)
+
+/** When a member's timeout ends. Null means none, undefined that Fenrid hasn't sent it */
+export const getMemberTimeout = (serverId: string, profileId: string) => memberTimeouts.get(`${serverId}:${profileId}`)
+
+function rememberTimeout(value: Entity, serverId: string | undefined) {
+
+  if (!serverId || typeof value.profile_id !== 'string' || !('communication_disabled_until' in value)) return
+
+  const key = `${serverId}:${value.profile_id}`
+
+  memberTimeouts.delete(key)
+  memberTimeouts.set(key, value.communication_disabled_until ?? null)
+
+  if (memberTimeouts.size > LIMIT) memberTimeouts.delete(memberTimeouts.keys().next().value!)
+}
 
 function classify(value: Entity) {
 
@@ -54,26 +70,30 @@ function classify(value: Entity) {
   }
 }
 
-function index(value: unknown, depth = 0) {
+// A list of members names its server once, on the object around them
+function index(value: unknown, parentServerId: string | undefined, depth = 0) {
 
   if (!value || typeof value !== 'object' || depth > MAX_DEPTH) return
 
   if (Array.isArray(value)) {
 
-    for (const item of value) index(item, depth + 1)
+    for (const item of value) index(item, parentServerId, depth + 1)
 
     return
   }
 
   const entity = value as Entity
+  const serverId = entity.server_id ?? entity.guild_id ?? parentServerId
+
+  rememberTimeout(entity, serverId)
 
   if (typeof entity.id === 'string' || typeof entity.id === 'number') classify(entity)
 
-  for (const child of Object.values(entity)) index(child, depth + 1)
+  for (const child of Object.values(entity)) index(child, serverId, depth + 1)
 }
 
 export function startEntityCache() {
 
-  onGatewayFrame((frame) => index(frame.d))
-  onApiResponse((_, body) => index(body))
+  onGatewayFrame((frame) => index(frame.d, frame.d?.topic?.match(/^guild:(\d+)/)?.[1]))
+  onApiResponse((url, body) => index(body, url.pathname.match(/^\/api\/servers\/(\d+)/)?.[1]))
 }
