@@ -1,7 +1,7 @@
 import { findClickableByText, findTextNode, onDomChange, replaceIcon, replaceText, sanitizeClone } from '../core/dom'
 import { createLogger } from '../core/logger'
 import { Selectors } from '../core/selectors'
-import { icon, isIconName, type IconName } from '../ui/icons'
+import { fittedIcon, isIconName, type IconName } from '../ui/icons'
 
 export type MenuKind = keyof typeof Selectors.contextMenus
 
@@ -206,7 +206,7 @@ function inject(root: Element) {
 
     replaceText(el, anchorLabel, item.label)
 
-    if (item.icon) replaceIcon(el, isIconName(item.icon) ? icon(item.icon) : item.icon)
+    if (item.icon) replaceIcon(el, isIconName(item.icon) ? fittedIcon(item.icon) : item.icon)
 
     el.addEventListener(
       'click',

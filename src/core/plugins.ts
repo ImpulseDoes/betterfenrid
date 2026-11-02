@@ -1,4 +1,5 @@
 import { addContextMenuItem, type ContextMenuItem } from '../api/contextMenu'
+import type { IconName } from '../ui/icons'
 import { onDomChange } from './dom'
 import { createLogger, type Logger } from './logger'
 import { settings } from './settings'
@@ -46,6 +47,15 @@ export interface PluginContext<S extends SettingsSchema = SettingsSchema> {
   onStop(fn: () => void): void
 }
 
+// A tab in the settings sidebar, there only while the plugin is on
+export interface PluginPage {
+  id: string
+  label: string
+  title: string
+  icon: IconName
+  render(): Node
+}
+
 export interface Plugin<S extends SettingsSchema = SettingsSchema> {
   // Stable id used as the storage key. NEVER rename it after release
   id: string
@@ -56,6 +66,8 @@ export interface Plugin<S extends SettingsSchema = SettingsSchema> {
   settings?: S
   // Extra controls shown under the plugin's settings. Available while it's stopped too
   panel?(): Node
+  // Its settings move here from the plugin's card
+  page?: PluginPage
   start(ctx: PluginContext<S>): void | (() => void)
 }
 

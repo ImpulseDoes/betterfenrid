@@ -11,10 +11,11 @@ import {
   sanitizeClone,
 } from '../core/dom'
 import { createLogger } from '../core/logger'
+import { getPlugins, isEnabled } from '../core/plugins'
 import { Selectors } from '../core/selectors'
 import { settings } from '../core/settings'
 import { NAME, VERSION } from '../meta'
-import { icon, type IconName } from './icons'
+import { fittedIcon, type IconName } from './icons'
 import { PluginsPage } from './pages/plugins'
 import { SettingsPage } from './pages/settings'
 import { ThemesPage } from './pages/themes'
@@ -38,6 +39,13 @@ const PAGES: Page[] = [
   { id: 'themes', label: 'Themes', title: 'Themes', icon: 'themes', render: ThemesPage },
 ]
 
+function visiblePages(): Page[] {
+
+  return [...PAGES, ...getPlugins().flatMap((plugin) => (plugin.page && isEnabled(plugin.id) ? [plugin.page] : []))]
+}
+
+const pagesKey = () => visiblePages().map((page) => page.id).join()
+
 const S = Selectors.settings
 const NAV = 'data-bf-nav'
 const FOOTER = 'data-bf-footer'
@@ -46,6 +54,7 @@ const log = createLogger('Settings')
 let sidebar: HTMLElement | null = null
 let injected: Element[] = []
 let activePage: string | null = null
+let injectedPages = ''
 interface Look {
   on: string[]
   off: string[]
@@ -60,8 +69,25 @@ let restoreNative: (() => void) | null = null
 const wired = new WeakSet<Element>()
 
 export function startSettingsInjection() {
+
   onDomChange(check)
-  settings.subscribe(() => sidebar && updateFooter(sidebar))
+
+  settings.subscribe(() => {
+
+    if (!sidebar) return
+
+    updateFooter(sidebar)
+    syncPages(sidebar)
+  })
+}
+
+function syncPages(sb: HTMLElement) {
+
+  if (!injected.length || injectedPages === pagesKey()) return
+
+  if (activePage && !visiblePages().some((page) => page.id === activePage)) closePage()
+
+  inject(sb)
 }
 
 function check(added: Element[]) {
@@ -132,6 +158,10 @@ function inject(sb: HTMLElement) {
   for (const n of injected) n.remove()
   injected = []
 
+  const pages = visiblePages()
+
+  injectedPages = pagesKey()
+
   const template = findClickableByText(sb, S.templateItem)
 
   if (!template) {
@@ -147,7 +177,7 @@ function inject(sb: HTMLElement) {
   if (!headerText?.parentElement) {
 
     const unit = unitOf(template, sb)
-    const items = PAGES.map((p) => buildItem(unit, p))
+    const items = pages.map((p) => buildItem(unit, p))
 
     unit.after(...items)
     injected = items
@@ -172,7 +202,7 @@ function inject(sb: HTMLElement) {
 
       for (const u of units) u.remove()
 
-      list.append(...PAGES.map((p) => buildItem(templateUnit, p)))
+      list.append(...pages.map((p) => buildItem(templateUnit, p)))
       headerRow.before(group)
 
       injected = [group]
@@ -185,7 +215,7 @@ function inject(sb: HTMLElement) {
       sanitizeClone(header)
       replaceHeader(header, headerLabel)
 
-      const items = PAGES.map((p) => buildItem(templateRow, p))
+      const items = pages.map((p) => buildItem(templateRow, p))
 
       headerRow.before(header, ...items)
 
@@ -219,7 +249,7 @@ function buildItem(template: Element, page: Page): Element {
   row.setAttribute(NAV, page.id)
 
   replaceText(row, S.templateItem, page.label)
-  replaceIcon(row, icon(page.icon))
+  replaceIcon(row, fittedIcon(page.icon))
 
   const open = (e: Event) => {
     e.preventDefault()
@@ -258,7 +288,7 @@ function wireSidebar(sb: HTMLElement) {
 
 function openPage(id: string) {
 
-  const page = PAGES.find((p) => p.id === id)
+  const page = visiblePages().find((p) => p.id === id)
 
   if (!sidebar || !page) return
 
@@ -344,7 +374,7 @@ function learnLook(items: HTMLElement[], selected: HTMLElement): Look | null {
 
 function setSelected(el: HTMLElement, selected: boolean): () => void {
 
-  if (!look) return () => {}
+  if (!look) return () => { }
 
   if (!look.on.length && !look.off.length) {
 

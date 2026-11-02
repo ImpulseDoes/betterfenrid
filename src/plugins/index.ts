@@ -6,8 +6,11 @@ import communityStatistics from './communityStatistics'
 import deletedMessages from './deletedMessages'
 import doubleClickEdit from './doubleClickEdit'
 import editHistory from './editHistory'
+import experiments from './experiments'
+import expressionManager from './expressionManager'
 import fakeSurge from './fakeSurge'
 import forceOwnerCrown from './forceOwnerCrown'
+import imageLink from './imageLink'
 import mentionAvatars from './mentionAvatars'
 import noReplyMentions from './noReplyMentions'
 import oneko from './oneko'
@@ -24,15 +27,18 @@ import whoReacted from './whoReacted'
 
 export const plugins = [
     badgeFaker,
-  badges,
+    badges,
     betterFolders,
     clearUrls,
     communityStatistics,
     deletedMessages,
     doubleClickEdit,
     editHistory,
+    experiments,
+    expressionManager,
     fakeSurge,
     forceOwnerCrown,
+    imageLink,
     mentionAvatars,
     noReplyMentions,
     oneko,

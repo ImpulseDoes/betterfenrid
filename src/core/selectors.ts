@@ -43,6 +43,7 @@ export const Selectors = {
   lockedEmoji: 'button[aria-label="Requires Surge"]',
   emojiLink: 'a[href^="https://cdn.fenrid.com/emojis/"]',
   mediaEmbed: '.group\\/direct-image, [role="status"]',
+  embedList: '[data-phase7b-spacing$=":embed-spacing"]',
   pendingGif: '[role="status"]',
   replyBar: '.border-l-\\[3px\\].border-primary-action\\/70',
   replyMentionToggle: 'button:not([aria-label])',

@@ -43,7 +43,7 @@ export function PluginsPage(): Node {
 // Looks like Fenrid's option cards (e.g. the language list)
 function PluginCard(plugin: Plugin): Node {
 
-  const schema = Object.entries(plugin.settings ?? {})
+  const schema = plugin.page ? [] : Object.entries(plugin.settings ?? {})
   const card = h('div', { class: 'bf-option' })
 
   const hasSettings = schema.length > 0 || !!plugin.panel

@@ -5,6 +5,8 @@ const PATHS = {
     'M20.5 11H19V7c0-1.1-.9-2-2-2h-4V3.5C13 2.12 11.88 1 10.5 1S8 2.12 8 3.5V5H4c-1.1 0-1.99.9-1.99 2v3.8H3.5c1.49 0 2.7 1.21 2.7 2.7s-1.21 2.7-2.7 2.7H2V20c0 1.1.9 2 2 2h3.8v-1.5c0-1.49 1.21-2.7 2.7-2.7 1.49 0 2.7 1.21 2.7 2.7V22H17c1.1 0 2-.9 2-2v-4h1.5c1.38 0 2.5-1.12 2.5-2.5S21.88 11 20.5 11z',
   themes:
     'M12 3a9 9 0 0 0 0 18c.83 0 1.5-.67 1.5-1.5 0-.39-.15-.74-.39-1.01-.23-.26-.38-.61-.38-.99 0-.83.67-1.5 1.5-1.5H16c2.76 0 5-2.24 5-5 0-4.42-4.03-8-9-8zm-5.5 9c-.83 0-1.5-.67-1.5-1.5S5.67 9 6.5 9 8 9.67 8 10.5 7.33 12 6.5 12zm3-4C8.67 8 8 7.33 8 6.5S8.67 5 9.5 5s1.5.67 1.5 1.5S10.33 8 9.5 8zm5 0c-.83 0-1.5-.67-1.5-1.5S13.67 5 14.5 5s1.5.67 1.5 1.5S15.33 8 14.5 8zm3 4c-.83 0-1.5-.67-1.5-1.5S16.67 9 17.5 9s1.5.67 1.5 1.5-.67 1.5-1.5 1.5z',
+  flask: 'M19.8 18.4 14 10.67V6.5l1.35-1.69c.26-.33.03-.81-.39-.81H9.04c-.42 0-.65.48-.39.81L10 6.5v4.17L4.2 18.4c-.49.66-.02 1.6.8 1.6h14c.82 0 1.29-.94.8-1.6z',
+  plus: 'M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z',
   close: 'M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z',
   quote: 'M6 17h3l2-4V7H5v6h3zm8 0h3l2-4V7h-6v6h3z',
   code: 'M9.4 16.6 4.8 12l4.6-4.6L8 6l-6 6 6 6 1.4-1.4zm5.2 0 4.6-4.6-4.6-4.6L16 6l6 6-6 6-1.4-1.4z',
@@ -49,6 +51,41 @@ export function icon(name: IconName, size = 20): SVGSVGElement {
 
   path.setAttribute('d', PATHS[name])
   svg.append(path)
+
+  return svg
+}
+
+const fittedBoxes = new Map<IconName, string>()
+
+function fittedBox(name: IconName): string {
+
+  const known = fittedBoxes.get(name)
+
+  if (known) return known
+
+  const svg = icon(name)
+
+  svg.style.cssText = 'position:absolute;visibility:hidden'
+  document.body.append(svg)
+
+  const { x, y, width, height } = svg.querySelector('path')!.getBBox()
+
+  svg.remove()
+
+  const size = Math.max(width, height)
+  const box = `${x + width / 2 - size / 2} ${y + height / 2 - size / 2} ${size} ${size}`
+
+  fittedBoxes.set(name, box)
+
+  return box
+}
+
+/** For rows next to Fenrid's icons: those fill their box, ours are drawn with a margin */
+export function fittedIcon(name: IconName, size = 20): SVGSVGElement {
+
+  const svg = icon(name, size)
+
+  svg.setAttribute('viewBox', fittedBox(name))
 
   return svg
 }

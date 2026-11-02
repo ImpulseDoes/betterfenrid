@@ -834,7 +834,7 @@
 
 .bf-tooltip {
   position: fixed;
-  z-index: 300;
+  z-index: 10001;
   width: max-content;
   max-width: 320px;
   white-space: nowrap;
@@ -1109,6 +1109,90 @@ div:has(> [data-bf-folder-servers])>span {
 .bf-read-all:disabled {
   cursor: default;
   opacity: 0.5;
+}
+
+.bf-image-links {
+  display: flex;
+  flex-direction: column;
+  max-width: 100%;
+  overflow-wrap: anywhere;
+}
+
+.bf-clone-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 8px;
+}
+
+.bf-clone-preview {
+  flex-shrink: 0;
+  width: 48px;
+  height: 48px;
+  object-fit: contain;
+}
+
+.bf-clone-name {
+  flex: 1;
+  min-width: 0;
+}
+
+.bf-clone-servers {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, 48px);
+  gap: 10px;
+  max-height: 228px;
+  margin-top: 16px;
+  padding: 3px;
+  overflow-y: auto;
+}
+
+.bf-clone-server {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  padding: 0;
+  overflow: hidden;
+  border: 0;
+  border-radius: 14px;
+  background-color: var(--secondary-button, #292932);
+  color: var(--color-text-primary, #fff);
+  cursor: pointer;
+  transition: border-radius 120ms, opacity 120ms;
+}
+
+.bf-clone-server:hover,
+.bf-clone-server:focus-visible {
+  border-radius: 10px;
+  outline: 2px solid var(--primary-action, #3f56f5);
+  outline-offset: 1px;
+}
+
+.bf-clone-server:disabled {
+  cursor: default;
+  opacity: 0.5;
+}
+
+.bf-clone-server img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.bf-clone-initial {
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.bf-clone-note {
+  grid-column: 1 / -1;
+}
+
+.bf-clone-note {
+  margin: 0;
+  color: var(--color-text-muted, #949ba4);
 }
 
 .bf-oneko {
