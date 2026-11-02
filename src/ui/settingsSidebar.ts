@@ -16,6 +16,7 @@ import { Selectors } from '../core/selectors'
 import { settings } from '../core/settings'
 import { NAME, VERSION } from '../meta'
 import { fittedIcon, type IconName } from './icons'
+import { CreditsPage } from './pages/credits'
 import { PluginsPage } from './pages/plugins'
 import { SettingsPage } from './pages/settings'
 import { ThemesPage } from './pages/themes'
@@ -39,9 +40,11 @@ const PAGES: Page[] = [
   { id: 'themes', label: 'Themes', title: 'Themes', icon: 'themes', render: ThemesPage },
 ]
 
+const CREDITS: Page = { id: 'credits', label: 'Credits', title: 'Credits', icon: 'heart', render: CreditsPage }
+
 function visiblePages(): Page[] {
 
-  return [...PAGES, ...getPlugins().flatMap((plugin) => (plugin.page && isEnabled(plugin.id) ? [plugin.page] : []))]
+  return [...PAGES, ...getPlugins().flatMap((plugin) => (plugin.page && isEnabled(plugin.id) ? [plugin.page] : [])), CREDITS]
 }
 
 const pagesKey = () => visiblePages().map((page) => page.id).join()
