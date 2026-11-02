@@ -1,0 +1,92 @@
+/* Dracula Official (dracula/betterdiscord) */
+
+:root,
+.dark {
+  --dracula-bg: #282a36;
+  --dracula-darker: #1e1f29;
+  --dracula-sidebar: #21222c;
+  --dracula-current: #44475a;
+  --dracula-selection: #44475a;
+  --dracula-fg: #f8f8f2;
+  --dracula-comment: #6272a4;
+  --dracula-cyan: #8be9fd;
+  --dracula-green: #50fa7b;
+  --dracula-orange: #ffb86c;
+  --dracula-pink: #ff79c6;
+  --dracula-purple: #bd93f9;
+  --dracula-red: #ff5555;
+  --dracula-yellow: #f1fa8c;
+
+  --onyx-base: var(--dracula-bg);
+  --onyx-raised: #343746;
+  --onyx-raised-2: var(--dracula-current);
+  --onyx-raised-3: #565a73;
+  --onyx-line: var(--dracula-current);
+  --onyx-line-strong: var(--dracula-comment);
+
+  --background: var(--dracula-bg);
+  --foreground: var(--dracula-fg);
+  --server-sidebar: var(--dracula-darker);
+  --channel-sidebar: var(--dracula-sidebar);
+  --main-chat-area: var(--dracula-bg);
+  --member-list: var(--dracula-sidebar);
+  --sidebar: var(--dracula-sidebar);
+  --message-embed-background: var(--dracula-sidebar);
+  --popups-and-modals: var(--dracula-sidebar);
+  --borders-and-separators: var(--dracula-current);
+  --secondary-button: var(--dracula-current);
+  --secondary-button-hover: #565a73;
+
+  --primary-action: var(--dracula-purple);
+  --primary-hover: #a975f7;
+  --primary-foreground: #21222c;
+  --sidebar-primary-foreground: #21222c;
+
+  --danger-button: var(--dracula-red);
+  --danger-button-hover: #e64545;
+  --danger-button-foreground: #fff;
+  --danger-secondary-button: rgb(255 85 85 / 15%);
+  --danger-secondary-button-hover: rgb(255 85 85 / 25%);
+  --danger-secondary-foreground: var(--dracula-fg);
+
+  --accent-vibrant: var(--dracula-pink);
+  --success-green: var(--dracula-green);
+  --error-red: var(--dracula-red);
+  --warning-yellow: var(--dracula-yellow);
+
+  --text-primary: var(--dracula-fg);
+  --text-secondary: #cdd1e4;
+  --text-muted: var(--dracula-comment);
+  --interactive-hover: #fff;
+  --hover-overlay: rgb(255 255 255 / 4%);
+  --active-overlay: rgb(255 255 255 / 8%);
+
+  --muted: var(--dracula-current);
+  --accent: var(--dracula-current);
+  color-scheme: dark;
+}
+
+.dark ::-webkit-scrollbar-thumb {
+  background-color: var(--dracula-current);
+}
+
+.dark .ProseMirror :not(pre)>code {
+  background: var(--dracula-current);
+  color: var(--dracula-pink);
+}
+
+.dark .chat-app .ProseMirror pre,
+.dark .ProseMirror pre,
+.dark .ProseMirror codeBlock {
+  border-color: var(--dracula-current);
+  background: var(--dracula-darker) !important;
+}
+
+[data-mentioned-current-user="true"] {
+  background: rgb(189 147 249 / 10%);
+  box-shadow: inset 2px 0 0 var(--dracula-purple);
+}
+
+.w-1.rounded-r-full.bg-text-primary {
+  background-color: var(--dracula-purple);
+}

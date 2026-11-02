@@ -1,0 +1,115 @@
+/* Frosted Glass (DiscordStyles/FrostedGlass) */
+
+:root,
+.dark {
+  --fg-base: rgb(11 15 23 / 75%);
+  --fg-glass: rgb(16 22 34 / 65%);
+  --fg-card: rgb(22 30 46 / 70%);
+  --fg-card-hover: rgb(30 40 60 / 75%);
+  --fg-card-active: rgb(38 52 78 / 85%);
+  --fg-border: rgb(255 255 255 / 10%);
+  --fg-border-strong: rgb(255 255 255 / 18%);
+  --fg-accent: #00b0f4;
+  --fg-accent-hover: #009ad6;
+
+  --onyx-base: var(--fg-base);
+  --onyx-raised: var(--fg-card);
+  --onyx-raised-2: var(--fg-card-hover);
+  --onyx-raised-3: var(--fg-card-active);
+  --onyx-line: var(--fg-border);
+  --onyx-line-strong: var(--fg-border-strong);
+
+  --background: transparent;
+  --foreground: #f0f6fc;
+  --server-sidebar: transparent;
+  --channel-sidebar: transparent;
+  --main-chat-area: transparent;
+  --member-list: transparent;
+  --sidebar: transparent;
+  --message-embed-background: var(--fg-glass);
+  --popups-and-modals: rgb(16 22 34 / 92%);
+  --borders-and-separators: var(--fg-border);
+  --secondary-button: var(--fg-glass);
+  --secondary-button-hover: var(--fg-card-hover);
+
+  --primary-action: var(--fg-accent);
+  --primary-hover: var(--fg-accent-hover);
+  --primary-foreground: #0b0f17;
+  --sidebar-primary-foreground: #0b0f17;
+
+  --danger-button: #f85149;
+  --danger-button-hover: #da3633;
+  --danger-button-foreground: #fff;
+  --danger-secondary-button: rgb(248 81 73 / 15%);
+  --danger-secondary-button-hover: rgb(248 81 73 / 25%);
+  --danger-secondary-foreground: #f0f6fc;
+
+  --accent-vibrant: #79c0ff;
+  --success-green: #56d364;
+  --error-red: #f85149;
+  --warning-yellow: #e3b341;
+
+  --text-primary: #f0f6fc;
+  --text-secondary: #c9d1d9;
+  --text-muted: #8b949e;
+  --interactive-hover: #fff;
+  --hover-overlay: rgb(255 255 255 / 6%);
+  --active-overlay: rgb(255 255 255 / 12%);
+
+  --muted: var(--fg-glass);
+  --accent: var(--fg-glass);
+  color-scheme: dark;
+}
+
+html {
+  background: radial-gradient(ellipse at top left, #1a233a 0%, #0c1220 50%, #07090e 100%) fixed !important;
+}
+
+body {
+  background: transparent !important;
+}
+
+.bg-popups-and-modals,
+.bg-popover,
+.bg-message-embed-background,
+.bg-channel-sidebar,
+.bg-server-sidebar,
+.bg-member-list,
+[role="menu"] {
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+}
+
+.fenrid-settings-root {
+  --popups-and-modals: rgb(12 18 28 / 60%);
+  background: radial-gradient(ellipse at top left, #1a233a 0%, #0c1220 50%, #07090e 100%);
+}
+
+.bf-panel {
+  --bf-panel-bg: transparent !important;
+}
+
+.dark ::-webkit-scrollbar-thumb {
+  background-color: rgb(255 255 255 / 15%);
+}
+
+.dark .ProseMirror :not(pre)>code {
+  background: var(--fg-glass);
+  border: 1px solid var(--fg-border);
+}
+
+.dark .chat-app .ProseMirror pre,
+.dark .ProseMirror pre,
+.dark .ProseMirror codeBlock {
+  border-color: var(--fg-border);
+  background: var(--fg-glass) !important;
+}
+
+[data-mentioned-current-user="true"] {
+  background: rgb(0 176 244 / 12%);
+  box-shadow: inset 2px 0 0 var(--fg-accent);
+}
+
+.w-1.rounded-r-full.bg-text-primary {
+  background-color: var(--fg-accent);
+}

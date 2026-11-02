@@ -1,0 +1,95 @@
+/* Nord Theme (nordtheme/discord) */
+
+:root,
+.dark {
+  --nord0: #2e3440;
+  --nord1: #3b4252;
+  --nord2: #434c5e;
+  --nord3: #4c566a;
+  --nord4: #d8dee9;
+  --nord5: #e5e9f0;
+  --nord6: #eceff4;
+  --nord7: #8fbcbb;
+  --nord8: #88c0d0;
+  --nord9: #81a1c1;
+  --nord10: #5e81ac;
+  --nord11: #bf616a;
+  --nord12: #d08770;
+  --nord13: #ebcb8b;
+  --nord14: #a3be8c;
+  --nord15: #b48ead;
+  --nord-crust: #242933;
+
+  --onyx-base: var(--nord0);
+  --onyx-raised: var(--nord1);
+  --onyx-raised-2: var(--nord2);
+  --onyx-raised-3: var(--nord3);
+  --onyx-line: #373e4d;
+  --onyx-line-strong: var(--nord3);
+
+  --background: var(--nord0);
+  --foreground: var(--nord6);
+  --server-sidebar: var(--nord-crust);
+  --channel-sidebar: #292e39;
+  --main-chat-area: var(--nord0);
+  --member-list: #292e39;
+  --sidebar: #292e39;
+  --message-embed-background: var(--nord1);
+  --popups-and-modals: var(--nord1);
+  --borders-and-separators: #373e4d;
+  --secondary-button: var(--nord2);
+  --secondary-button-hover: var(--nord3);
+
+  --primary-action: var(--nord8);
+  --primary-hover: var(--nord9);
+  --primary-foreground: #242933;
+  --sidebar-primary-foreground: #242933;
+
+  --danger-button: var(--nord11);
+  --danger-button-hover: #ab545c;
+  --danger-button-foreground: #fff;
+  --danger-secondary-button: rgb(191 97 106 / 15%);
+  --danger-secondary-button-hover: rgb(191 97 106 / 25%);
+  --danger-secondary-foreground: var(--nord6);
+
+  --accent-vibrant: var(--nord7);
+  --success-green: var(--nord14);
+  --error-red: var(--nord11);
+  --warning-yellow: var(--nord13);
+
+  --text-primary: var(--nord6);
+  --text-secondary: var(--nord5);
+  --text-muted: var(--nord4);
+  --interactive-hover: #fff;
+  --hover-overlay: rgb(255 255 255 / 4%);
+  --active-overlay: rgb(255 255 255 / 8%);
+
+  --muted: var(--nord1);
+  --accent: var(--nord1);
+  color-scheme: dark;
+}
+
+.dark ::-webkit-scrollbar-thumb {
+  background-color: var(--nord2);
+}
+
+.dark .ProseMirror :not(pre)>code {
+  background: var(--nord2);
+  color: var(--nord8);
+}
+
+.dark .chat-app .ProseMirror pre,
+.dark .ProseMirror pre,
+.dark .ProseMirror codeBlock {
+  border-color: var(--nord2);
+  background: var(--nord-crust) !important;
+}
+
+[data-mentioned-current-user="true"] {
+  background: rgb(136 192 208 / 10%);
+  box-shadow: inset 2px 0 0 var(--nord8);
+}
+
+.w-1.rounded-r-full.bg-text-primary {
+  background-color: var(--nord8);
+}

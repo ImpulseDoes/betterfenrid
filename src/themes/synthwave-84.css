@@ -1,0 +1,96 @@
+/* Synthwave '84 (Robb Owen / Discord) */
+
+:root,
+.dark {
+  --sw-bg: #1a162b;
+  --sw-crust: #131021;
+  --sw-surface: #201b35;
+  --sw-card: #26213f;
+  --sw-hover: #342d54;
+  --sw-active: #443c6d;
+  --sw-border: #352c54;
+  --sw-border-strong: #503f7e;
+  --sw-pink: #ff7edb;
+  --sw-pink-hover: #ff54cf;
+  --sw-cyan: #36f9f6;
+  --sw-yellow: #fede5d;
+  --sw-orange: #fe8554;
+  --sw-red: #fe4450;
+  --sw-fg: #fdfdfd;
+  --sw-fg-subtle: #b6b1cc;
+  --sw-comment: #847b9b;
+
+  --onyx-base: var(--sw-bg);
+  --onyx-raised: var(--sw-card);
+  --onyx-raised-2: var(--sw-hover);
+  --onyx-raised-3: var(--sw-active);
+  --onyx-line: var(--sw-border);
+  --onyx-line-strong: var(--sw-border-strong);
+
+  --background: var(--sw-bg);
+  --foreground: var(--sw-fg);
+  --server-sidebar: var(--sw-crust);
+  --channel-sidebar: var(--sw-surface);
+  --main-chat-area: var(--sw-bg);
+  --member-list: var(--sw-surface);
+  --sidebar: var(--sw-surface);
+  --message-embed-background: var(--sw-card);
+  --popups-and-modals: var(--sw-card);
+  --borders-and-separators: var(--sw-border);
+  --secondary-button: var(--sw-hover);
+  --secondary-button-hover: var(--sw-active);
+
+  --primary-action: var(--sw-pink);
+  --primary-hover: var(--sw-pink-hover);
+  --primary-foreground: #131021;
+  --sidebar-primary-foreground: #131021;
+
+  --danger-button: var(--sw-red);
+  --danger-button-hover: #df313d;
+  --danger-button-foreground: #fff;
+  --danger-secondary-button: rgb(254 68 80 / 15%);
+  --danger-secondary-button-hover: rgb(254 68 80 / 25%);
+  --danger-secondary-foreground: var(--sw-fg);
+
+  --accent-vibrant: var(--sw-cyan);
+  --success-green: #72f1b8;
+  --error-red: var(--sw-red);
+  --warning-yellow: var(--sw-yellow);
+
+  --text-primary: var(--sw-fg);
+  --text-secondary: var(--sw-fg-subtle);
+  --text-muted: var(--sw-comment);
+  --interactive-hover: #fff;
+  --hover-overlay: rgb(255 255 255 / 4%);
+  --active-overlay: rgb(255 255 255 / 8%);
+
+  --muted: var(--sw-card);
+  --accent: var(--sw-card);
+  color-scheme: dark;
+}
+
+.dark ::-webkit-scrollbar-thumb {
+  background-color: var(--sw-hover);
+}
+
+.dark .ProseMirror :not(pre)>code {
+  background: var(--sw-card);
+  color: var(--sw-cyan);
+}
+
+.dark .chat-app .ProseMirror pre,
+.dark .ProseMirror pre,
+.dark .ProseMirror codeBlock {
+  border-color: var(--sw-border);
+  background: var(--sw-crust) !important;
+}
+
+[data-mentioned-current-user="true"] {
+  background: rgb(255 126 219 / 10%);
+  box-shadow: inset 2px 0 0 var(--sw-pink);
+}
+
+.w-1.rounded-r-full.bg-text-primary {
+  background-color: var(--sw-pink);
+  box-shadow: 0 0 6px var(--sw-pink);
+}

@@ -1,0 +1,96 @@
+/* Tokyo Night (folke/tokyonight.nvim port) */
+
+:root,
+.dark {
+  --tn-bg: #1a1b26;
+  --tn-darker: #13141c;
+  --tn-sidebar: #16161e;
+  --tn-card: #24283b;
+  --tn-card-hover: #2f3549;
+  --tn-card-active: #3b4261;
+  --tn-border: #292e42;
+  --tn-border-strong: #3b4261;
+  --tn-blue: #7aa2f7;
+  --tn-purple: #bb9af7;
+  --tn-cyan: #7dcfff;
+  --tn-green: #9ece6a;
+  --tn-yellow: #e0af68;
+  --tn-orange: #ff9e64;
+  --tn-red: #f7768e;
+  --tn-fg: #c0caf5;
+  --tn-fg-dark: #a9b1d6;
+  --tn-comment: #565f89;
+
+  --onyx-base: var(--tn-bg);
+  --onyx-raised: var(--tn-card);
+  --onyx-raised-2: var(--tn-card-hover);
+  --onyx-raised-3: var(--tn-card-active);
+  --onyx-line: var(--tn-border);
+  --onyx-line-strong: var(--tn-border-strong);
+
+  --background: var(--tn-bg);
+  --foreground: var(--tn-fg);
+  --server-sidebar: var(--tn-darker);
+  --channel-sidebar: var(--tn-sidebar);
+  --main-chat-area: var(--tn-bg);
+  --member-list: var(--tn-sidebar);
+  --sidebar: var(--tn-sidebar);
+  --message-embed-background: var(--tn-card);
+  --popups-and-modals: var(--tn-card);
+  --borders-and-separators: var(--tn-border);
+  --secondary-button: var(--tn-card-hover);
+  --secondary-button-hover: var(--tn-card-active);
+
+  --primary-action: var(--tn-blue);
+  --primary-hover: #6390f0;
+  --primary-foreground: #13141c;
+  --sidebar-primary-foreground: #13141c;
+
+  --danger-button: var(--tn-red);
+  --danger-button-hover: #e35a74;
+  --danger-button-foreground: #fff;
+  --danger-secondary-button: rgb(247 118 142 / 15%);
+  --danger-secondary-button-hover: rgb(247 118 142 / 25%);
+  --danger-secondary-foreground: var(--tn-fg);
+
+  --accent-vibrant: var(--tn-purple);
+  --success-green: var(--tn-green);
+  --error-red: var(--tn-red);
+  --warning-yellow: var(--tn-yellow);
+
+  --text-primary: var(--tn-fg);
+  --text-secondary: var(--tn-fg-dark);
+  --text-muted: var(--tn-comment);
+  --interactive-hover: #fff;
+  --hover-overlay: rgb(255 255 255 / 4%);
+  --active-overlay: rgb(255 255 255 / 8%);
+
+  --muted: var(--tn-card);
+  --accent: var(--tn-card);
+  color-scheme: dark;
+}
+
+.dark ::-webkit-scrollbar-thumb {
+  background-color: var(--tn-card-hover);
+}
+
+.dark .ProseMirror :not(pre)>code {
+  background: var(--tn-card);
+  color: var(--tn-cyan);
+}
+
+.dark .chat-app .ProseMirror pre,
+.dark .ProseMirror pre,
+.dark .ProseMirror codeBlock {
+  border-color: var(--tn-border);
+  background: var(--tn-darker) !important;
+}
+
+[data-mentioned-current-user="true"] {
+  background: rgb(122 162 247 / 10%);
+  box-shadow: inset 2px 0 0 var(--tn-blue);
+}
+
+.w-1.rounded-r-full.bg-text-primary {
+  background-color: var(--tn-blue);
+}

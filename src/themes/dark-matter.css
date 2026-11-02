@@ -1,0 +1,87 @@
+/* Dark Matter / AMOLED (DiscordStyles/DarkMatter) */
+
+:root,
+.dark {
+  --dm-bg: #000000;
+  --dm-sidebar: #060608;
+  --dm-card: #0d0d11;
+  --dm-card-hover: #16161c;
+  --dm-card-active: #22222a;
+  --dm-border: #181820;
+  --dm-border-strong: #282834;
+  --dm-accent: #5865f2;
+  --dm-accent-hover: #4752c4;
+
+  --onyx-base: var(--dm-bg);
+  --onyx-raised: var(--dm-card);
+  --onyx-raised-2: var(--dm-card-hover);
+  --onyx-raised-3: var(--dm-card-active);
+  --onyx-line: var(--dm-border);
+  --onyx-line-strong: var(--dm-border-strong);
+
+  --background: var(--dm-bg);
+  --foreground: #ffffff;
+  --server-sidebar: var(--dm-bg);
+  --channel-sidebar: var(--dm-sidebar);
+  --main-chat-area: var(--dm-bg);
+  --member-list: var(--dm-sidebar);
+  --sidebar: var(--dm-sidebar);
+  --message-embed-background: var(--dm-card);
+  --popups-and-modals: var(--dm-card);
+  --borders-and-separators: var(--dm-border);
+  --secondary-button: var(--dm-card-hover);
+  --secondary-button-hover: var(--dm-card-active);
+
+  --primary-action: var(--dm-accent);
+  --primary-hover: var(--dm-accent-hover);
+  --primary-foreground: #fff;
+  --sidebar-primary-foreground: #fff;
+
+  --danger-button: #da373c;
+  --danger-button-hover: #a12828;
+  --danger-button-foreground: #fff;
+  --danger-secondary-button: rgb(218 55 60 / 15%);
+  --danger-secondary-button-hover: rgb(218 55 60 / 25%);
+  --danger-secondary-foreground: #fff;
+
+  --accent-vibrant: #b5bac1;
+  --success-green: #23a55a;
+  --error-red: #da373c;
+  --warning-yellow: #f0b232;
+
+  --text-primary: #ffffff;
+  --text-secondary: #b5bac1;
+  --text-muted: #72767d;
+  --interactive-hover: #ffffff;
+  --hover-overlay: rgb(255 255 255 / 5%);
+  --active-overlay: rgb(255 255 255 / 10%);
+
+  --muted: var(--dm-card);
+  --accent: var(--dm-card);
+  color-scheme: dark;
+}
+
+.dark ::-webkit-scrollbar-thumb {
+  background-color: var(--dm-card-hover);
+}
+
+.dark .ProseMirror :not(pre)>code {
+  background: var(--dm-card);
+  border: 1px solid var(--dm-border);
+}
+
+.dark .chat-app .ProseMirror pre,
+.dark .ProseMirror pre,
+.dark .ProseMirror codeBlock {
+  border-color: var(--dm-border);
+  background: var(--dm-card) !important;
+}
+
+[data-mentioned-current-user="true"] {
+  background: rgb(88 101 242 / 10%);
+  box-shadow: inset 2px 0 0 var(--dm-accent);
+}
+
+.w-1.rounded-r-full.bg-text-primary {
+  background-color: var(--dm-accent);
+}

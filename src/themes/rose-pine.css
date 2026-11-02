@@ -1,0 +1,94 @@
+/* Rosé Pine (rose-pine/discord) */
+
+:root,
+.dark {
+  --rp-base: #191724;
+  --rp-surface: #1f1d2e;
+  --rp-overlay: #26233a;
+  --rp-muted: #6e6a86;
+  --rp-subtle: #908caa;
+  --rp-text: #e0def4;
+  --rp-love: #eb6f92;
+  --rp-gold: #f6c177;
+  --rp-rose: #ebbcba;
+  --rp-pine: #31748f;
+  --rp-foam: #9ccfd8;
+  --rp-iris: #c4a7e7;
+  --rp-highlight-low: #21202e;
+  --rp-highlight-med: #403d52;
+  --rp-highlight-high: #524f67;
+  --rp-crust: #13111c;
+
+  --onyx-base: var(--rp-base);
+  --onyx-raised: var(--rp-surface);
+  --onyx-raised-2: var(--rp-overlay);
+  --onyx-raised-3: var(--rp-highlight-med);
+  --onyx-line: var(--rp-highlight-low);
+  --onyx-line-strong: var(--rp-highlight-med);
+
+  --background: var(--rp-base);
+  --foreground: var(--rp-text);
+  --server-sidebar: var(--rp-crust);
+  --channel-sidebar: var(--rp-surface);
+  --main-chat-area: var(--rp-base);
+  --member-list: var(--rp-surface);
+  --sidebar: var(--rp-surface);
+  --message-embed-background: var(--rp-surface);
+  --popups-and-modals: var(--rp-surface);
+  --borders-and-separators: var(--rp-highlight-low);
+  --secondary-button: var(--rp-overlay);
+  --secondary-button-hover: var(--rp-highlight-med);
+
+  --primary-action: var(--rp-iris);
+  --primary-hover: #b091db;
+  --primary-foreground: #191724;
+  --sidebar-primary-foreground: #191724;
+
+  --danger-button: var(--rp-love);
+  --danger-button-hover: #d95c7f;
+  --danger-button-foreground: #fff;
+  --danger-secondary-button: rgb(235 111 146 / 15%);
+  --danger-secondary-button-hover: rgb(235 111 146 / 25%);
+  --danger-secondary-foreground: var(--rp-text);
+
+  --accent-vibrant: var(--rp-rose);
+  --success-green: var(--rp-foam);
+  --error-red: var(--rp-love);
+  --warning-yellow: var(--rp-gold);
+
+  --text-primary: var(--rp-text);
+  --text-secondary: var(--rp-subtle);
+  --text-muted: var(--rp-muted);
+  --interactive-hover: #fff;
+  --hover-overlay: rgb(255 255 255 / 4%);
+  --active-overlay: rgb(255 255 255 / 8%);
+
+  --muted: var(--rp-surface);
+  --accent: var(--rp-surface);
+  color-scheme: dark;
+}
+
+.dark ::-webkit-scrollbar-thumb {
+  background-color: var(--rp-highlight-med);
+}
+
+.dark .ProseMirror :not(pre)>code {
+  background: var(--rp-surface);
+  color: var(--rp-rose);
+}
+
+.dark .chat-app .ProseMirror pre,
+.dark .ProseMirror pre,
+.dark .ProseMirror codeBlock {
+  border-color: var(--rp-highlight-med);
+  background: var(--rp-crust) !important;
+}
+
+[data-mentioned-current-user="true"] {
+  background: rgb(196 167 231 / 10%);
+  box-shadow: inset 2px 0 0 var(--rp-iris);
+}
+
+.w-1.rounded-r-full.bg-text-primary {
+  background-color: var(--rp-iris);
+}
