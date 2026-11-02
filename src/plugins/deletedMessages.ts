@@ -7,6 +7,7 @@ import { createLogger } from '../core/logger'
 import { definePlugin } from '../core/plugins'
 import { Selectors } from '../core/selectors'
 import { Button } from '../ui/components'
+import { forgetEdits } from './editHistory'
 
 const STORAGE_KEY = 'BetterFenrid:deletedMessages'
 const SERVER_MESSAGES = '/api/chat/server/messages'
@@ -288,6 +289,28 @@ export default definePlugin({
 
     onLogChange = render
     render()
+
+    ctx.addContextMenuItem({
+      id: 'remove',
+      label: 'Remove From History',
+      icon: 'close',
+      kinds: ['message'],
+      visible: (target) => !!target.id && logged.has(target.id),
+      action: (target) => {
+
+        const entry = logged.get(target.id!)
+
+        if (!entry) return
+
+        logged.delete(entry.id)
+        ownDeletes.delete(entry.id)
+        saveLog()
+        forgetEdits(entry.id)
+
+        // Goes straight to Fenrid, past our own hook that would log it all over again
+        injectGatewayEvent('MESSAGE_DELETE', entry.topic, { id: entry.id, deletedAt: entry.deletedAt })
+      },
+    })
 
     ctx.onStop(() => {
       onLogChange = null

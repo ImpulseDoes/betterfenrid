@@ -5,6 +5,7 @@ import { createLogger } from '../core/logger'
 import { definePlugin } from '../core/plugins'
 import { Selectors } from '../core/selectors'
 import { Button } from '../ui/components'
+import { isDeletedMessage } from './deletedMessages'
 
 const STORAGE_KEY = 'BetterFenrid:editHistory'
 const MARK = 'data-bf-edits'
@@ -67,6 +68,14 @@ function record(id: string, before: Record<string, any>, max: number) {
 
   trimHistory(max)
   saveHistory()
+}
+
+export function forgetEdits(id: string) {
+
+  if (!history.delete(id)) return
+
+  saveHistory()
+  refresh?.(id)
 }
 
 const formatTime = (at: string) => new Date(at).toLocaleString()
@@ -254,6 +263,16 @@ export default definePlugin({
       kinds: ['message'],
       visible: (target) => !!target.id && history.has(target.id),
       action: (target) => openHistory(target.id!),
+    })
+
+    // A deleted message has its own item, which clears this too
+    ctx.addContextMenuItem({
+      id: 'remove',
+      label: 'Remove From History',
+      icon: 'close',
+      kinds: ['message'],
+      visible: (target) => !!target.id && history.has(target.id) && !isDeletedMessage(target.id),
+      action: (target) => forgetEdits(target.id!),
     })
 
     renderAll()

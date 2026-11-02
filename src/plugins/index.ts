@@ -1,4 +1,5 @@
 import badges from './badges'
+import betterFolders from './betterFolders'
 import clearUrls from './clearUrls'
 import communityStatistics from './communityStatistics'
 import deletedMessages from './deletedMessages'
@@ -9,6 +10,7 @@ import mentionAvatars from './mentionAvatars'
 import noReplyMentions from './noReplyMentions'
 import permissionViewer from './permissionViewer'
 import quoteMessage from './quoteMessage'
+import readAllButton from './readAllButton'
 import showHiddenThings from './showHiddenThings'
 import silentTyping from './silentTyping'
 import translate from './translate'
@@ -19,6 +21,7 @@ import whoReacted from './whoReacted'
 
 export const plugins = [
     badges,
+    betterFolders,
     clearUrls,
     communityStatistics,
     deletedMessages,
@@ -29,6 +32,7 @@ export const plugins = [
     noReplyMentions,
     permissionViewer,
     quoteMessage,
+    readAllButton,
     showHiddenThings,
     silentTyping,
     translate,
