@@ -133,28 +133,18 @@ function canAddExpressions(permissions: unknown): boolean {
 
 async function loadServers(): Promise<Server[]> {
 
-  const bootstrap = await getJson('/api/sidebar/bootstrap')
+  const layout = await getJson('/api/users/me/server-layout')
 
-  if (!bootstrap) throw new Error('Could not load your servers')
+  if (!Array.isArray(layout?.servers)) throw new Error('Could not load your servers')
 
-  const ids: string[] = (bootstrap.servers ?? []).map((server: any) => String(server?.id))
+  const found = await inBatches(layout.servers as any[], async (server): Promise<Server | null> => {
 
-  const found = await inBatches(ids, async (id): Promise<Server | null> => {
+    const id = String(server.id)
+    const access = await getJson(`/api/servers/${encodeURIComponent(id)}/permissions`)
 
-    const encoded = encodeURIComponent(id)
+    if (!canAddExpressions(access?.permissions)) return null
 
-    const [permissions, channels] = await Promise.all([
-      getJson(`/api/servers/${encoded}/permissions`),
-      // intent=1 is what adds the server itself to the response
-      getJson(`/api/servers/${encoded}/channels?intent=1`),
-    ])
-
-    const server = channels?.sidebarServer
-    const owner = server?.ownerId ?? server?.owner_id
-
-    if (!canAddExpressions(permissions?.permissions) && (owner == null || String(owner) !== String(bootstrap.userId))) return null
-
-    return { id, name: server?.name ?? id, image: server?.imageUrl ?? server?.iconUrl ?? server?.image_url ?? null }
+    return { id, name: server.name ?? id, image: server.imageUrl ?? null }
   })
 
   return found.filter((server) => server !== null).sort((a, b) => a.name.localeCompare(b.name))
