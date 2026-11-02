@@ -77,7 +77,7 @@ function ExperimentsPage({ refresh }: { refresh(): void }): Node {
     ),
     Section(
       'In development',
-      'Found in Fenrid\'s client, with no way to turn them on from here.',
+      'Fenrid\'s client has the text for these, but no screens we could find, so there\'s nothing to turn on yet.',
       ...IN_DEVELOPMENT.map(([name, description]) => Row(name, description)),
     ),
   )

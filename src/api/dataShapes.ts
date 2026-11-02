@@ -7,8 +7,7 @@ const MAX_FIELDS = 400
 const SAVE_DELAY_MS = 5000
 const PRIVATE_AFTER = new Set(['users', 'invites', 'user-memos', 'profile-comments'])
 const FIELD = /^[A-Za-z_][A-Za-z0-9_-]{0,40}$/
-// Ids: a run of digits, or a long hex string like a UUID. Short ones are real names, like e2ee
-const LOOKS_LIKE_ID = /\d{4,}|^[0-9a-f-]{16,}$/i
+const LOOKS_LIKE_ID = /\d{4,}|^[0-9a-f-]{16,}$|%/i
 
 type Shapes = Record<string, Record<string, string[]>>
 
