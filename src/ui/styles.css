@@ -1047,10 +1047,12 @@ div:has(> [data-bf-folder-servers])>span {
 [data-bf-hidden-picker] {
   display: none !important;
 }
+
 .bf-folder-colors {
   display: flex;
   gap: 12px;
 }
+
 .bf-folder-color {
   width: 36px;
   height: 36px;
@@ -1060,13 +1062,16 @@ div:has(> [data-bf-folder-servers])>span {
   cursor: pointer;
   transition: transform 100ms;
 }
+
 .bf-folder-color:hover {
   transform: scale(1.08);
 }
+
 .bf-folder-color[aria-checked="true"] {
   outline: 2px solid var(--color-text-primary, #fff);
   outline-offset: 2px;
 }
+
 .bf-read-all {
   flex-shrink: 0;
   width: 52px;
@@ -1092,4 +1097,38 @@ div:has(> [data-bf-folder-servers])>span {
 .bf-read-all:disabled {
   cursor: default;
   opacity: 0.5;
+}
+
+.bf-oneko {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 2147483647;
+  width: 32px;
+  height: 32px;
+  background-repeat: no-repeat;
+  image-rendering: pixelated;
+  pointer-events: none;
+  will-change: transform;
+}
+
+a[data-bf-fake-surge],
+[data-bf-fake-surge-embed] {
+  display: none !important;
+}
+
+.bf-fake-emoji {
+  display: inline-block;
+  margin: 0 0.05em;
+  object-fit: contain;
+  vertical-align: -0.3em;
+}
+
+[data-bf-unlocked] {
+  cursor: pointer !important;
+  opacity: 1 !important;
+}
+
+[data-bf-unlocked] .grayscale {
+  filter: none !important;
 }

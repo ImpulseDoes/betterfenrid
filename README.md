@@ -26,9 +26,11 @@ A client mod for [Fenrid](https://fenrid.com). It adds plugins, custom themes an
 | Deleted Messages | Keeps deleted messages in the chat, marked in red, your own included, and saves them to a history you can open from the plugin's settings. Stored only in your browser. *Remove From History* in the message menu drops a message for good. |
 | Double Click To Edit | Double click one of your messages in a server channel to edit it. |
 | Edit History | Shows earlier versions of edited messages above them, and adds *Edit History* to the message menu. Only edits seen while Fenrid is open are saved, in your browser. *Remove From History* clears them for that message. |
+| Fake Surge | Lets you pick emojis marked *Requires Surge*: they are sent as image links and shown as emojis for you, like Vencord's FakeNitro. Emojis a server blocks stay blocked. Off by default. |
 | Force Owner Crown | Shows a crown next to the server owner in messages, and in the member list when the server hides it. |
 | Mention Avatars | Shows user avatars inside mentions. |
 | No Reply Mentions | Turns off the reply ping by default. You can still turn it on for a single reply. Off by default. |
+| Oneko | A pixel cat that chases your cursor, ported from [oneko.js](https://github.com/adryd325/oneko.js) by adryd (MIT). Off by default. |
 | Permission Viewer | Adds *Permissions* to the user, server, channel and category menus: a member's permissions and which roles give them, every role's permissions, and what a channel allows or denies. |
 | Read All Button | Adds a *Read All* button above the server list that marks every server as read. Direct messages stay unread. |
 | Quote Message | Adds *Quote Message* to the message menu: pastes the message into your message box as a quote. |

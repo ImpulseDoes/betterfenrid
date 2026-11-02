@@ -5,9 +5,11 @@ import communityStatistics from './communityStatistics'
 import deletedMessages from './deletedMessages'
 import doubleClickEdit from './doubleClickEdit'
 import editHistory from './editHistory'
+import fakeSurge from './fakeSurge'
 import forceOwnerCrown from './forceOwnerCrown'
 import mentionAvatars from './mentionAvatars'
 import noReplyMentions from './noReplyMentions'
+import oneko from './oneko'
 import permissionViewer from './permissionViewer'
 import quoteMessage from './quoteMessage'
 import readAllButton from './readAllButton'
@@ -27,9 +29,11 @@ export const plugins = [
     deletedMessages,
     doubleClickEdit,
     editHistory,
+    fakeSurge,
     forceOwnerCrown,
     mentionAvatars,
     noReplyMentions,
+    oneko,
     permissionViewer,
     quoteMessage,
     readAllButton,
