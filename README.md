@@ -22,6 +22,7 @@ A client mod for [Fenrid](https://fenrid.com). It adds plugins, custom themes an
 | Badge Faker | Shows the Fenrid badges you pick on your own profile. Only you can see them: nothing is sent to Fenrid. Off by default. |
 | Better Fenrid Badges | Shows a badge next to Better Fenrid developers and contributors. The list lives in `src/badges.ts`. |
 | Better Folders | Shows the servers of open folders in their own sidebar next to the server list, like Vencord's plugin. Closed folders get a folder icon instead of small server icons, and folder settings offer six colors in place of Fenrid's picker. Options can close or open folders as you move between servers. |
+| Camera Quality | Picks the resolution, frame rate and bitrate of your camera in calls, up to 1440p at 60 FPS. Works from the next time you turn your camera on. Off by default. |
 | Clear URLs | Removes tracking parameters (`utm_*`, `fbclid`, `si=`…) from links you send or paste. |
 | Community Statistics | Adds *Community Statistics* to the server menu: members, online count, channels, roles, emojis and owner in a modal. |
 | Deleted Messages | Keeps deleted messages in the chat, marked in red, your own included, and saves them to a history you can open from the plugin's settings. Stored only in your browser. *Remove From History* in the message menu drops a message for good. |
@@ -34,6 +35,7 @@ A client mod for [Fenrid](https://fenrid.com). It adds plugins, custom themes an
 | Hide Blocked Users | Hides messages from people you blocked: Fenrid shows them in chat as usual. Off by default. |
 | Image Link | Never hides image links in messages, even when the image is all the message has. The link appears above the image. GIFs are optional. Off by default. |
 | Mention Avatars | Shows user avatars inside mentions. |
+| Microphone Quality | Picks the bitrate of your microphone in calls, up to 510 kbps. Works from the next time you join a call. Off by default. |
 | No Link Warning | Opens links straight away, without the *Leaving Fenrid* warning. Works for every link, or only the sites you list. Off by default. |
 | No Reply Mentions | Turns off the reply ping by default. You can still turn it on for a single reply. Off by default. |
 | Oneko | A pixel cat that chases your cursor, ported from [oneko.js](https://github.com/adryd325/oneko.js) by adryd (MIT). Off by default. |

@@ -1,6 +1,7 @@
 import badgeFaker from './badgeFaker'
 import badges from './badges'
 import betterFolders from './betterFolders'
+import cameraQuality from './cameraQuality'
 import clearUrls from './clearUrls'
 import communityStatistics from './communityStatistics'
 import deletedMessages from './deletedMessages'
@@ -13,6 +14,7 @@ import forceOwnerCrown from './forceOwnerCrown'
 import hideBlocked from './hideBlocked'
 import imageLink from './imageLink'
 import mentionAvatars from './mentionAvatars'
+import microphoneQuality from './microphoneQuality'
 import noLinkWarning from './noLinkWarning'
 import noReplyMentions from './noReplyMentions'
 import oneko from './oneko'
@@ -34,6 +36,7 @@ export const plugins = [
     badgeFaker,
     badges,
     betterFolders,
+    cameraQuality,
     clearUrls,
     communityStatistics,
     deletedMessages,
@@ -46,6 +49,7 @@ export const plugins = [
     hideBlocked,
     imageLink,
     mentionAvatars,
+    microphoneQuality,
     noLinkWarning,
     noReplyMentions,
     oneko,
