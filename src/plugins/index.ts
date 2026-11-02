@@ -7,6 +7,7 @@ import editHistory from './editHistory'
 import forceOwnerCrown from './forceOwnerCrown'
 import mentionAvatars from './mentionAvatars'
 import noReplyMentions from './noReplyMentions'
+import permissionViewer from './permissionViewer'
 import quoteMessage from './quoteMessage'
 import showHiddenThings from './showHiddenThings'
 import silentTyping from './silentTyping'
@@ -25,6 +26,7 @@ export const plugins = [
     forceOwnerCrown,
     mentionAvatars,
     noReplyMentions,
+    permissionViewer,
     quoteMessage,
     showHiddenThings,
     silentTyping,

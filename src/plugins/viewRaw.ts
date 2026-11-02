@@ -28,7 +28,7 @@ async function loadRaw({ kind, id }: MenuTarget): Promise<object | null> {
 
   if (!id) return null
   if (kind === 'message') return getMessage(id)
-  if (kind === 'channel') return getChannel(id)
+  if (kind === 'channel' || kind === 'category') return getChannel(id)
 
   return (await fetchUser(id)) ?? getUser(id)
 }
@@ -36,7 +36,7 @@ async function loadRaw({ kind, id }: MenuTarget): Promise<object | null> {
 export default definePlugin({
   id: 'viewRaw',
   name: 'View Raw',
-  description: 'Adds "View Raw" to the message, channel and user menus to see and copy the raw JSON.',
+  description: 'Adds "View Raw" to the message, channel, category and user menus to see and copy the raw JSON.',
   authors: ['Better Fenrid'],
   enabledByDefault: true,
 
@@ -46,7 +46,7 @@ export default definePlugin({
       id: 'viewRaw',
       label: 'View Raw',
       icon: 'code',
-      kinds: ['message', 'channel', 'user'],
+      kinds: ['message', 'channel', 'category', 'user'],
       action: async (target) => {
 
         if (!target.id) return toast(`Could not read the ${target.kind} ID`, 'error')

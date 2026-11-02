@@ -850,3 +850,116 @@
     transform: scale(0.95) translateY(2px);
   }
 }
+
+.bf-perms {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  min-width: 0;
+}
+
+.bf-role-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.bf-role-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 3px 9px;
+  border: 1px solid var(--bf-border);
+  border-radius: 999px;
+  background: var(--bf-bg-card);
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.bf-role-dot {
+  width: 10px;
+  height: 10px;
+  flex-shrink: 0;
+  border-radius: 50%;
+}
+
+.bf-perm-list {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  max-height: 50vh;
+  overflow-y: auto;
+}
+
+.bf-perm {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 6px 10px;
+  border-radius: 6px;
+}
+
+.bf-perm:hover {
+  background: var(--bf-bg-card);
+}
+
+.bf-perm[hidden] {
+  display: none;
+}
+
+.bf-perm-mark {
+  width: 16px;
+  flex-shrink: 0;
+  font-weight: 800;
+  text-align: center;
+}
+
+.bf-perm-allow .bf-perm-mark {
+  color: #3ba55d;
+}
+
+.bf-perm-deny .bf-perm-mark {
+  color: var(--bf-danger);
+}
+
+.bf-perm-none {
+  color: var(--bf-text-muted);
+}
+
+.bf-perm-label {
+  flex: 1;
+}
+
+.bf-perm-note {
+  margin-left: auto;
+  overflow: hidden;
+  color: var(--bf-text-muted);
+  font-size: 12px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 50%;
+}
+
+.bf-perm-role {
+  border: 1px solid var(--bf-border);
+  border-radius: var(--bf-radius);
+  background: var(--bf-bg-card);
+}
+
+.bf-perm-role summary {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 12px;
+  cursor: pointer;
+  list-style: none;
+}
+
+.bf-perm-role summary::-webkit-details-marker {
+  display: none;
+}
+
+.bf-perm-role>.bf-perm-list {
+  padding: 0 6px 8px;
+  max-height: none;
+}

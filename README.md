@@ -28,12 +28,13 @@ A client mod for [Fenrid](https://fenrid.com). It adds plugins, custom themes an
 | Force Owner Crown | Shows a crown next to the server owner in messages, and in the member list when the server hides it. |
 | Mention Avatars | Shows user avatars inside mentions. |
 | No Reply Mentions | Turns off the reply ping by default. You can still turn it on for a single reply. Off by default. |
+| Permission Viewer | Adds *Permissions* to the user, server, channel and category menus: a member's permissions and which roles give them, every role's permissions, and what a channel allows or denies. |
 | Quote Message | Adds *Quote Message* to the message menu: pastes the message into your message box as a quote. |
 | Show Hidden Things | Shows a clock next to members who are timed out, which Fenrid has the data for but doesn't display. |
 | Silent Typing | Hides that you are typing. Off by default. |
 | Translate | Adds *Translate* to the message menu: opens the message in Google Translate. |
 | Typing in Channel List | Shows animated dots next to channels where someone is typing. |
-| View Raw | Adds *View Raw* to the message, channel and user menus: shows the raw JSON, with a copy button. |
+| View Raw | Adds *View Raw* to the message, channel, category and user menus: shows the raw JSON, with a copy button. |
 | Who Reacted | Shows the avatars of the people who reacted to a message. |
 
 After an update, Better Fenrid lists what changed the first time Fenrid loads. You can turn this off in *Better Fenrid → Settings*.

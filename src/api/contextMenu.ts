@@ -10,6 +10,7 @@ export interface MenuTarget {
   element: HTMLElement | null
   id: string | null
   text: string
+  source?: Element | null
 }
 
 export interface ContextMenuItem {
@@ -175,7 +176,7 @@ function inject(root: Element) {
 
   if (container.querySelector(`[${MARK}]`)) return
 
-  const target: MenuTarget = kind === 'message' ? findMessage(lastTarget) : { kind, element: null, id: null, text: '' }
+  const target: MenuTarget = { ...(kind === 'message' ? findMessage(lastTarget) : { kind, element: null, id: null, text: '' }), source: lastTarget }
   const visible = [...items.values()].filter((item) => (item.kinds ?? ['message']).includes(kind) && (item.visible?.(target) ?? true))
 
   if (!visible.length) return

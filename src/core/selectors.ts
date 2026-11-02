@@ -14,6 +14,10 @@ export const Selectors = {
       anchors: ['Copy Channel ID'],
       markers: ['Invite People', 'Edit Channel', 'Delete Channel'],
     },
+    category: {
+      anchors: ['Copy Category ID'],
+      markers: ['Edit Category', 'Delete Category', 'Mark as read', 'Notification Settings'],
+    },
     user: {
       anchors: ['Copy User ID'],
       markers: ['Copy Username', 'Block', 'Unblock'],
