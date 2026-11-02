@@ -1,4 +1,5 @@
 import { installNetworkHooks } from './api/network'
+import { startTopics } from './api/topics'
 import { startObserver } from './core/dom'
 import { startEntityCache } from './core/entities'
 import { createLogger } from './core/logger'
@@ -6,6 +7,7 @@ import { registerPlugins, syncPlugins } from './core/plugins'
 import { settings } from './core/settings'
 import { createStyle } from './core/styles'
 import { startThemes } from './core/theme'
+import { showUpdateNotice } from './core/updates'
 import { NAME, VERSION } from './meta'
 import { plugins } from './plugins'
 import { startSettingsInjection } from './ui/settingsSidebar'
@@ -17,12 +19,14 @@ function startUi() {
 
   startObserver()
   startSettingsInjection()
+  showUpdateNotice()
 }
 
 // Runs before Fenrid's scripts, to catch its connections and avoid a flash of the stock theme
 function init() {
 
   installNetworkHooks()
+  startTopics()
   startEntityCache()
 
   createStyle(css)

@@ -19,19 +19,24 @@ A client mod for [Fenrid](https://fenrid.com). It adds plugins, custom themes an
 
 | Plugin | What it does |
 | --- | --- |
+| Better Fenrid Badges | Shows a badge next to Better Fenrid developers and contributors. The list lives in `src/badges.ts`. |
+| Clear URLs | Removes tracking parameters (`utm_*`, `fbclid`, `si=`…) from links you send or paste. |
 | Community Statistics | Adds *Community Statistics* to the server menu: members, online count, channels, roles, emojis and owner in a modal. |
 | Deleted Messages | Keeps deleted messages in the chat, marked in red, your own included, and saves them to a history you can open from the plugin's settings. Stored only in your browser. |
 | Double Click To Edit | Double click one of your messages in a server channel to edit it. |
+| Edit History | Shows earlier versions of edited messages above them, and adds *Edit History* to the message menu. Only edits seen while Fenrid is open are saved, in your browser. |
 | Force Owner Crown | Shows a crown next to the server owner in messages, and in the member list when the server hides it. |
 | Mention Avatars | Shows user avatars inside mentions. |
 | No Reply Mentions | Turns off the reply ping by default. You can still turn it on for a single reply. Off by default. |
 | Quote Message | Adds *Quote Message* to the message menu: pastes the message into your message box as a quote. |
-| View Raw | Adds *View Raw* to the message, channel and user menus: shows the raw JSON, with a copy button. |
 | Show Hidden Things | Shows a clock next to members who are timed out, which Fenrid has the data for but doesn't display. |
 | Silent Typing | Hides that you are typing. Off by default. |
 | Translate | Adds *Translate* to the message menu: opens the message in Google Translate. |
-
+| Typing in Channel List | Shows animated dots next to channels where someone is typing. |
+| View Raw | Adds *View Raw* to the message, channel and user menus: shows the raw JSON, with a copy button. |
 | Who Reacted | Shows the avatars of the people who reacted to a message. |
+
+After an update, Better Fenrid lists what changed the first time Fenrid loads. You can turn this off in *Better Fenrid → Settings*.
 
 ## Install
 

@@ -38,6 +38,14 @@ export function memberOf(trigger: Element): Record<string, any> | null {
   return findProps(trigger, (props) => !!props.member)?.member ?? null
 }
 
+/** Your own id, as Fenrid passes it to names on the page. Null until a name is on screen */
+export function currentUserId(): string | null {
+
+  const trigger = document.querySelector(Selectors.profileTrigger)
+
+  return trigger ? (findProps(trigger, (props) => typeof props.currentUserId === 'string')?.currentUserId ?? null) : null
+}
+
 function firstTextParent(root: Element): Element | null {
 
   const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT)

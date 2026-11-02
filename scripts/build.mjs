@@ -1,3 +1,4 @@
+import { execFileSync } from 'node:child_process'
 import { readFileSync } from 'node:fs'
 import { context, build } from 'esbuild'
 
@@ -5,6 +6,26 @@ const pkg = JSON.parse(readFileSync(new URL('../package.json', import.meta.url),
 const watch = process.argv.includes('--watch')
 const version = process.env.BF_VERSION ?? pkg.version
 const downloadUrl = 'https://github.com/ImpulseDoes/betterfenrid/releases/latest/download/betterfenrid.user.js'
+
+function changelog() {
+
+  try {
+
+    const log = execFileSync('git', ['log', '-n', '40', '--no-merges', '--format=%h%x1f%s%x1f%cI'], { encoding: 'utf8' })
+
+    return log.trim().split('\n').filter(Boolean).map((line) => {
+
+      const [hash, message, date] = line.split('\x1f')
+
+      return { hash, message, date }
+    })
+
+  } catch {
+
+    return []
+
+  }
+}
 
 const userscriptHeader = `// ==UserScript==
 // @name         Better Fenrid
@@ -32,7 +53,7 @@ const common = {
   format: 'iife',
   target: 'es2022',
   loader: { '.css': 'text', '.jpg': 'dataurl' },
-  define: { __BF_VERSION__: JSON.stringify(version) },
+  define: { __BF_VERSION__: JSON.stringify(version), __BF_CHANGELOG__: JSON.stringify(changelog()) },
   legalComments: 'none',
   logLevel: 'info',
 }

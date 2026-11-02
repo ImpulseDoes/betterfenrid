@@ -653,3 +653,200 @@
     transform: scale(0.96);
   }
 }
+
+.bf-typing {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  gap: 3px;
+  height: 16px;
+  margin: 0 4px;
+  color: currentColor;
+}
+
+.bf-typing i {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: currentColor;
+  opacity: 0.35;
+  animation: bf-typing 1.2s infinite ease-in-out;
+}
+
+.bf-typing i:nth-child(2) {
+  animation-delay: 0.15s;
+}
+
+.bf-typing i:nth-child(3) {
+  animation-delay: 0.3s;
+}
+
+@keyframes bf-typing {
+
+  0%,
+  60%,
+  100% {
+    opacity: 0.35;
+    transform: translateY(0);
+  }
+
+  30% {
+    opacity: 1;
+    transform: translateY(-2px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .bf-typing i {
+    animation: none;
+    opacity: 0.8;
+  }
+}
+
+.bf-edit-history {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin-bottom: 2px;
+}
+
+.bf-edit-old {
+  font-size: 15px;
+  line-height: 1.375rem;
+  opacity: 0.5;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.bf-edit-tag {
+  margin-left: 4px;
+  font-size: 10px;
+  cursor: help;
+}
+
+.bf-changelog {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin: 12px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.bf-changelog-item {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 8px 12px;
+  border: 1px solid var(--bf-border);
+  border-radius: 8px;
+  background: var(--bf-bg-card);
+}
+
+.bf-changelog-text {
+  word-break: break-word;
+}
+
+.bf-changelog-hash {
+  flex-shrink: 0;
+  color: var(--bf-link);
+  font-family: ui-monospace, 'Cascadia Code', Consolas, monospace;
+  font-size: 12px;
+  text-decoration: none;
+}
+
+.bf-changelog-hash:hover {
+  text-decoration: underline;
+}
+
+.bf-user-badge {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  align-self: center;
+  gap: 2px;
+  margin-left: 4px;
+}
+
+.bf-user-badge-icon {
+  display: inline-flex;
+  color: var(--bf-badge-color, #3f56f5);
+  cursor: pointer;
+}
+
+.bf-user-badge-icon svg {
+  width: 16px;
+  height: 16px;
+}
+
+.bf-profile-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  border-radius: 4px;
+  color: var(--bf-badge-color, #3f56f5);
+  cursor: pointer;
+  filter: drop-shadow(0 3px 4px rgb(0 0 0 / 40%)) drop-shadow(0 5px 6px rgb(0 0 0 / 16%));
+}
+
+.bf-profile-badge svg {
+  width: 20px;
+  height: 20px;
+}
+
+/*
+ * The same values as Fenrid's tooltip classes. Fenrid's sit in a CSS layer, which always
+ * loses to this sheet, so these read the same theme variables to come out identical
+ */
+.bf-tooltip {
+  border: 1px solid #555c6b;
+  border-radius: 12px;
+  background-color: var(--secondary-button, #292932);
+  color: var(--text-primary, #f3f3f7);
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 16px;
+  padding: 8px 12px;
+}
+
+.bf-tooltip-arrow {
+  width: 10px;
+  height: 10px;
+  border-right: 1px solid #555c6b;
+  border-bottom: 1px solid #555c6b;
+  background-color: var(--secondary-button, #292932);
+}
+
+.bf-tooltip {
+  position: fixed;
+  z-index: 300;
+  width: max-content;
+  max-width: 320px;
+  white-space: nowrap;
+  pointer-events: none;
+  animation: bf-tooltip-in 0.12s ease-out;
+}
+
+.bf-tooltip-arrow {
+  position: absolute;
+  top: 100%;
+  left: var(--bf-arrow-x, 50%);
+  box-sizing: border-box;
+  transform: translate(-50%, -5px) rotate(45deg);
+}
+
+.bf-tooltip-below .bf-tooltip-arrow {
+  top: auto;
+  bottom: 100%;
+  transform: translate(-50%, 5px) rotate(225deg);
+}
+
+@keyframes bf-tooltip-in {
+  from {
+    opacity: 0;
+    transform: scale(0.95) translateY(2px);
+  }
+}

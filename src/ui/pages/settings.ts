@@ -3,7 +3,8 @@ import { toast } from '../../api/toast'
 import { h } from '../../core/dom'
 import { syncPlugins } from '../../core/plugins'
 import { settings } from '../../core/settings'
-import { NAME, REPO_URL, VERSION } from '../../meta'
+import { checkForUpdates, openChangelog } from '../../core/updates'
+import { COMMIT, NAME, REPO_URL, VERSION } from '../../meta'
 import { Button, Row, Section, SwitchRow } from '../components'
 import type { PageContext } from '../settingsSidebar'
 
@@ -24,11 +25,19 @@ export function SettingsPage({ refresh }: PageContext): Node {
     Section(
       NAME,
       'An open source client mod for Fenrid with plugins, themes and more.',
-      Row('Version', `v${VERSION}`, Button('Source on GitHub', () => window.open(REPO_URL, '_blank', 'noopener'), 'secondary')),
+      Row('Version', `v${VERSION}${COMMIT ? ` (${COMMIT})` : ''}`, Button('Source on GitHub', () => window.open(REPO_URL, '_blank', 'noopener'), 'secondary')),
+      Row('Updates', 'Your userscript manager installs new versions on its own about once a day. Check now to get the latest one right away.', Button('Check for updates', checkForUpdates, 'secondary')),
+      Row('Changelog', 'See what changed in recent versions.', Button('What\'s new', () => openChangelog(), 'secondary')),
     ),
     Section(
       'General',
       `Choose how ${NAME} behaves.`,
+      SwitchRow(
+        'Show what\'s new after updates',
+        'Lists the changes once, the first time Fenrid loads after an update.',
+        s.core.updateNotices,
+        (v) => settings.update((x) => { x.core.updateNotices = v }),
+      ),
       SwitchRow(
         'Show version in sidebar',
         `Adds the ${NAME} version under Fenrid's own version at the bottom of the settings sidebar.`,

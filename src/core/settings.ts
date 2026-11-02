@@ -3,6 +3,8 @@ const STORAGE_KEY = 'BetterFenrid:settings'
 export interface CoreSettings {
   debug: boolean
   showFooterVersion: boolean
+  updateNotices: boolean
+  lastCommit: string | null
 }
 
 export interface ThemeSettings {
@@ -23,7 +25,7 @@ export interface Settings {
 }
 
 const DEFAULTS: Settings = {
-  core: { debug: false, showFooterVersion: true },
+  core: { debug: false, showFooterVersion: true, updateNotices: true, lastCommit: null },
   theme: { preset: 'onyx', enabled: true, css: '' },
   plugins: {},
 }

@@ -1,6 +1,9 @@
+import badges from './badges'
+import clearUrls from './clearUrls'
 import communityStatistics from './communityStatistics'
 import deletedMessages from './deletedMessages'
 import doubleClickEdit from './doubleClickEdit'
+import editHistory from './editHistory'
 import forceOwnerCrown from './forceOwnerCrown'
 import mentionAvatars from './mentionAvatars'
 import noReplyMentions from './noReplyMentions'
@@ -8,20 +11,25 @@ import quoteMessage from './quoteMessage'
 import showHiddenThings from './showHiddenThings'
 import silentTyping from './silentTyping'
 import translate from './translate'
+import typingIndicator from './typingIndicator'
 import viewRaw from './viewRaw'
 import whoReacted from './whoReacted'
 
 export const plugins = [
-  communityStatistics,
-  deletedMessages,
-  doubleClickEdit,
-  forceOwnerCrown,
-  mentionAvatars,
-  noReplyMentions,
-  quoteMessage,
-  showHiddenThings,
-  silentTyping,
-  translate,
-  viewRaw,
-  whoReacted,
+    badges,
+    clearUrls,
+    communityStatistics,
+    deletedMessages,
+    doubleClickEdit,
+    editHistory,
+    forceOwnerCrown,
+    mentionAvatars,
+    noReplyMentions,
+    quoteMessage,
+    showHiddenThings,
+    silentTyping,
+    translate,
+    typingIndicator,
+    viewRaw,
+    whoReacted,
 ]

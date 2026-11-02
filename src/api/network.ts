@@ -29,6 +29,8 @@ type RequestHook = (request: ApiRequest) => void
 type ResultHook = (result: ApiResult) => void
 // Return a new body to replace what Fenrid receives
 type ResponseHook = (url: URL, body: any) => unknown
+// Return a new body to replace what Fenrid sends
+type RequestBodyHook = (request: ApiRequest, body: any) => unknown
 
 const log = createLogger('Network')
 const gatewayHooks = new Set<GatewayHook>()
@@ -36,8 +38,9 @@ const sendHooks = new Set<GatewaySendHook>()
 const requestHooks = new Set<RequestHook>()
 const resultHooks = new Set<ResultHook>()
 const responseHooks = new Set<ResponseHook>()
+const requestBodyHooks = new Set<RequestBodyHook>()
 
-const WATCHED_FRAME = /"t"\s*:\s*"(READY|GUILD_|CHANNEL_|MEMBER_|MESSAGE_|SERVER_)/
+const WATCHED_FRAME = /"t"\s*:\s*"(READY|RESUMED|SUBSCRIBED|REQUEST_ERROR|TOPICS_INVALIDATED|TYPING_|GUILD_|CHANNEL_|MEMBER_|MESSAGE_|SERVER_)/
 
 let gatewaySeen = false
 let dispatchOp = 0
@@ -56,6 +59,7 @@ export const onGatewaySend = (hook: GatewaySendHook) => subscribe(sendHooks, hoo
 export const onApiRequest = (hook: RequestHook) => subscribe(requestHooks, hook)
 export const onApiResult = (hook: ResultHook) => subscribe(resultHooks, hook)
 export const onApiResponse = (hook: ResponseHook) => subscribe(responseHooks, hook)
+export const onApiRequestBody = (hook: RequestBodyHook) => subscribe(requestBodyHooks, hook)
 
 /** False when the mod was injected too late, or outside the page's own JS context */
 export function isGatewaySeen(): boolean {
@@ -219,6 +223,28 @@ function apiUrl(input: RequestInfo | URL): URL | null {
   }
 }
 
+// Only JSON sent as a string, which is how Fenrid sends everything but uploads
+function rewriteBody(request: ApiRequest, init: RequestInit | undefined): RequestInit | undefined {
+
+  if (!requestBodyHooks.size || typeof init?.body !== 'string') return init
+
+  try {
+
+    const body = JSON.parse(init.body)
+
+    let next = body
+
+    for (const hook of requestBodyHooks) next = hook(request, next) ?? next
+
+    return next === body ? init : { ...init, body: JSON.stringify(next) }
+
+  } catch {
+
+    return init
+
+  }
+}
+
 function hookFetch() {
 
   const native = window.fetch.bind(window)
@@ -233,7 +259,7 @@ function hookFetch() {
 
     for (const hook of requestHooks) hook({ url, method })
 
-    const response = await native(input, init)
+    const response = await native(input, rewriteBody({ url, method }, init))
 
     for (const hook of resultHooks) hook({ url, method, ok: response.ok })
 

@@ -29,6 +29,18 @@ const channels = createCache()
 const users = createCache()
 const memberTimeouts = new Map<string, string | null>()
 
+type EditHook = (id: string, before: Entity, after: Entity) => void
+
+const editHooks = new Set<EditHook>()
+
+/** Runs when a message's text changes, with the version seen before it */
+export function onMessageEdit(hook: EditHook): () => void {
+
+  editHooks.add(hook)
+
+  return () => editHooks.delete(hook)
+}
+
 export const getMessage = (id: string) => messages.get(id)
 export const getChannel = (id: string) => channels.get(id)
 export const getUser = (id: string) => users.get(id)
@@ -48,13 +60,44 @@ function rememberTimeout(value: Entity, serverId: string | undefined) {
   if (memberTimeouts.size > LIMIT) memberTimeouts.delete(memberTimeouts.keys().next().value!)
 }
 
+// A new edit time too, so a shortened copy of a message (in a reply preview, say) doesn't count
+function isEdit(before: Entity, after: Entity): boolean {
+
+  return typeof before.content === 'string' &&
+    typeof after.content === 'string' &&
+    before.content !== after.content &&
+    after.edited_at != null &&
+    after.edited_at !== before.edited_at &&
+    !after.deleted_at
+}
+
 function classify(value: Entity) {
 
   const id = String(value.id)
 
   if ('created_at' in value && ('channel_id' in value || 'conversation_id' in value) && !('name' in value)) {
 
+    const before = messages.get(id)
+
     messages.set(id, value)
+
+    if (before && isEdit(before, value)) {
+
+      const after = messages.get(id)!
+
+      for (const hook of editHooks) {
+
+        try {
+
+          hook(id, before, after)
+
+        } catch (err) {
+
+          console.error('[Better Fenrid] Edit hook failed', err)
+
+        }
+      }
+    }
 
   } else if ('username' in value) {
 
