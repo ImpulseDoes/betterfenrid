@@ -1463,3 +1463,29 @@ a[data-bf-fake-surge],
 [data-bf-unlocked] .grayscale {
   filter: none !important;
 }
+
+[data-bf-stream-unlocked] {
+  color: var(--text-primary) !important;
+  cursor: pointer !important;
+}
+
+[data-bf-stream-unlocked]:hover {
+  background: var(--hover-overlay, rgb(255 255 255 / 0.06)) !important;
+}
+
+[data-bf-stream-unlocked]>svg {
+  display: none;
+}
+
+[data-bf-stream-unlocked][data-bf-stream-picked] {
+  background: var(--primary-action) !important;
+  color: #fff !important;
+}
+
+[data-bf-stream-picked] span {
+  color: inherit !important;
+}
+
+[data-bf-stream-upsell] {
+  display: none !important;
+}

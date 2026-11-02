@@ -4,6 +4,7 @@ import { toast } from '../api/toast'
 import { definePlugin } from '../core/plugins'
 import { findProps } from '../core/react'
 import { Selectors } from '../core/selectors'
+import { startStreamBypass } from './fakeSurgeStream'
 
 const SEND_PATH = /^\/api\/(chat\/server\/messages(\/\d+)?|dm\/conversations\/[^/]+\/messages(\/\d+)?)$/
 
@@ -118,7 +119,7 @@ function linkEmoji(link: HTMLAnchorElement): Emoji | null {
 export default definePlugin({
     id: 'fakeSurge',
     name: 'Fake Surge',
-    description: 'Lets you pick Surge-locked emojis: they are sent as image links, and shown as emojis for you (like Vencord\'s FakeNitro).',
+    description: 'Lets you pick Surge-locked emojis, sent as image links and shown as emojis for you, and stream in higher quality (like Vencord\'s FakeNitro).',
     authors: ['Better Fenrid community'],
     enabledByDefault: false,
 
@@ -157,11 +158,31 @@ export default definePlugin({
                 ...[16, 22, 32, 48, 64, 96, 128].map((s) => ({ label: `${s}px`, value: String(s) })),
             ],
         },
+        enableStreamBypass: {
+            type: 'boolean',
+            label: 'Unlock screen share quality',
+            description: 'Lets you pick 1080p, 1440p and 60 FPS when you share your screen.',
+            default: true,
+        },
+        streamBitrate: {
+            type: 'select',
+            label: 'Screen share bitrate',
+            description: 'Auto uses what Fenrid gives the plan that unlocks the quality you picked. Higher looks sharper, but needs a faster upload.',
+            default: 'auto',
+            options: [
+                { label: 'Auto', value: 'auto' },
+                ...[2500, 5000, 8000, 12000, 20000].map((kbps) => ({ label: `${kbps / 1000} Mbps`, value: String(kbps) })),
+            ],
+        },
     },
 
     start(ctx) {
 
         const linkOptions = () => ({ useHyperLinks: ctx.settings.useHyperLinks, hyperLinkText: ctx.settings.hyperLinkText })
+
+        const stream = startStreamBypass({ enabled: () => ctx.settings.enableStreamBypass, bitrate: () => ctx.settings.streamBitrate })
+
+        ctx.onStop(stream.stop)
 
         // Fenrid turns locked tokens into :name: before sending, so this only catches tokens typed out by hand
         ctx.onStop(
@@ -343,6 +364,7 @@ export default definePlugin({
 
                 render(root)
                 unlock(root)
+                stream.unlock(el)
             }
         })
 
@@ -353,11 +375,15 @@ export default definePlugin({
 
             if (ctx.settings.enableEmojiBypass) unlock(document)
             else relock()
+
+            if (ctx.settings.enableStreamBypass) stream.unlock(document)
+            else stream.relock()
         })
 
         ctx.onStop(reset)
 
         render(document)
         unlock(document)
+        stream.unlock(document)
     },
 })

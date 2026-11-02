@@ -29,7 +29,7 @@ A client mod for [Fenrid](https://fenrid.com). It adds plugins, custom themes an
 | Edit History | Shows earlier versions of edited messages above them, and adds *Edit History* to the message menu. Only edits seen while Fenrid is open are saved, in your browser. *Remove From History* clears them for that message. |
 | Experiments | Adds an Experiments tab to the sidebar with hidden Fenrid features (default profile themes, What's New on demand), its debug logs, what's in development, and a data inspector that records which fields Fenrid sends (names and types only). Fenrid has no feature flags, so this doesn't unlock unreleased features. Off by default. |
 | Expression Manager | Right click an emoji, a reaction or a GIF to clone it to a server where you can add emojis. Files must be on Fenrid's own storage and at most 256 KiB, except still images, which are shrunk. |
-| Fake Surge | Lets you pick emojis marked *Requires Surge*: they are sent as image links and shown as emojis for you, like Vencord's FakeNitro. Emojis a server blocks stay blocked. Off by default. |
+| Fake Surge | Lets you pick emojis marked *Requires Surge*: they are sent as image links and shown as emojis for you, like Vencord's FakeNitro. Emojis a server blocks stay blocked. Also unlocks 1080p, 1440p and 60 FPS screen sharing with a matching bitrate. Off by default. |
 | Force Owner Crown | Shows a crown next to the server owner in messages, and in the member list when the server hides it. |
 | Image Link | Never hides image links in messages, even when the image is all the message has. The link appears above the image. GIFs are optional. Off by default. |
 | Mention Avatars | Shows user avatars inside mentions. |
