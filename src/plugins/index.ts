@@ -1,5 +1,6 @@
 import badgeFaker from './badgeFaker'
 import badges from './badges'
+import betterFenrid from './betterFenrid'
 import betterFolders from './betterFolders'
 import cameraQuality from './cameraQuality'
 import clearUrls from './clearUrls'
@@ -36,6 +37,7 @@ import whoReacted from './whoReacted'
 export const plugins = [
     badgeFaker,
     badges,
+    betterFenrid,
     betterFolders,
     cameraQuality,
     clearUrls,

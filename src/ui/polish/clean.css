@@ -1,0 +1,14 @@
+button.rounded[class*="hover:bg-hover-overlay"] {
+  border-radius: var(--radius-md);
+}
+
+button[title="Deafen"],
+button[title="Undeafen"] {
+  border-radius: var(--radius-md) 0 0 var(--radius-md);
+}
+
+button[title="Media settings"] {
+  width: 22px;
+  margin-left: 0;
+  border-radius: 0 var(--radius-md) var(--radius-md) 0;
+}

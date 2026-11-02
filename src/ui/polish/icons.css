@@ -1,0 +1,75 @@
+@media (prefers-reduced-motion: no-preference) {
+
+  button>svg {
+    transition: rotate 450ms cubic-bezier(0.34, 1.56, 0.64, 1), scale 160ms cubic-bezier(0.2, 0, 0, 1), translate 160ms cubic-bezier(0.2, 0, 0, 1);
+  }
+
+  button[class*="hover:bg-hover-overlay"]:active:not(:disabled)>svg {
+    scale: 0.86;
+  }
+
+  button[title="Settings"]:hover>svg,
+  button[aria-label="Settings"]:hover>svg,
+  button[aria-label^="Close"]:hover>svg {
+    rotate: 90deg;
+  }
+
+  button[title="Mute"]:not(:disabled):hover>svg,
+  button[aria-label="Start Voice Call"]:hover>svg {
+    animation: bf-wiggle 450ms ease-out;
+  }
+
+  button[title="Deafen"]:not(:disabled):hover>svg,
+  [data-fenrid-notification-inbox-trigger]:hover>svg {
+    animation: bf-bob 400ms ease-out;
+  }
+
+  /* These icons only exist while muted, so this plays the moment you mute */
+  button[title="Unmute"]>svg,
+  button[title="Undeafen"]>svg {
+    animation: bf-pop 240ms cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+
+  button[title="Media settings"][data-state="open"]>svg {
+    rotate: 180deg;
+  }
+
+  [data-fenrid-pinned-messages-trigger]:hover svg {
+    rotate: -18deg;
+  }
+
+  button[aria-label="Toggle members"]:hover>svg,
+  button[aria-label="Add Reaction"]:hover>svg {
+    scale: 1.14;
+  }
+
+  @keyframes bf-wiggle {
+    25% {
+      rotate: -11deg;
+    }
+
+    60% {
+      rotate: 8deg;
+    }
+
+    85% {
+      rotate: -3deg;
+    }
+  }
+
+  @keyframes bf-bob {
+    40% {
+      translate: 0 -2px;
+    }
+
+    75% {
+      translate: 0 1px;
+    }
+  }
+
+  @keyframes bf-pop {
+    from {
+      scale: 0.7;
+    }
+  }
+}

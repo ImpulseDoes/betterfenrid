@@ -1,0 +1,51 @@
+:root {
+  --default-transition-duration: 170ms;
+  --default-transition-timing-function: cubic-bezier(0.2, 0, 0, 1);
+}
+
+[data-state="open"],
+.animate-in {
+  --tw-animation-duration: 180ms;
+  --tw-ease: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+[data-state="closed"],
+.animate-out {
+  --tw-animation-duration: 110ms;
+  --tw-ease: cubic-bezier(0.4, 0, 1, 1);
+}
+
+.rounded-r-full.bg-text-primary.transition-all {
+  transition-duration: 260ms;
+  transition-timing-function: cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+
+  .h-11.w-11.overflow-hidden.transition-all:active,
+  .h-12.w-12.overflow-hidden.transition-all:active {
+    transform: translateY(1px);
+  }
+
+  .fenrid-safe-modal-frame {
+    animation: bf-modal-fade 140ms ease-out backwards;
+  }
+
+  .fenrid-safe-modal-frame>[role="dialog"],
+  .fenrid-safe-modal-frame>.relative {
+    animation: bf-modal-rise 220ms cubic-bezier(0.16, 1, 0.3, 1) backwards;
+  }
+
+  @keyframes bf-modal-fade {
+    from {
+      opacity: 0;
+    }
+  }
+
+  @keyframes bf-modal-rise {
+    from {
+      opacity: 0;
+      transform: translateY(6px) scale(0.985);
+    }
+  }
+}
