@@ -52,7 +52,7 @@ const common = {
   bundle: true,
   format: 'iife',
   target: 'es2022',
-  loader: { '.css': 'text', '.jpg': 'dataurl', '.gif': 'dataurl' },
+  loader: { '.css': 'text', '.jpg': 'dataurl', '.png': 'dataurl', '.gif': 'dataurl' },
   define: { __BF_VERSION__: JSON.stringify(version), __BF_CHANGELOG__: JSON.stringify(changelog()) },
   legalComments: 'none',
   logLevel: 'info',

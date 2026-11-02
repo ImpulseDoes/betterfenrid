@@ -1,5 +1,6 @@
 import impulseBackground from '../themes/assets/impulse-background.jpg'
 import impulseHome from '../themes/assets/impulse-home.jpg'
+import translucenceBackground from '../themes/assets/translucence-background.jpg'
 import catppuccinMocha from '../themes/catppuccin-mocha.css'
 import darkMatter from '../themes/dark-matter.css'
 import dracula from '../themes/dracula.css'
@@ -11,10 +12,12 @@ import hardcodedColors from '../themes/onyx.generated.css'
 import rosePine from '../themes/rose-pine.css'
 import synthwave84 from '../themes/synthwave-84.css'
 import tokyoNight from '../themes/tokyo-night.css'
+import translucence from '../themes/translucence.css'
 import { settings } from './settings'
 import { createStyle } from './styles'
 
 const impulseImages = `:root { --impulse-background: url("${impulseBackground}"); --impulse-home-icon: url("${impulseHome}"); }`
+const translucenceImages = `:root { --translucence-background: url("${translucenceBackground}"); }`
 
 export interface ThemeDef {
   id: string
@@ -102,6 +105,14 @@ export const THEMES: ThemeDef[] = [
     description: 'Retro 80s neon synthwave with hot magenta, electric cyan and deep twilight purple.',
     preview: { bg: '#1a162b', surface: '#26213f', accent: '#ff7edb', text: '#fdfdfd' },
     css: `${synthwave84}\n${hardcodedColors}`,
+  },
+  {
+    id: 'translucence',
+    name: 'Translucence',
+    author: 'CapnKitten',
+    description: 'Frosted glass with the Alpine Amnesia background and lavender accents.',
+    preview: { bg: '#101018', surface: '#1b1b28', accent: '#b89eff', text: '#ffffff' },
+    css: `${translucenceImages}\n${translucence}\n${hardcodedColors}`,
   },
   {
     id: 'impulse',

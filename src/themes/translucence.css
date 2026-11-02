@@ -1,0 +1,123 @@
+/* Translucence by CapnKitten (CapnKitten/Translucence) */
+
+:root,
+.dark {
+  --translucence-accent: hsl(260, 83%, 72%);
+  --translucence-accent-hover: hsl(260, 83%, 80%);
+  --translucence-shade: rgb(0 0 0 / 35%);
+  --translucence-settings-shade: rgb(0 0 0 / 55%);
+  --translucence-glass: rgb(0 0 0 / 32%);
+  --translucence-solid: rgb(15 15 22 / 88%);
+  --translucence-card: rgb(255 255 255 / 8%);
+  --translucence-card-hover: rgb(255 255 255 / 14%);
+  --translucence-card-active: rgb(255 255 255 / 20%);
+  --translucence-border: rgb(255 255 255 / 10%);
+  --translucence-border-strong: rgb(255 255 255 / 18%);
+
+  --onyx-base: var(--translucence-glass);
+  --onyx-raised: var(--translucence-card);
+  --onyx-raised-2: var(--translucence-card-hover);
+  --onyx-raised-3: var(--translucence-card-active);
+  --onyx-line: var(--translucence-border);
+  --onyx-line-strong: var(--translucence-border-strong);
+
+  --background: transparent;
+  --foreground: #ffffff;
+  --server-sidebar: transparent;
+  --channel-sidebar: transparent;
+  --main-chat-area: transparent;
+  --member-list: transparent;
+  --sidebar: transparent;
+  --message-embed-background: var(--translucence-glass);
+  --popups-and-modals: var(--translucence-solid);
+  --borders-and-separators: var(--translucence-border);
+  --secondary-button: rgb(255 255 255 / 10%);
+  --secondary-button-hover: rgb(255 255 255 / 18%);
+
+  --primary-action: var(--translucence-accent);
+  --primary-hover: var(--translucence-accent-hover);
+  --primary-foreground: #000000;
+  --sidebar-primary-foreground: #000000;
+
+  --danger-button: #f04747;
+  --danger-button-hover: #d84040;
+  --danger-button-foreground: #ffffff;
+  --danger-secondary-button: rgb(240 71 71 / 15%);
+  --danger-secondary-button-hover: rgb(240 71 71 / 25%);
+  --danger-secondary-foreground: #ffffff;
+
+  --accent-vibrant: #d2c0ff;
+  --success-green: #43b581;
+  --error-red: #f04747;
+  --warning-yellow: #faa61a;
+
+  --text-primary: #ffffff;
+  --text-secondary: #dcdde1;
+  --text-muted: #a4a7b0;
+  --interactive-hover: #ffffff;
+  --hover-overlay: rgb(255 255 255 / 6%);
+  --active-overlay: rgb(255 255 255 / 12%);
+
+  --muted: var(--translucence-glass);
+  --accent: var(--translucence-glass);
+  color-scheme: dark;
+}
+
+html {
+  background: linear-gradient(var(--translucence-shade), var(--translucence-shade)), var(--translucence-background) center / cover no-repeat fixed #000 !important;
+}
+
+body {
+  background: transparent !important;
+}
+
+.text-background,
+.text-main-chat-area {
+  color: #0b0b0d;
+}
+
+.bg-popups-and-modals,
+.bg-popover,
+.bg-message-embed-background,
+[role="menu"] {
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+.fenrid-settings-root {
+  --popups-and-modals: rgb(0 0 0 / 40%);
+  background: linear-gradient(var(--translucence-settings-shade), var(--translucence-settings-shade)), var(--translucence-background) center / cover no-repeat;
+}
+
+.bf-panel {
+  --bf-panel-bg: transparent !important;
+}
+
+.dark ::-webkit-scrollbar-thumb {
+  background-color: rgb(255 255 255 / 20%);
+}
+
+[data-mentioned-current-user="true"] {
+  background: rgb(184 158 255 / 12%);
+  box-shadow: inset 2px 0 0 var(--translucence-accent);
+}
+
+[data-mentioned-current-user="true"]:hover {
+  background: rgb(184 158 255 / 18%);
+}
+
+.w-1.rounded-r-full.bg-text-primary {
+  background-color: var(--translucence-accent);
+}
+
+.dark .ProseMirror :not(pre)>code {
+  background: var(--translucence-glass);
+  border: 1px solid var(--translucence-border);
+}
+
+.dark .chat-app .ProseMirror pre,
+.dark .ProseMirror pre,
+.dark .ProseMirror codeBlock {
+  border-color: var(--translucence-border);
+  background: var(--translucence-glass) !important;
+}
