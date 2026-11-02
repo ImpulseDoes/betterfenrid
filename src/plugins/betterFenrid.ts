@@ -10,12 +10,12 @@ export default definePlugin({
     name: 'Better Fenrid',
     description: 'Polishes Fenrid: animated icons, smoother motion and tidier details.',
     authors: ['Better Fenrid'],
-    enabledByDefault: false,
+    enabledByDefault: true,
     settings: {
         iconAnimations: {
             type: 'boolean',
             label: 'Animated icons',
-            description: 'The settings gear turns, the microphone wiggles, close buttons spin, and more. Follows your system\'s reduced motion setting.',
+            description: 'The bell rings, the settings gear turns, the microphone looks around, headphones open, and more. Follows your system\'s reduced motion setting.',
             default: true,
         },
         smootherMotion: {
@@ -27,7 +27,7 @@ export default definePlugin({
         cleanerDetails: {
             type: 'boolean',
             label: 'Tidier details',
-            description: 'Matches the corners of icon buttons and lines up the buttons next to your name.',
+            description: 'Matches the corners of icon buttons, lines up the buttons next to your name, sits short channels above the message box, and uses a clearer ID icon.',
             default: true,
         },
         reduceBlur: {

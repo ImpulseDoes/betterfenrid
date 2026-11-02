@@ -20,7 +20,7 @@ A client mod for [Fenrid](https://fenrid.com). It adds plugins, custom themes an
 | Plugin | What it does |
 | --- | --- |
 | Badge Faker | Shows the Fenrid badges you pick on your own profile. Only you can see them: nothing is sent to Fenrid. Off by default. |
-| Better Fenrid | Polishes Fenrid: animated icons, smoother motion and tidier details, each with its own switch. Can also turn off background blur for older computers. Off by default. |
+| Better Fenrid | Polishes Fenrid: animated icons, smoother motion and tidier details, each with its own switch. Can also turn off background blur for older computers. |
 | Better Fenrid Badges | Shows a badge next to Better Fenrid developers and contributors. The list lives in `src/badges.ts`. |
 | Better Folders | Shows the servers of open folders in their own sidebar next to the server list, like Vencord's plugin. Closed folders get a folder icon instead of small server icons, and folder settings offer six colors in place of Fenrid's picker. Options can close or open folders as you move between servers. |
 | Camera Quality | Picks the resolution, frame rate and bitrate of your camera in calls, up to 1440p at 60 FPS. Works from the next time you turn your camera on. Off by default. |
