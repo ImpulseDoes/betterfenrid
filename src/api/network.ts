@@ -34,6 +34,7 @@ type RequestBodyHook = (request: ApiRequest, body: any) => unknown
 
 const log = createLogger('Network')
 const gatewayHooks = new Set<GatewayHook>()
+const everyFrameHooks = new Set<GatewayHook>()
 const sendHooks = new Set<GatewaySendHook>()
 const requestHooks = new Set<RequestHook>()
 const resultHooks = new Set<ResultHook>()
@@ -55,6 +56,8 @@ function subscribe<T>(hooks: Set<T>, hook: T): () => void {
 }
 
 export const onGatewayFrame = (hook: GatewayHook) => subscribe(gatewayHooks, hook)
+// Every frame costs a parse, so only for tools that are switched on by hand
+export const onEveryGatewayFrame = (hook: GatewayHook) => subscribe(everyFrameHooks, hook)
 export const onGatewaySend = (hook: GatewaySendHook) => subscribe(sendHooks, hook)
 export const onApiRequest = (hook: RequestHook) => subscribe(requestHooks, hook)
 export const onApiResult = (hook: ResultHook) => subscribe(resultHooks, hook)
@@ -113,7 +116,24 @@ function isBlocked(data: unknown): boolean {
   return false
 }
 
+function showEveryFrame(data: string) {
+
+  try {
+
+    const frame = JSON.parse(data) as GatewayFrame
+
+    for (const hook of everyFrameHooks) hook(frame)
+
+  } catch (err) {
+
+    log.error('Gateway frame hook failed', err)
+
+  }
+}
+
 function rewriteFrame(event: MessageEvent): MessageEvent {
+
+  if (everyFrameHooks.size && typeof event.data === 'string') showEveryFrame(event.data)
 
   if (typeof event.data !== 'string' || !WATCHED_FRAME.test(event.data)) return event
 

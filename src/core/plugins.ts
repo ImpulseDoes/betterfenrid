@@ -53,7 +53,7 @@ export interface PluginPage {
   label: string
   title: string
   icon: IconName
-  render(): Node
+  render(ctx: { refresh(): void }): Node
 }
 
 export interface Plugin<S extends SettingsSchema = SettingsSchema> {

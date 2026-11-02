@@ -1,3 +1,4 @@
+import { clearRecording, downloadReport, recordedCount, startRecording } from '../api/dataShapes'
 import { h } from '../core/dom'
 import { definePlugin, getPluginSetting, setPluginSetting, type Plugin } from '../core/plugins'
 import { Button, Row, Section, SettingControl } from '../ui/components'
@@ -37,14 +38,16 @@ const IN_DEVELOPMENT = [
   ['Discovery Events and Giveaways', 'Marked as coming soon in Server Discovery.'],
 ]
 
-function switches(...flags: Flag[]): Node[] {
+function switches(...flags: (Flag | 'dataInspector')[]): Node[] {
 
   const target = plugin as Plugin<any>
 
   return flags.map((flag) => SettingControl(target.settings[flag], getPluginSetting(target, flag), (value) => setPluginSetting(target, flag, value)))
 }
 
-function ExperimentsPage(): Node {
+function ExperimentsPage({ refresh }: { refresh(): void }): Node {
+
+  const { sources, fields } = recordedCount()
 
   return h(
     'div',
@@ -59,6 +62,18 @@ function ExperimentsPage(): Node {
       'Debug logs',
       'Fenrid\'s own logging, printed to the browser console (F12).',
       ...switches('presenceDebug', 'rtcDiagnostics', 'navigationTrace'),
+    ),
+    Section(
+      'Data inspector',
+      'Notes which fields Fenrid sends you, to spot new ones. It keeps field names and their types, never their values, and the list stays in this browser until you save it.',
+      ...switches('dataInspector'),
+      Row('Report', `${sources} sources and ${fields} fields so far. Also lists the script files this page loaded.`, Button('Save report', downloadReport, 'secondary')),
+      Row('Start over', 'Forgets everything recorded so far.', Button('Clear', () => {
+
+        clearRecording()
+        refresh()
+
+      }, 'secondary')),
     ),
     Section(
       'In development',
@@ -79,6 +94,12 @@ const plugin = definePlugin({
       type: 'boolean',
       label: 'Default profile themes',
       description: 'Ignores the custom colors on people\'s profile cards. Fenrid has this switch, but no setting for it.',
+      default: false,
+    },
+    dataInspector: {
+      type: 'boolean',
+      label: 'Record fields',
+      description: 'Takes effect from now on. Reload Fenrid to catch what it loads at the start.',
       default: false,
     },
     presenceDebug: {
@@ -105,12 +126,32 @@ const plugin = definePlugin({
 
   start(ctx) {
 
-    const apply = () => NAMES.forEach((flag) => setFlag(flag, ctx.settings[flag]))
+    let stopRecording: (() => void) | null = null
+
+    const apply = () => {
+
+      NAMES.forEach((flag) => setFlag(flag, ctx.settings[flag]))
+
+      if (ctx.settings.dataInspector && !stopRecording) {
+
+        stopRecording = startRecording()
+
+      } else if (!ctx.settings.dataInspector && stopRecording) {
+
+        stopRecording()
+        stopRecording = null
+
+      }
+    }
 
     apply()
 
     ctx.onSettingsChange(apply)
-    ctx.onStop(() => NAMES.forEach((flag) => setFlag(flag, false)))
+    ctx.onStop(() => {
+
+      NAMES.forEach((flag) => setFlag(flag, false))
+      stopRecording?.()
+    })
   },
 })
 
