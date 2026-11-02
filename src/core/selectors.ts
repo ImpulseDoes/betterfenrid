@@ -33,6 +33,7 @@ export const Selectors = {
   channelName: '.truncate',
   profileTrigger: '[data-profile-preview-trigger]',
   profileBadges: '[aria-label="Profile badges"]',
+  accountCard: '.fixed[class*="bottom-[72px]"]',
   voiceParticipant: '.group\\/vcuser',
   serverRail: '.bg-server-sidebar:has(a[href="/channels/me"])',
   serverList: ':scope > .flex-1',

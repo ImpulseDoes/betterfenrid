@@ -798,6 +798,18 @@
 }
 
 /*
+ * Fenrid's small cards pin this row beside the avatar and only ever fill it with a few badges.
+ * Any more would run over the avatar, so they wrap instead, growing up into the banner
+ */
+[aria-label="Profile badges"][class*="top-[114px]"] {
+  top: auto;
+  bottom: calc(100% - 142px);
+  max-width: 180px;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+/*
  * The same values as Fenrid's tooltip classes. Fenrid's sit in a CSS layer, which always
  * loses to this sheet, so these read the same theme variables to come out identical
  */

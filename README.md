@@ -19,6 +19,7 @@ A client mod for [Fenrid](https://fenrid.com). It adds plugins, custom themes an
 
 | Plugin | What it does |
 | --- | --- |
+| Badge Faker | Shows the Fenrid badges you pick on your own profile. Only you can see them: nothing is sent to Fenrid. Off by default. |
 | Better Fenrid Badges | Shows a badge next to Better Fenrid developers and contributors. The list lives in `src/badges.ts`. |
 | Better Folders | Shows the servers of open folders in their own sidebar next to the server list, like Vencord's plugin. Closed folders get a folder icon instead of small server icons, and folder settings offer six colors in place of Fenrid's picker. Options can close or open folders as you move between servers. |
 | Clear URLs | Removes tracking parameters (`utm_*`, `fbclid`, `si=`…) from links you send or paste. |

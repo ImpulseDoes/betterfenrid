@@ -91,6 +91,14 @@ export default definePlugin({
     let last = 0
     let running = false
 
+    const keepInside = () => {
+
+      if (!innerWidth || !innerHeight) return
+
+      state.x = Math.min(Math.max(SIZE / 2, state.x), innerWidth - SIZE / 2)
+      state.y = Math.min(Math.max(SIZE / 2, state.y), innerHeight - SIZE / 2)
+    }
+
     const place = () => {
 
       cat.style.transform = `translate(${state.x - SIZE / 2}px, ${state.y - SIZE / 2}px)`
@@ -193,10 +201,8 @@ export default definePlugin({
 
       setSprite(direction, state.frame)
 
-      state.x = Math.min(Math.max(SIZE / 2, state.x - (diffX / distance) * speed), innerWidth - SIZE / 2)
-      state.y = Math.min(Math.max(SIZE / 2, state.y - (diffY / distance) * speed), innerHeight - SIZE / 2)
-
-      place()
+      state.x -= (diffX / distance) * speed
+      state.y -= (diffY / distance) * speed
     }
 
     const tick = (now: number) => {
@@ -215,6 +221,8 @@ export default definePlugin({
 
       last = now
       step()
+      keepInside()
+      place()
     }
 
     const onMove = (event: PointerEvent) => {
@@ -252,9 +260,7 @@ export default definePlugin({
       }
     }
 
-    state.x = Math.min(Math.max(SIZE / 2, state.x), innerWidth - SIZE / 2)
-    state.y = Math.min(Math.max(SIZE / 2, state.y), innerHeight - SIZE / 2)
-
+    keepInside()
     place()
     setSprite(state.idleAnimation === 'sleeping' && state.idleFrame >= 8 ? 'sleeping' : 'idle', 0)
     sync()

@@ -1,3 +1,4 @@
+import badgeFaker from './badgeFaker'
 import badges from './badges'
 import betterFolders from './betterFolders'
 import clearUrls from './clearUrls'
@@ -22,7 +23,8 @@ import voiceTimers from './voiceTimers'
 import whoReacted from './whoReacted'
 
 export const plugins = [
-    badges,
+    badgeFaker,
+  badges,
     betterFolders,
     clearUrls,
     communityStatistics,
