@@ -13,6 +13,7 @@ import fakeSurge from './fakeSurge'
 import forceOwnerCrown from './forceOwnerCrown'
 import hideBlocked from './hideBlocked'
 import imageLink from './imageLink'
+import loadingMessages from './loadingMessages'
 import mentionAvatars from './mentionAvatars'
 import microphoneQuality from './microphoneQuality'
 import noLinkWarning from './noLinkWarning'
@@ -48,6 +49,7 @@ export const plugins = [
     forceOwnerCrown,
     hideBlocked,
     imageLink,
+    loadingMessages,
     mentionAvatars,
     microphoneQuality,
     noLinkWarning,

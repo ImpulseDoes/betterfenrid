@@ -34,6 +34,7 @@ A client mod for [Fenrid](https://fenrid.com). It adds plugins, custom themes an
 | Force Owner Crown | Shows a crown next to the server owner in messages, and in the member list when the server hides it. |
 | Hide Blocked Users | Hides messages from people you blocked: Fenrid shows them in chat as usual. Off by default. |
 | Image Link | Never hides image links in messages, even when the image is all the message has. The link appears above the image. GIFs are optional. Off by default. |
+| Loading Messages | Replaces the messages on Fenrid's loading screen with your own, and the signature under them. Mix them with Fenrid's if you like. Off by default. |
 | Mention Avatars | Shows user avatars inside mentions. |
 | Microphone Quality | Picks the bitrate of your microphone in calls, up to 510 kbps. Works from the next time you join a call. Off by default. |
 | No Link Warning | Opens links straight away, without the *Leaving Fenrid* warning. Works for every link, or only the sites you list. Off by default. |
