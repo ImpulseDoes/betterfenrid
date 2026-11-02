@@ -13,6 +13,7 @@ import forceOwnerCrown from './forceOwnerCrown'
 import hideBlocked from './hideBlocked'
 import imageLink from './imageLink'
 import mentionAvatars from './mentionAvatars'
+import noLinkWarning from './noLinkWarning'
 import noReplyMentions from './noReplyMentions'
 import oneko from './oneko'
 import permissionViewer from './permissionViewer'
@@ -45,6 +46,7 @@ export const plugins = [
     hideBlocked,
     imageLink,
     mentionAvatars,
+    noLinkWarning,
     noReplyMentions,
     oneko,
     permissionViewer,

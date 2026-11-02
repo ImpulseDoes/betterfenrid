@@ -34,6 +34,7 @@ A client mod for [Fenrid](https://fenrid.com). It adds plugins, custom themes an
 | Hide Blocked Users | Hides messages from people you blocked: Fenrid shows them in chat as usual. Off by default. |
 | Image Link | Never hides image links in messages, even when the image is all the message has. The link appears above the image. GIFs are optional. Off by default. |
 | Mention Avatars | Shows user avatars inside mentions. |
+| No Link Warning | Opens links straight away, without the *Leaving Fenrid* warning. Works for every link, or only the sites you list. Off by default. |
 | No Reply Mentions | Turns off the reply ping by default. You can still turn it on for a single reply. Off by default. |
 | Oneko | A pixel cat that chases your cursor, ported from [oneko.js](https://github.com/adryd325/oneko.js) by adryd (MIT). Off by default. |
 | Permission Viewer | Adds *Permissions* to the user, server, channel and category menus: a member's permissions and which roles give them, every role's permissions, and what a channel allows or denies. |
