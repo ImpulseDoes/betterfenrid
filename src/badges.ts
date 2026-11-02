@@ -9,6 +9,7 @@ export interface BadgeType {
 export const BADGE_TYPES = {
   developer: { label: 'Better Fenrid Developer', icon: 'verified', color: '#3f56f5' },
   contributor: { label: 'Better Fenrid Contributor', icon: 'plugins', color: '#3ab8f7' },
+  fencordDeveloper: { label: 'Fencord Developer', icon: 'code', color: '#4f8cff' },
 } satisfies Record<string, BadgeType>
 
 export type BadgeId = keyof typeof BADGE_TYPES
@@ -16,4 +17,7 @@ export type BadgeId = keyof typeof BADGE_TYPES
 export const BADGE_HOLDERS: Record<string, BadgeId[]> = {
   // Meeeeeeeeeeeeeeeeeeeee!!!!!!!!!!!!
   '366486701203860': ['developer'],
+  '110864555902508682': ['fencordDeveloper'],
+  '327682752155656': ['fencordDeveloper'],
+  '349197476036700': ['fencordDeveloper'],
 }

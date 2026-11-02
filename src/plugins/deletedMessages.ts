@@ -308,8 +308,9 @@ export default definePlugin({
         saveLog()
         forgetEdits(entry.id)
 
-        // Goes straight to Fenrid, past our own hook that would log it all over again
-        injectGatewayEvent('MESSAGE_DELETE', entry.topic, { id: entry.id, deletedAt: entry.deletedAt })
+        const deletedAt = Number.isNaN(Date.parse(entry.deletedAt)) ? new Date().toISOString() : entry.deletedAt
+
+        injectGatewayEvent('MESSAGE_DELETE', entry.topic, { id: entry.id, deletedAt, changeCursor: { id: entry.id, updatedAt: deletedAt } })
       },
     })
 
