@@ -37,6 +37,7 @@ A client mod for [Fenrid](https://fenrid.com). It adds plugins, custom themes an
 | Oneko | A pixel cat that chases your cursor, ported from [oneko.js](https://github.com/adryd325/oneko.js) by adryd (MIT). Off by default. |
 | Permission Viewer | Adds *Permissions* to the user, server, channel and category menus: a member's permissions and which roles give them, every role's permissions, and what a channel allows or denies. |
 | Read All Button | Adds a *Read All* button above the server list that marks every server as read. Direct messages stay unread. |
+| Platform Indicators | Shows whether someone is on a computer or a phone next to their name, and how many sessions they have open. Green is active, yellow is idle. People who appear invisible show nothing. Off by default. |
 | Quote Message | Adds *Quote Message* to the message menu: pastes the message into your message box as a quote. |
 | Show Hidden Things | Shows a clock next to members who are timed out, which Fenrid has the data for but doesn't display. |
 | Silent Typing | Hides that you are typing. Off by default. |

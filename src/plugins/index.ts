@@ -15,6 +15,7 @@ import mentionAvatars from './mentionAvatars'
 import noReplyMentions from './noReplyMentions'
 import oneko from './oneko'
 import permissionViewer from './permissionViewer'
+import platformIndicators from './platformIndicators'
 import quoteMessage from './quoteMessage'
 import readAllButton from './readAllButton'
 import showHiddenThings from './showHiddenThings'
@@ -43,6 +44,7 @@ export const plugins = [
     noReplyMentions,
     oneko,
     permissionViewer,
+    platformIndicators,
     quoteMessage,
     readAllButton,
     showHiddenThings,

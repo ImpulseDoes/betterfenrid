@@ -1195,6 +1195,25 @@ div:has(> [data-bf-folder-servers])>span {
   color: var(--color-text-muted, #949ba4);
 }
 
+.bf-platform {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  align-self: center;
+  gap: 2px;
+  margin-left: 4px;
+}
+
+.bf-platform-icon {
+  display: inline-flex;
+  color: #23a55a;
+  cursor: default;
+}
+
+.bf-platform-icon[data-active="false"] {
+  color: #f0b232;
+}
+
 .bf-oneko {
   position: fixed;
   top: 0;
