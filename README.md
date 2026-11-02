@@ -2,6 +2,9 @@
 
 A client mod for [Fenrid](https://fenrid.com). It adds plugins, custom themes and its own settings section to the official web app, without replacing it, our fenrid server -> https://fenrid.com/FzyW30IO
 
+[![Install with Tampermonkey](https://img.shields.io/badge/Install-Tampermonkey-00485B?style=for-the-badge&logo=tampermonkey&logoColor=white)](https://github.com/ImpulseDoes/betterfenrid/releases/latest/download/betterfenrid.user.js)
+[![Install with Violentmonkey](https://img.shields.io/badge/Install-Violentmonkey-F7DF1E?style=for-the-badge&labelColor=333333)](https://github.com/ImpulseDoes/betterfenrid/releases/latest/download/betterfenrid.user.js)
+
 > Better Fenrid is a community project and isn't made by the Fenrid team. Use at your own risk.
 
 ## Features
@@ -35,8 +38,10 @@ A client mod for [Fenrid](https://fenrid.com). It adds plugins, custom themes an
 Better Fenrid runs as a userscript in your browser.
 
 1. Install a userscript manager: [Violentmonkey](https://violentmonkey.github.io/) or [Tampermonkey](https://www.tampermonkey.net/).
-2. Download `betterfenrid.user.js` from the [latest release](https://github.com/ImpulseDoes/betterfenrid/releases/latest) and open it. Your userscript manager will offer to install it.
+2. [Open the latest build](https://github.com/ImpulseDoes/betterfenrid/releases/latest/download/betterfenrid.user.js). Your userscript manager will offer to install it.
 3. Open [fenrid.com](https://fenrid.com) and go to **Settings**. You'll find the **Better Fenrid** section above *General*.
+
+Your userscript manager keeps it up to date on its own.
 
 ## Development
 
@@ -128,14 +133,9 @@ Setting types: `boolean`, `string` (optionally `multiline`), `number` (`min`/`ma
 
 ## Releasing
 
-Bump `version` in `package.json`, then push a tag:
+Every push to `main` builds the userscript and publishes it as a new release, numbered `<version in package.json>.<build number>`. Changes that only touch Markdown files don't trigger a release.
 
-```sh
-git tag v0.1.0
-git push origin v0.1.0
-```
-
-GitHub Actions builds the userscript and attaches it to a new release.
+Bump `version` in `package.json` for bigger milestones.
 
 ## License
 

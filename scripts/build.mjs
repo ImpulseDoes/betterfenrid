@@ -3,11 +3,13 @@ import { context, build } from 'esbuild'
 
 const pkg = JSON.parse(readFileSync(new URL('../package.json', import.meta.url), 'utf8'))
 const watch = process.argv.includes('--watch')
+const version = process.env.BF_VERSION ?? pkg.version
+const downloadUrl = 'https://github.com/ImpulseDoes/betterfenrid/releases/latest/download/betterfenrid.user.js'
 
 const userscriptHeader = `// ==UserScript==
 // @name         Better Fenrid
 // @namespace    https://github.com/ImpulseDoes/betterfenrid
-// @version      ${pkg.version}
+// @version      ${version}
 // @description  ${pkg.description}
 // @author       ${pkg.author}
 // @license      MIT
@@ -15,6 +17,8 @@ const userscriptHeader = `// ==UserScript==
 // @icon         https://fenrid.com/favicon.ico
 // @homepageURL  https://github.com/ImpulseDoes/betterfenrid
 // @supportURL   https://github.com/ImpulseDoes/betterfenrid/issues
+// @updateURL    ${downloadUrl}
+// @downloadURL  ${downloadUrl}
 // @run-at       document-start
 // @grant        none
 // @inject-into  page
@@ -28,7 +32,7 @@ const common = {
   format: 'iife',
   target: 'es2022',
   loader: { '.css': 'text', '.jpg': 'dataurl' },
-  define: { __BF_VERSION__: JSON.stringify(pkg.version) },
+  define: { __BF_VERSION__: JSON.stringify(version) },
   legalComments: 'none',
   logLevel: 'info',
 }
