@@ -107,7 +107,7 @@ export default definePlugin({
     addToBio: {
       type: 'boolean',
       label: 'Add my theme to my bio',
-      description: 'Done when you next save your profile. Turn off and save to remove it.',
+      description: 'Others see your theme once you save your profile, you see it right away. Turn off and save to remove it.',
       default: true,
     },
     showBanners: {
@@ -132,6 +132,17 @@ export default definePlugin({
       if (banner) text += `{${banner.replace(/^https:\/\//, '')}}`
 
       return text ? encode(text) : ''
+    }
+
+    let me: string | null = null
+
+    const myId = () => (me ??= currentUserId())
+
+    const ownTheme = (): Theme | null => {
+
+      const code = ownCode()
+
+      return code ? readTheme(code) : null
     }
 
     ctx.onStop(
@@ -167,7 +178,8 @@ export default definePlugin({
       media.patch((original, user) => {
 
         const result = original(user)
-        const theme = typeof user?.bio === 'string' && user.blocked_by_target !== true ? readTheme(user.bio) : null
+        const self = user?.id != null && String(user.id) === myId()
+        const theme = self ? ownTheme() ?? readTheme(user.bio ?? '') : typeof user?.bio === 'string' && user.blocked_by_target !== true ? readTheme(user.bio) : null
 
         if (!theme || !result) return result
 
@@ -181,7 +193,7 @@ export default definePlugin({
 
         }
 
-        if (theme.banner && !result.bannerAnimated && (ctx.settings.showBanners || String(user.id) === currentUserId())) {
+        if (theme.banner && !result.bannerAnimated && (ctx.settings.showBanners || self)) {
 
           next.bannerUrl = theme.banner
           next.bannerAnimated = true

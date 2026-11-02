@@ -3,7 +3,7 @@ import { startTopics } from './api/topics'
 import { startObserver } from './core/dom'
 import { startEntityCache } from './core/entities'
 import { createLogger } from './core/logger'
-import { installModuleHooks } from './core/modules'
+import { installModuleHooks, moduleStatus } from './core/modules'
 import { registerPlugins, syncPlugins } from './core/plugins'
 import { settings } from './core/settings'
 import { createStyle } from './core/styles'
@@ -40,7 +40,7 @@ function init() {
   if (document.body) startUi()
   else document.addEventListener('DOMContentLoaded', startUi, { once: true })
 
-  window.BetterFenrid = { version: VERSION, settings }
+  window.BetterFenrid = { version: VERSION, settings, modules: moduleStatus }
 
   log.info(`${NAME} v${VERSION} loaded`)
 }

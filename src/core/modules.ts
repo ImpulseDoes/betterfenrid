@@ -177,6 +177,12 @@ export function installModuleHooks() {
     })
 }
 
+/** For debugging from the console: BetterFenrid.modules() */
+export function moduleStatus() {
+
+    return { hooked, patched: [...found], wanted: [...patches.keys()] }
+}
+
 /**
  * Declares an export to patch. Call it when the plugin file loads, not in start()
  */
