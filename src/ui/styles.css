@@ -963,3 +963,36 @@
   padding: 0 6px 8px;
   max-height: none;
 }
+
+.bf-voice-timer {
+  flex-shrink: 0;
+  margin-left: 4px;
+  color: currentColor;
+  font-size: 11px;
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
+  opacity: 0.75;
+  cursor: default;
+}
+
+.bf-voice-call {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  box-sizing: border-box;
+  height: 18px;
+  padding: 0 7px;
+  border: 1px solid rgb(35 165 90 / 35%);
+  border-radius: 999px;
+  background: rgb(35 165 90 / 14%);
+  color: #3fd07a;
+  font-size: 11px;
+  font-variant-numeric: tabular-nums;
+  font-weight: 700;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+a:has(> .bf-voice-call)>.truncate {
+  flex: 0 1 auto;
+}

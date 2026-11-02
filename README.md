@@ -35,6 +35,7 @@ A client mod for [Fenrid](https://fenrid.com). It adds plugins, custom themes an
 | Translate | Adds *Translate* to the message menu: opens the message in Google Translate. |
 | Typing in Channel List | Shows animated dots next to channels where someone is typing. |
 | View Raw | Adds *View Raw* to the message, channel, category and user menus: shows the raw JSON, with a copy button. |
+| Voice Timers | Shows how long a call has been going on, as a pill next to the voice channel's name. It counts from the person who has been there longest, with a "≥" (at least) when they were already there as you opened Fenrid. Can also show each person's time. |
 | Who Reacted | Shows the avatars of the people who reacted to a message. |
 
 After an update, Better Fenrid lists what changed the first time Fenrid loads. You can turn this off in *Better Fenrid → Settings*.

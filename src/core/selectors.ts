@@ -33,6 +33,7 @@ export const Selectors = {
   channelName: '.truncate',
   profileTrigger: '[data-profile-preview-trigger]',
   profileBadges: '[aria-label="Profile badges"]',
+  voiceParticipant: '.group\\/vcuser',
   reactionChip: '[data-reaction-chip]',
   replyBar: '.border-l-\\[3px\\].border-primary-action\\/70',
   replyMentionToggle: 'button:not([aria-label])',

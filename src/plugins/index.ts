@@ -14,6 +14,7 @@ import silentTyping from './silentTyping'
 import translate from './translate'
 import typingIndicator from './typingIndicator'
 import viewRaw from './viewRaw'
+import voiceTimers from './voiceTimers'
 import whoReacted from './whoReacted'
 
 export const plugins = [
@@ -33,5 +34,6 @@ export const plugins = [
     translate,
     typingIndicator,
     viewRaw,
+    voiceTimers,
     whoReacted,
 ]
