@@ -3,6 +3,7 @@ import { startTopics } from './api/topics'
 import { startObserver } from './core/dom'
 import { startEntityCache } from './core/entities'
 import { createLogger } from './core/logger'
+import { installModuleHooks } from './core/modules'
 import { registerPlugins, syncPlugins } from './core/plugins'
 import { settings } from './core/settings'
 import { createStyle } from './core/styles'
@@ -25,6 +26,7 @@ function startUi() {
 // Runs before Fenrid's scripts, to catch its connections and avoid a flash of the stock theme
 function init() {
 
+  installModuleHooks()
   installNetworkHooks()
   startTopics()
   startEntityCache()

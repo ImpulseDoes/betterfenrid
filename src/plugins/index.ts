@@ -10,12 +10,15 @@ import experiments from './experiments'
 import expressionManager from './expressionManager'
 import fakeSurge from './fakeSurge'
 import forceOwnerCrown from './forceOwnerCrown'
+import hideBlocked from './hideBlocked'
 import imageLink from './imageLink'
 import mentionAvatars from './mentionAvatars'
 import noReplyMentions from './noReplyMentions'
 import oneko from './oneko'
 import permissionViewer from './permissionViewer'
+import pinDms from './pinDms'
 import platformIndicators from './platformIndicators'
+import profileThemes from './profileThemes'
 import quoteMessage from './quoteMessage'
 import readAllButton from './readAllButton'
 import showHiddenThings from './showHiddenThings'
@@ -39,12 +42,15 @@ export const plugins = [
     expressionManager,
     fakeSurge,
     forceOwnerCrown,
+    hideBlocked,
     imageLink,
     mentionAvatars,
     noReplyMentions,
     oneko,
     permissionViewer,
+    pinDms,
     platformIndicators,
+    profileThemes,
     quoteMessage,
     readAllButton,
     showHiddenThings,

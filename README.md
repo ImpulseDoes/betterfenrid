@@ -31,13 +31,16 @@ A client mod for [Fenrid](https://fenrid.com). It adds plugins, custom themes an
 | Expression Manager | Right click an emoji, a reaction or a GIF to clone it to a server where you can add emojis. Files must be on Fenrid's own storage and at most 256 KiB, except still images, which are shrunk. |
 | Fake Surge | Lets you pick emojis marked *Requires Surge*: they are sent as image links and shown as emojis for you, like Vencord's FakeNitro. Emojis a server blocks stay blocked. Also unlocks 1080p, 1440p and 60 FPS screen sharing with a matching bitrate. Off by default. |
 | Force Owner Crown | Shows a crown next to the server owner in messages, and in the member list when the server hides it. |
+| Hide Blocked Users | Hides messages from people you blocked: Fenrid shows them in chat as usual. Off by default. |
 | Image Link | Never hides image links in messages, even when the image is all the message has. The link appears above the image. GIFs are optional. Off by default. |
 | Mention Avatars | Shows user avatars inside mentions. |
 | No Reply Mentions | Turns off the reply ping by default. You can still turn it on for a single reply. Off by default. |
 | Oneko | A pixel cat that chases your cursor, ported from [oneko.js](https://github.com/adryd325/oneko.js) by adryd (MIT). Off by default. |
 | Permission Viewer | Adds *Permissions* to the user, server, channel and category menus: a member's permissions and which roles give them, every role's permissions, and what a channel allows or denies. |
+| Pin DMs | Right click a DM and pick *Pin DM* to keep it at the top of the list, under a *Pinned* heading. Off by default. |
 | Read All Button | Adds a *Read All* button above the server list that marks every server as read. Direct messages stay unread. |
 | Platform Indicators | Shows whether someone is on a computer or a phone next to their name, and how many sessions they have open. Green is active, yellow is idle. People who appear invisible show nothing. Off by default. |
+| Profile Themes | Two-color profile themes and animated banners without Flare. Set them in the plugin, then save your profile: the theme is hidden in your bio as invisible characters, so everyone with the plugin sees it, like Vencord's FakeProfileThemes. Off by default. |
 | Quote Message | Adds *Quote Message* to the message menu: pastes the message into your message box as a quote. |
 | Show Hidden Things | Shows a clock next to members who are timed out, which Fenrid has the data for but doesn't display. |
 | Silent Typing | Hides that you are typing. Off by default. |

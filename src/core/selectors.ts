@@ -22,6 +22,10 @@ export const Selectors = {
       anchors: ['Copy User ID'],
       markers: ['Copy Username', 'Block', 'Unblock'],
     },
+    dm: {
+      anchors: ['Mute Conversation', 'Unmute Conversation'],
+      markers: ['Mark as read', 'View Profile', 'Notification settings'],
+    },
     server: {
       anchors: ['Copy Server ID'],
       markers: ['Invite People', 'Leave Server', 'Create Channel'],
@@ -39,6 +43,8 @@ export const Selectors = {
   serverList: ':scope > .flex-1',
   folderToggle: 'button[aria-expanded]',
   folderNameInput: '#folder-settings-name',
+  dmLink: 'a[href^="/channels/me/"]',
+  dmRow: '.group.relative.rounded-md',
   reactionChip: '[data-reaction-chip]',
   lockedEmoji: 'button[aria-label="Requires Surge"]',
   emojiLink: 'a[href^="https://cdn.fenrid.com/emojis/"]',

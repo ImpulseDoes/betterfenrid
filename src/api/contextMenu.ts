@@ -215,7 +215,7 @@ function inject(root: Element) {
         e.stopPropagation()
         try {
 
-          const id = target.id ?? (await readNativeId(anchor))
+          const id = target.id ?? (anchorLabel.startsWith('Copy') ? await readNativeId(anchor) : null)
 
           closeMenu(anchor)
           item.action({ ...target, id })

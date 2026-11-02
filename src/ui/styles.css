@@ -1489,3 +1489,12 @@ a[data-bf-fake-surge],
 [data-bf-stream-upsell] {
   display: none !important;
 }
+
+[data-bf-blocked] {
+  display: none !important;
+}
+
+[data-bf-pinned-dms] {
+  display: flex !important;
+  flex-direction: column;
+}
