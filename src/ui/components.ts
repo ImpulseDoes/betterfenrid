@@ -117,13 +117,85 @@ export function SettingControl(def: SettingDef, value: unknown, onChange: (value
 
     case 'select': {
 
-      const field = h(
-        'select',
-        { class: 'bf-input bf-select', onChange: (e: Event) => onChange((e.target as HTMLSelectElement).value) },
-        ...def.options.map((o) => h('option', { value: o.value, selected: o.value === value }, o.label)),
+      const current = def.options.find((o) => o.value === value) ?? def.options[0]
+
+      const label = h('span', { class: 'bf-dropdown-label' }, current?.label ?? '')
+      const chevronSvg = icon('chevron', 16)
+
+      const trigger = h(
+        'button',
+        {
+          class: 'bf-dropdown-trigger',
+          type: 'button',
+          'aria-haspopup': 'listbox',
+          'aria-expanded': 'false',
+        },
+        label,
+        chevronSvg,
       )
 
-      return Row(def.label, def.description, field)
+      const menu = h('div', { class: 'bf-dropdown-menu', role: 'listbox' })
+
+      const wrapper = h('div', { class: 'bf-dropdown' }, trigger, menu)
+
+      const close = () => {
+        trigger.setAttribute('aria-expanded', 'false')
+        menu.classList.remove('bf-dropdown-open')
+      }
+
+      const buildItems = () => {
+
+        menu.replaceChildren(
+          ...def.options.map((o) => {
+
+            const item = h(
+              'div',
+              {
+                class: `bf-dropdown-item${o.value === value ? ' bf-dropdown-item-active' : ''}`,
+                role: 'option',
+                'aria-selected': o.value === value ? 'true' : 'false',
+                onClick: (e: Event) => {
+                  e.stopPropagation()
+                  label.textContent = o.label
+                  value = o.value
+                  onChange(o.value)
+                  close()
+                  buildItems()
+                },
+              },
+              o.label,
+              o.value === value ? icon('check', 16) : null,
+            )
+
+            return item
+          }),
+        )
+      }
+
+      buildItems()
+
+      trigger.addEventListener('click', (e) => {
+        e.stopPropagation()
+
+        const open = trigger.getAttribute('aria-expanded') === 'true'
+
+        if (open) {
+          close()
+        } else {
+          trigger.setAttribute('aria-expanded', 'true')
+          menu.classList.add('bf-dropdown-open')
+        }
+      })
+
+      const onOutside = (e: Event) => {
+
+        if (!wrapper.contains(e.target as Node)) close()
+
+      }
+
+      document.addEventListener('pointerdown', onOutside, true)
+
+      return Row(def.label, def.description, wrapper)
     }
   }
 }
