@@ -582,7 +582,8 @@
   line-height: 1;
 }
 
-[data-bf-menu-item].bf-danger {
+[data-bf-menu-item].bf-danger,
+[data-bf-menu-item].bf-danger * {
   color: var(--bf-danger, #e5484d) !important;
 }
 

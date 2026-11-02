@@ -270,6 +270,7 @@ export default definePlugin({
       id: 'remove',
       label: 'Remove From History',
       icon: 'close',
+      danger: true,
       kinds: ['message'],
       visible: (target) => !!target.id && history.has(target.id) && !isDeletedMessage(target.id),
       action: (target) => forgetEdits(target.id!),

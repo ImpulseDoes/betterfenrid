@@ -294,6 +294,7 @@ export default definePlugin({
       id: 'remove',
       label: 'Remove From History',
       icon: 'close',
+      danger: true,
       kinds: ['message'],
       visible: (target) => !!target.id && logged.has(target.id),
       action: (target) => {
