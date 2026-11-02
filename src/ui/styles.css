@@ -170,6 +170,14 @@
   transform: translateX(16px);
 }
 
+.bf-switch-input:disabled {
+  cursor: not-allowed;
+}
+
+.bf-switch-input:disabled+.bf-switch-track {
+  opacity: 0.5;
+}
+
 .bf-switch-input:focus-visible+.bf-switch-track {
   outline: 2px solid var(--bf-accent);
   outline-offset: 2px;

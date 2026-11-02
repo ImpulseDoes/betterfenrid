@@ -5,7 +5,7 @@ import { syncPlugins } from '../../core/plugins'
 import { settings } from '../../core/settings'
 import { checkForUpdates, openChangelog } from '../../core/updates'
 import { COMMIT, NAME, REPO_URL, VERSION } from '../../meta'
-import { Button, Row, Section, SwitchRow } from '../components'
+import { Button, Row, Section, SettingControl, Switch, SwitchRow } from '../components'
 import type { PageContext } from '../settingsSidebar'
 
 export function SettingsPage({ refresh }: PageContext): Node {
@@ -49,6 +49,22 @@ export function SettingsPage({ refresh }: PageContext): Node {
         'Logs extra details to the developer console (F12). Turn this on when reporting a bug.',
         s.core.debug,
         (v) => settings.update((x) => { x.core.debug = v }),
+      ),
+      Row(
+        'Force Canary API',
+        'Not available yet.',
+        Switch(false, () => { }, 'Force Canary API', true),
+      ),
+      SettingControl(
+        {
+          type: 'string',
+          label: 'Font',
+          description: 'The name of a font installed on your computer. Leave empty for Fenrid\'s own. Code keeps its font.',
+          placeholder: 'Segoe UI',
+          default: '',
+        },
+        s.core.font,
+        (v) => settings.update((x) => { x.core.font = String(v) }),
       ),
     ),
     Section(

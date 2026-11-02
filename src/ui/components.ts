@@ -4,13 +4,14 @@ import { icon, type IconName } from './icons'
 
 type Child = Node | string | null | undefined | false
 
-export function Switch(checked: boolean, onChange: (value: boolean) => void, label?: string) {
+export function Switch(checked: boolean, onChange: (value: boolean) => void, label?: string, disabled = false) {
 
   const input = h('input', {
     type: 'checkbox',
     role: 'switch',
     class: 'bf-switch-input',
     checked,
+    disabled,
     'aria-label': label,
     onChange: () => onChange(input.checked),
   })

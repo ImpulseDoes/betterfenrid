@@ -132,6 +132,18 @@ export const THEMES: ThemeDef[] = [
   },
 ]
 
+const FONT_VARIABLES = ['--font-manrope-loaded', '--font-fira-sans-loaded', '--font-clash-grotesk', '--font-sans']
+
+function fontCss(font: string): string {
+
+  const name = font.replace(/["'\\]/g, '').replace(/\s+/g, ' ').trim()
+
+  if (!name) return ''
+
+  // On body because Fenrid sets the first two on a class there, !important beats that class wherever it loads
+  return `body { ${FONT_VARIABLES.map((variable) => `${variable}: "${name}", sans-serif !important;`).join(' ')} }`
+}
+
 export function startThemes() {
 
   const style = createStyle()
@@ -140,10 +152,10 @@ export function startThemes() {
 
   const apply = () => {
 
-    const { preset, enabled, css } = settings.get().theme
+    const { theme: { preset, enabled, css }, core: { font } } = settings.get()
     const theme = THEMES.find((t) => t.id === preset)
 
-    const next = `${theme?.css ?? ''}\n${enabled ? css : ''}`
+    const next = `${theme?.css ?? ''}\n${enabled ? css : ''}\n${fontCss(font)}`
 
     if (next === current) return
 
