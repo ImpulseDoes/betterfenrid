@@ -89,6 +89,7 @@ export default definePlugin({
 
     let raf = 0
     let last = 0
+    let running = false
 
     const place = () => {
 
@@ -202,6 +203,14 @@ export default definePlugin({
 
       raf = requestAnimationFrame(tick)
 
+      if (!cat.isConnected) {
+
+        if (!document.body) return
+
+        document.body.append(cat)
+
+      }
+
       if (now - last < FRAME_MS) return
 
       last = now
@@ -229,13 +238,14 @@ export default definePlugin({
 
       const run = ctx.settings.reducedMotion || !reducedMotion.matches
 
-      if (run && !cat.isConnected) {
+      if (run && !running) {
 
-        document.body.append(cat)
+        running = true
         raf = requestAnimationFrame(tick)
 
-      } else if (!run && cat.isConnected) {
+      } else if (!run && running) {
 
+        running = false
         cancelAnimationFrame(raf)
         cat.remove()
 
