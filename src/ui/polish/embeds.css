@@ -30,14 +30,18 @@
 }
 
 .bf-embed-cover {
+  position: relative;
   flex: none;
+  align-self: stretch;
   width: 80px;
-  height: 80px;
+  min-height: 80px;
   overflow: hidden;
-  background: #000;
+  background: #111;
 }
 
 .bf-embed-cover img {
+  position: absolute;
+  inset: 0;
   display: block;
   width: 100%;
   height: 100%;

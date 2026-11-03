@@ -112,18 +112,48 @@ function parseGitHub(url: URL): Media | null {
 
   if (url.hostname !== 'github.com' && url.hostname !== 'www.github.com') return null
 
-  const [owner, repo] = url.pathname.split('/').filter(Boolean)
+  const [owner, repoName] = url.pathname.split('/').filter(Boolean)
 
-  if (!owner || !repo || owner === 'orgs' || owner === 'settings') return null
+  if (!owner || !repoName || owner === 'orgs' || owner === 'settings') return null
+
+  const repo = repoName.replace(/\.git$/, '')
+  const id = `${owner}/${repo}`.replace(/\/$/, '')
 
   return {
     site: 'github',
-    key: `github:${owner}/${repo}`,
-    url: `https://github.com/${owner}/${repo}`,
-    title: `${owner}/${repo}`,
+    key: `github:${id.toLowerCase()}`,
+    url: `https://github.com/${id}`,
+    title: id,
     subtitle: 'GitHub',
     image: `https://github.com/${owner}.png?size=80`,
     github: { owner, repo },
+  }
+}
+
+function isLinkText(value: string) {
+
+  return !value || /^https?:\/\//i.test(value)
+}
+
+function betterText(current: string, incoming: string) {
+
+  if (!isLinkText(incoming)) return incoming
+  if (!isLinkText(current)) return current
+
+  return incoming || current
+}
+
+function mergeMedia(base: Media, extra: Media): Media {
+
+  return {
+    ...base,
+    ...extra,
+    title: betterText(base.title, extra.title),
+    subtitle: betterText(base.subtitle, extra.subtitle) || base.subtitle,
+    image: extra.image || base.image,
+    spotify: extra.spotify ?? base.spotify,
+    youtube: extra.youtube ?? base.youtube,
+    github: extra.github ?? base.github,
   }
 }
 
@@ -145,8 +175,8 @@ function fromUrl(raw: string, extra: Partial<Pick<Media, 'title' | 'subtitle' | 
 
   if (!parsed) return null
 
-  if (extra.title) parsed.title = extra.title
-  if (extra.subtitle) parsed.subtitle = extra.subtitle
+  if (extra.title && !isLinkText(extra.title)) parsed.title = extra.title
+  if (extra.subtitle && !isLinkText(extra.subtitle)) parsed.subtitle = extra.subtitle
   if (extra.image) parsed.image = extra.image
 
   return parsed
@@ -188,7 +218,7 @@ function mediaFromEmbed(embed: Record<string, any>): Media | null {
 
   const image = imageOf(embed)
 
-  if (image) media.image = image
+  if (image && media.site !== 'youtube') media.image = image
 
   return media
 }
@@ -299,15 +329,27 @@ function closePlayers(except?: Element) {
   }
 }
 
+function inDesktop() {
+
+  return Boolean(window.BetterFenridNative)
+}
+
+function openUrl(url: string) {
+
+  const native = window.BetterFenridNative
+
+  if (native?.openExternal) native.openExternal(url)
+  else window.open(url, '_blank', 'noopener,noreferrer')
+}
+
 function iframe(src: string, title: string): HTMLIFrameElement {
 
   const frame = document.createElement('iframe')
 
   frame.src = src
   frame.title = title
-  frame.allow = 'autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture'
-  frame.loading = 'lazy'
-  frame.referrerPolicy = 'strict-origin-when-cross-origin'
+  frame.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; fullscreen'
+  frame.setAttribute('allowfullscreen', '')
 
   return frame
 }
@@ -318,9 +360,14 @@ function fill(card: HTMLElement, media: Media) {
   const sub = card.querySelector(`.${CARD}-sub`)
   const img = card.querySelector<HTMLImageElement>(`.${CARD}-cover img, .${CARD}-thumb img`)
 
-  if (title && media.title) title.textContent = media.title
-  if (sub && media.subtitle) sub.textContent = media.subtitle
-  if (img && media.image && img.src !== media.image) img.src = media.image
+  if (title && media.title && !isLinkText(media.title)) title.textContent = media.title
+  if (sub && media.subtitle && !isLinkText(media.subtitle)) sub.textContent = media.subtitle
+
+  if (img && media.image) {
+
+    if (img.src !== media.image) img.src = media.image
+    img.hidden = false
+  }
 }
 
 function enrich(card: HTMLElement, media: Media) {
@@ -331,8 +378,8 @@ function enrich(card: HTMLElement, media: Media) {
 
       if (!data || !card.isConnected) return
 
-      if (!media.title && data.title) media.title = data.title
-      if (!media.image && data.thumbnail) media.image = data.thumbnail
+      if (data.title && isLinkText(media.title)) media.title = data.title
+      if (data.thumbnail) media.image = data.thumbnail
 
       fill(card, media)
     })
@@ -388,9 +435,16 @@ function spotifyCard(media: Media): HTMLElement {
             return
           }
 
+          if (!inDesktop()) {
+
+            openUrl(media.url)
+            return
+          }
+
           player.hidden = false
           preview.setAttribute('aria-pressed', 'true')
           player.replaceChildren(iframe(`https://open.spotify.com/embed/${media.spotify.type}/${media.spotify.id}?utm_source=generator&theme=0`, media.title || 'Spotify'))
+          player.style.height = media.spotify.type === 'track' || media.spotify.type === 'episode' ? '152px' : '352px'
         },
       },
       icon('preview', 12),
@@ -413,7 +467,7 @@ function spotifyCard(media: Media): HTMLElement {
     h(
       'div',
       { class: `${CARD}-row` },
-      h('a', { class: `${CARD}-cover`, href: media.url, target: '_blank', rel: 'noopener noreferrer' }, h('img', { alt: '', src: media.image || 'data:image/gif;base64,R0lGODlhAQABAAAAACwAAAAAAQABAAA=' })),
+      h('a', { class: `${CARD}-cover`, href: media.url, target: '_blank', rel: 'noopener noreferrer' }, h('img', { alt: '', src: media.image || undefined, hidden: !media.image })),
       h(
         'div',
         { class: `${CARD}-body` },
@@ -452,10 +506,19 @@ function youtubeCard(media: Media): HTMLElement {
 
         if (!media.youtube || !player.hidden) return
 
+        if (!inDesktop()) {
+
+          openUrl(media.url)
+          return
+        }
+
         closePlayers()
         thumb.hidden = true
         player.hidden = false
-        player.replaceChildren(iframe(`https://www.youtube-nocookie.com/embed/${media.youtube.id}?autoplay=1`, media.title || 'YouTube'))
+
+        const origin = encodeURIComponent(location.origin || 'https://fenrid.com')
+
+        player.replaceChildren(iframe(`https://www.youtube.com/embed/${media.youtube.id}?autoplay=1&rel=0&modestbranding=1&playsinline=1&origin=${origin}`, media.title || 'YouTube'))
       },
     },
     h('img', { alt: '', src: media.image }),
@@ -529,19 +592,13 @@ function allowed(media: Media, settings: { spotify: boolean; youtube: boolean; g
   return settings[media.site]
 }
 
-function mount(host: Element, media: Media, hide?: Element) {
+function outermost(el: Element) {
 
-  const existing = host.matches(`.${CARD}`) ? host : host.querySelector(`:scope > .${CARD}[${KEY}="${CSS.escape(media.key)}"]`)
+  let message = el.closest(Selectors.message)
 
-  if (existing instanceof HTMLElement && existing.getAttribute(KEY) === media.key) {
+  while (message?.parentElement?.closest(Selectors.message)) message = message.parentElement.closest(Selectors.message)
 
-    hide?.setAttribute(HIDDEN, '')
-
-    return
-  }
-
-  hide?.setAttribute(HIDDEN, '')
-  hide ? hide.before(render(media)) : host.append(render(media))
+  return message
 }
 
 export default definePlugin({
@@ -573,71 +630,88 @@ export default definePlugin({
 
   start(ctx) {
 
-    const listsIn = (root: Element) => {
-
-      const around = root.closest(Selectors.embedList)
-
-      return around ? [around] : [...root.querySelectorAll(Selectors.embedList)]
-    }
-
     const messagesIn = (root: Element) => {
 
-      const around = root.closest(Selectors.message)
+      const around = outermost(root)
 
-      return around ? [around] : [...root.querySelectorAll(Selectors.message)]
+      if (around) return [around]
+
+      return [...root.querySelectorAll(Selectors.message)].filter((el) => !el.parentElement?.closest(Selectors.message))
     }
 
-    const syncList = (list: Element) => {
+    const collect = (message: Element) => {
 
-      for (const child of [...list.children]) {
+      const items = new Map<string, { media: Media; hide: Element }>()
 
-        if (child.classList.contains(CARD)) continue
+      for (const list of message.querySelectorAll(Selectors.embedList)) {
 
-        const media = mediaOf(child)
+        for (const child of [...list.children]) {
 
-        if (!media || !allowed(media, ctx.settings)) {
+          if (child.classList.contains(CARD)) continue
 
-          if (child.hasAttribute(HIDDEN) && child.previousElementSibling?.classList.contains(CARD)) {
+          const media = mediaOf(child)
 
-            child.previousElementSibling.remove()
-            child.removeAttribute(HIDDEN)
-          }
+          if (!media || !allowed(media, ctx.settings)) continue
 
-          continue
+          const prev = items.get(media.key)
+
+          items.set(media.key, prev ? { media: mergeMedia(prev.media, media), hide: prev.hide } : { media, hide: child })
         }
-
-        const prev = child.previousElementSibling
-
-        if (prev instanceof HTMLElement && prev.classList.contains(CARD) && prev.getAttribute(KEY) !== media.key) prev.remove()
-
-        mount(list, media, child)
       }
+
+      return items
+    }
+
+    const cardsIn = (message: Element) => {
+
+      const id = message.getAttribute('data-message-id')
+
+      return [...message.querySelectorAll(`.${CARD}`)].concat(
+        id ? [...document.querySelectorAll(`.${CARD}[data-bf-embed-msg="${CSS.escape(id)}"]`)] : [],
+      ).filter((el, i, all) => all.indexOf(el) === i)
     }
 
     const syncMessage = (message: Element) => {
 
-      const seen = new Set([...message.querySelectorAll(`[${KEY}]`)].map((el) => el.getAttribute(KEY)))
-      const content = message.querySelector(Selectors.messageContent) ?? message
-      const host = message.querySelector(Selectors.embedList) ?? content
+      const items = collect(message)
+      const id = message.getAttribute('data-message-id') ?? ''
 
-      for (const link of content.querySelectorAll('a[href]')) {
+      const byKey = new Map<string, HTMLElement>()
 
-        if (link.closest(`.${CARD}`)) continue
+      for (const card of cardsIn(message)) {
 
-        const media = fromUrl(link.getAttribute('href') ?? '', { title: textOf(link.textContent) })
+        const key = card.getAttribute(KEY)
 
-        if (!media || !allowed(media, ctx.settings) || seen.has(media.key)) continue
+        if (!key || !items.has(key) || byKey.has(key)) {
 
-        seen.add(media.key)
-        host.after(render(media))
+          card.remove()
+          continue
+        }
+
+        byKey.set(key, card as HTMLElement)
+      }
+
+      for (const [key, { media, hide }] of items) {
+
+        let card = byKey.get(key)
+
+        if (!card) {
+
+          card = render(media)
+          if (id) card.setAttribute('data-bf-embed-msg', id)
+          hide.before(card)
+        }
+        else {
+
+          fill(card, media)
+          if (card.nextElementSibling !== hide) hide.before(card)
+        }
+
+        hide.setAttribute(HIDDEN, '')
       }
     }
 
-    const sync = (root: Element) => {
-
-      listsIn(root).forEach(syncList)
-      messagesIn(root).forEach(syncMessage)
-    }
+    const sync = (root: Element) => messagesIn(root).forEach(syncMessage)
 
     ctx.addStyle(css)
     ctx.onDomChange((added) => {
@@ -649,22 +723,17 @@ export default definePlugin({
         sync(el)
       }
     })
-    
     ctx.onSettingsChange(() => {
 
       document.querySelectorAll(`.${CARD}`).forEach((el) => el.remove())
       document.querySelectorAll(`[${HIDDEN}]`).forEach((el) => el.removeAttribute(HIDDEN))
-
       if (document.body) sync(document.body)
-    
-      })
-    
+    })
     ctx.onStop(() => {
 
       closePlayers()
       document.querySelectorAll(`.${CARD}`).forEach((el) => el.remove())
       document.querySelectorAll(`[${HIDDEN}]`).forEach((el) => el.removeAttribute(HIDDEN))
-      
     })
 
     if (document.body) sync(document.body)

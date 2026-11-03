@@ -594,6 +594,47 @@ function setUpSession() {
 
   ses.setPermissionCheckHandler((_webContents, permission, origin) => isInternal(origin) && ALLOWED_PERMISSIONS.has(permission))
 
+  ses.webRequest.onBeforeSendHeaders((details, callback) => {
+
+    const headers = details.requestHeaders
+
+    if (/youtube\.com\/embed\//.test(details.url)) headers.Referer = 'https://www.youtube.com/'
+
+    callback({ requestHeaders: headers })
+  })
+
+  ses.webRequest.onHeadersReceived((details, callback) => {
+
+    const headers = details.responseHeaders ?? {}
+    let host = ''
+
+    try { host = new URL(details.url).hostname } catch { }
+
+    const drop = (name) => {
+
+      for (const key of Object.keys(headers)) if (key.toLowerCase() === name) delete headers[key]
+
+    }
+
+    if (/(^|\.)(spotify\.com|youtube\.com|youtube-nocookie\.com)$/.test(host)) {
+
+      drop('x-frame-options')
+      drop('content-security-policy')
+    }
+
+    const csp = Object.keys(headers).find((key) => key.toLowerCase() === 'content-security-policy')
+    const frames = ' https://open.spotify.com https://embed.spotify.com https://www.youtube-nocookie.com https://www.youtube.com'
+
+    if (csp && /(^|\.)fenrid\.com$/.test(host)) {
+
+      headers[csp] = headers[csp].map((value) => /frame-src/i.test(value)
+        ? value.replace(/frame-src([^;]*)/i, (_, rest) => `frame-src${rest}${frames}`)
+        : `${value}; frame-src 'self'${frames}`)
+    }
+
+    callback({ responseHeaders: headers })
+  })
+
   ses.setDisplayMediaRequestHandler(async (_request, callback) => {
 
     try {
