@@ -26,6 +26,7 @@ import platformIndicators from './platformIndicators'
 import profileThemes from './profileThemes'
 import quoteMessage from './quoteMessage'
 import readAllButton from './readAllButton'
+import requestConsole from './requestConsole'
 import resizableSidebar from './resizableSidebar'
 import showHiddenThings from './showHiddenThings'
 import silentTyping from './silentTyping'
@@ -64,6 +65,7 @@ export const plugins = [
     profileThemes,
     quoteMessage,
     readAllButton,
+    requestConsole,
     resizableSidebar,
     showHiddenThings,
     silentTyping,
