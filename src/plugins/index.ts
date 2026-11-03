@@ -1,5 +1,6 @@
 import badgeFaker from './badgeFaker'
 import badges from './badges'
+import betterEmbedFormats from './betterEmbedFormats'
 import betterFenrid from './betterFenrid'
 import betterFolders from './betterFolders'
 import cameraQuality from './cameraQuality'
@@ -39,6 +40,7 @@ import whoReacted from './whoReacted'
 export const plugins = [
     badgeFaker,
     badges,
+    betterEmbedFormats,
     betterFenrid,
     betterFolders,
     cameraQuality,
