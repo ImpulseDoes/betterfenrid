@@ -592,7 +592,19 @@
 
 [data-bf-menu-item].bf-danger,
 [data-bf-menu-item].bf-danger * {
-  color: var(--bf-danger, #e5484d) !important;
+  color: var(--error-red, var(--bf-danger)) !important;
+}
+
+[data-bf-menu-item].bf-danger:hover,
+[data-bf-menu-item].bf-danger:focus,
+[data-bf-menu-item].bf-danger[data-highlighted] {
+  background-color: var(--error-red, var(--bf-danger));
+}
+
+[data-bf-menu-item].bf-danger:hover *,
+[data-bf-menu-item].bf-danger:focus *,
+[data-bf-menu-item].bf-danger[data-highlighted] * {
+  color: #f0f1f4 !important;
 }
 
 [data-bf-nav] {

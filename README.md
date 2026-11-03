@@ -47,6 +47,7 @@ A client mod for [Fenrid](https://fenrid.com). It adds plugins, custom themes an
 | Platform Indicators | Shows whether someone is on a computer or a phone next to their name, and how many sessions they have open. Green is active, yellow is idle. People who appear invisible show nothing. Off by default. |
 | Profile Themes | Two-color profile themes and animated banners without Flare. Set them in the plugin, then save your profile: the theme is hidden in your bio as invisible characters, so everyone with the plugin sees it, like Vencord's FakeProfileThemes. Off by default. |
 | Quote Message | Adds *Quote Message* to the message menu: pastes the message into your message box as a quote. |
+| Resizable Channel List | Drag the edge of the channel list to make it wider or narrower, like on Discord. Double click the edge to reset it. |
 | Show Hidden Things | Shows a clock next to members who are timed out, which Fenrid has the data for but doesn't display. |
 | Silent Typing | Hides that you are typing. Off by default. |
 | Translate | Adds *Translate* to the message menu: opens the message in Google Translate. |

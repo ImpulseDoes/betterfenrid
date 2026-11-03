@@ -1,0 +1,61 @@
+@media (min-width: 1024px) {
+
+  .w-\[270px\],
+  .lg\:w-\[270px\] {
+    width: var(--bf-sidebar-width);
+  }
+
+  .lg\:pl-\[270px\] {
+    padding-left: var(--bf-sidebar-width);
+  }
+
+  .w-\[342px\] {
+    width: calc(var(--bf-sidebar-width) + 72px);
+  }
+
+  body:has(.w-\[270px\], .lg\:w-\[270px\]) .bf-sidebar-resizer {
+    display: block;
+  }
+}
+
+.bf-sidebar-resizer {
+  position: fixed;
+  z-index: 50;
+  top: 0;
+  bottom: 0;
+  left: calc(var(--bf-sidebar-width) + 72px - 4px);
+  display: none;
+  width: 8px;
+  cursor: col-resize;
+  outline: none;
+  touch-action: none;
+}
+
+.bf-sidebar-resizer::after {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 3px;
+  width: 2px;
+  background: var(--primary-action, #5865f2);
+  content: "";
+  opacity: 0;
+  transition: opacity 120ms ease;
+}
+
+.bf-sidebar-resizer:hover::after {
+  opacity: 1;
+  transition-delay: 150ms;
+}
+
+.bf-sidebar-resizer:focus-visible::after,
+.bf-sidebar-resizing .bf-sidebar-resizer::after {
+  opacity: 1;
+  transition-delay: 0ms;
+}
+
+.bf-sidebar-resizing,
+.bf-sidebar-resizing * {
+  cursor: col-resize !important;
+  user-select: none !important;
+}

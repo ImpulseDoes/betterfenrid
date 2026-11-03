@@ -27,8 +27,10 @@ button[title="Media settings"] {
 }
 
 svg:has(>path[d^="M528 32H48C21.5 32 0 53.5 0 80v16h576"]) {
+  min-width: 18px;
+  min-height: 18px;
   background: currentColor;
-  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill-rule='evenodd' d='M6 1h12a5 5 0 0 1 5 5v12a5 5 0 0 1-5 5H6a5 5 0 0 1-5-5V6a5 5 0 0 1 5-5zM5.2 7.2v9.6h3.3V7.2zM11 7.2v9.6h4c3.3 0 5.3-1.9 5.3-4.8S18.300 7.2 15 7.200zM14.300 10h.6c1.400 0 2.100.800 2.100 2s-.7 2-2.100 2h-.6z'/%3E%3C/svg%3E") center / contain no-repeat;
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill-rule='evenodd' d='M5.5 .5h13a5 5 0 0 1 5 5v13a5 5 0 0 1-5 5h-13a5 5 0 0 1-5-5v-13a5 5 0 0 1 5-5zM4.2 6v12H8V6zM10.2 6v12h4.600c4 0 6.2-2.4 6.2-6s-2.2-6-6.2-6zM14 9.200v5.600h.7c1.7 0 2.5-1.1 2.5-2.800s-.8-2.8-2.5-2.800z'/%3E%3C/svg%3E") center / contain no-repeat;
 }
 
 svg>path[d^="M528 32H48C21.5 32 0 53.5 0 80v16h576"] {
