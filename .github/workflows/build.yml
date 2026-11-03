@@ -56,9 +56,11 @@ jobs:
             dist/betterfenrid.user.js
             dist/betterfenrid.js
 
+  # The portable Windows app. It downloads new mod builds by itself, so it's only rebuilt
+  # when the pushed commit's message has --exe in it (e.g. "fix tray icon --exe").
   desktop:
     needs: build
-    if: github.event_name == 'push'
+    if: github.event_name == 'push' && contains(github.event.head_commit.message, '--exe')
     runs-on: windows-latest
     defaults:
       run:
@@ -91,19 +93,29 @@ jobs:
         working-directory: electron
         run: npm run helper
 
-      - name: Build installer and portable exe
+      - name: Build the portable exe
         working-directory: electron
-        run: node scripts/dist.cjs all
+        run: node scripts/dist.cjs portable
 
       - uses: actions/upload-artifact@v4
         with:
           name: better-fenrid-desktop
-          path: electron/out/*.exe
+          path: electron/out/Better-Fenrid-Portable.exe
 
-      - name: Attach to the release
+      - name: Attach to this build's release
         uses: softprops/action-gh-release@v2
         with:
           tag_name: v${{ env.BF_VERSION }}
-          files: |
-            electron/out/Better-Fenrid-Setup.exe
-            electron/out/Better-Fenrid-Portable.exe
+          files: electron/out/Better-Fenrid-Portable.exe
+
+      - name: Update the desktop release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: desktop
+          name: Better Fenrid Desktop
+          target_commitish: ${{ github.sha }}
+          make_latest: 'false'
+          body: |
+            The newest Better Fenrid desktop app for Windows, built from ${{ github.sha }} with mod v${{ env.BF_VERSION }} inside.
+            The mod updates itself, so this only needs downloading again when the app itself changes.
+          files: electron/out/Better-Fenrid-Portable.exe
