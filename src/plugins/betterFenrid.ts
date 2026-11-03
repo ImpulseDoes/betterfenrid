@@ -1,14 +1,23 @@
-import { definePlugin } from '../core/plugins'
+import { definePlugin, type SelectSetting } from '../core/plugins'
+import { ANIMATION_OPTIONS, animationCss, startAnimations, type AnimationStyle } from '../ui/polish/animations'
 import clean from '../ui/polish/clean.css'
 import icons from '../ui/polish/icons.css'
 import motion from '../ui/polish/motion.css'
+
+const animation = (label: string, description: string, value: AnimationStyle): SelectSetting => ({
+    type: 'select',
+    label,
+    description,
+    default: value,
+    options: ANIMATION_OPTIONS,
+})
 
 const NO_BLUR = '[class*="backdrop-blur"] { backdrop-filter: none !important; }'
 
 export default definePlugin({
     id: 'betterFenrid',
     name: 'Better Fenrid',
-    description: 'Polishes Fenrid: animated icons, smoother motion and tidier details.',
+    description: 'Polishes Fenrid: animated icons, Discord-style animations for menus, dialogs, channels and messages, smoother motion and tidier details.',
     authors: ['Better Fenrid'],
     enabledByDefault: true,
     settings: {
@@ -36,6 +45,23 @@ export default definePlugin({
             description: 'Lighter on older computers, because blur is the most expensive effect Fenrid draws. Overlays stay see-through, but look less frosted.',
             default: false,
         },
+        animMenus: animation('Menu animation', 'Right click and dropdown menus.', 'zoom'),
+        animTooltips: animation('Tooltip animation', 'The labels you get when you hover a button or a server.', 'zoom'),
+        animPopouts: animation('Popout animation', 'Profiles and the emoji picker.', 'slide'),
+        animModals: animation('Dialog animation', 'Windows in the middle of the screen. Their dark background fades.', 'zoom'),
+        animSettings: animation('Settings animation', 'Opening and closing settings.', 'zoom'),
+        animChannels: animation('Channel switch animation', 'The chat slides in from the side of the channel list you moved to.', 'slide'),
+        animServers: animation('Server switch animation', 'The channels and chat slide in from the side of the server list you moved to.', 'slide'),
+        animMessages: animation('New message animation', 'New messages ease in at the bottom.', 'slide'),
+        animDuration: {
+            type: 'number',
+            label: 'Animation length',
+            description: 'In percent. 100 is the normal length, higher is slower, lower is snappier.',
+            default: 100,
+            min: 50,
+            max: 200,
+            step: 10,
+        },
     },
 
     start(ctx) {
@@ -51,10 +77,12 @@ export default definePlugin({
                 smootherMotion && motion,
                 cleanerDetails && clean,
                 reduceBlur && NO_BLUR,
+                animationCss(ctx.settings),
             ].filter(Boolean).join('\n'))
         }
 
         update()
         ctx.onSettingsChange(update)
+        ctx.onStop(startAnimations(() => ctx.settings))
     },
 })
