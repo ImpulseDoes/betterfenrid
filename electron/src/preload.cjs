@@ -243,12 +243,6 @@ if (location.hostname === 'fenrid.com') {
 
     },
 
-    setContentSecurityPolicy(on) {
-
-      ipcRenderer.send('bf:csp', Boolean(on))
-
-    },
-
     updates: {
       check: () => ipcRenderer.invoke('bf:mod-check'),
 

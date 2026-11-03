@@ -6,7 +6,6 @@ import betterFolders from './betterFolders'
 import cameraQuality from './cameraQuality'
 import clearUrls from './clearUrls'
 import communityStatistics from './communityStatistics'
-import contentSecurityPolicy from './contentSecurityPolicy'
 import deletedMessages from './deletedMessages'
 import doubleClickEdit from './doubleClickEdit'
 import editHistory from './editHistory'
@@ -47,7 +46,6 @@ export const plugins = [
     cameraQuality,
     clearUrls,
     communityStatistics,
-    contentSecurityPolicy,
     deletedMessages,
     doubleClickEdit,
     editHistory,

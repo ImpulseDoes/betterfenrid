@@ -1,1 +1,0 @@
-document.documentElement.dataset.bfCsp = '1'
