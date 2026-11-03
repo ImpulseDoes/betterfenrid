@@ -81,9 +81,10 @@ const trackKey = (state: MediaState) => `${state.app}|${state.title}|${state.art
 export default definePlugin({
   id: 'spotifyControls',
   name: 'Spotify Controls',
-  description: 'A Spotify player above your profile in the bottom left: cover, track, play/pause, skip, shuffle, repeat and seeking. Only in the Better Fenrid desktop app.',
+  description: 'A Spotify player above your profile in the bottom left: cover, track, play/pause, skip, shuffle, repeat and seeking.',
   authors: ['Better Fenrid'],
   enabledByDefault: false,
+  desktopOnly: true,
   settings: {
     anyPlayer: {
       type: 'boolean',

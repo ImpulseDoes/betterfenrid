@@ -1,5 +1,6 @@
 import { h } from '../../core/dom'
-import { getPlugins, getPluginSetting, isEnabled, setEnabled, setPluginSetting, type Plugin } from '../../core/plugins'
+import { getPlugins, getPluginSetting, isAvailable, isEnabled, setEnabled, setPluginSetting, type Plugin } from '../../core/plugins'
+import { tooltip } from '../tooltip'
 import { Section, SettingControl, Switch } from '../components'
 import { icon } from '../icons'
 
@@ -44,7 +45,12 @@ export function PluginsPage(): Node {
 function PluginCard(plugin: Plugin): Node {
 
   const schema = plugin.page ? [] : Object.entries(plugin.settings ?? {})
-  const card = h('div', { class: 'bf-option' })
+  const available = isAvailable(plugin)
+  const card = h('div', { class: available ? 'bf-option' : 'bf-option bf-option-unavailable' })
+
+  const pcOnly = plugin.desktopOnly
+    ? tooltip(h('span', { class: 'bf-option-tag' }, 'PC only'), available ? 'Needs the Better Fenrid desktop app' : 'Only works in the Better Fenrid desktop app')
+    : null
 
   const hasSettings = schema.length > 0 || !!plugin.panel
 
@@ -68,11 +74,11 @@ function PluginCard(plugin: Plugin): Node {
       h(
         'div',
         { class: 'bf-option-text' },
-        h('div', { class: 'bf-option-title' }, plugin.name),
+        h('div', { class: 'bf-option-title' }, plugin.name, pcOnly),
         h('div', { class: 'bf-option-desc' }, plugin.description),
       ),
       expand,
-      Switch(isEnabled(plugin.id), (v) => setEnabled(plugin.id, v), `Enable ${plugin.name}`),
+      Switch(isEnabled(plugin.id), (v) => setEnabled(plugin.id, v), available ? `Enable ${plugin.name}` : `${plugin.name} only works in the desktop app`, !available),
     ),
   )
 

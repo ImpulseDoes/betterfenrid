@@ -63,6 +63,8 @@ export interface Plugin<S extends SettingsSchema = SettingsSchema> {
   description: string
   authors: string[]
   enabledByDefault?: boolean
+  // Needs the Better Fenrid desktop app. Can't be turned on in the browser
+  desktopOnly?: boolean
   settings?: S
   // Extra controls shown under the plugin's settings. Available while it's stopped too
   panel?(): Node
@@ -85,10 +87,19 @@ export function getPlugins(): Plugin[] {
 
 }
 
+export const inDesktopApp = () => Boolean(window.BetterFenridNative)
+
+export function isAvailable(plugin: Plugin | undefined): boolean {
+
+  return !!plugin && (!plugin.desktopOnly || inDesktopApp())
+}
+
 export function isEnabled(id: string): boolean {
 
   const plugin = registry.get(id)
   const state = settings.get().plugins[id]
+
+  if (!isAvailable(plugin)) return false
 
   return state?.enabled ?? plugin?.enabledByDefault ?? false
 }
@@ -143,7 +154,7 @@ export function startPlugin(id: string) {
 
   const plugin = registry.get(id)
 
-  if (!plugin || running.has(id)) return
+  if (!plugin || running.has(id) || !isAvailable(plugin)) return
 
   const disposers: (() => void)[] = []
 
@@ -191,6 +202,8 @@ export function stopPlugin(id: string) {
 }
 
 export function setEnabled(id: string, enabled: boolean) {
+
+  if (enabled && !isAvailable(registry.get(id))) return
 
   settings.update((s) => {
 
