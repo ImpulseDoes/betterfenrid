@@ -49,8 +49,147 @@
   }
 
   button[aria-label="Toggle members"]:hover>svg,
-  button[aria-label="Add Reaction"]:hover>svg {
+  button[aria-label="Add Reaction"]:hover>svg,
+  button[aria-label="Copy invite link" i]:hover>svg,
+  button[aria-label="Show composer actions" i]:hover>svg {
     scale: 1.14;
+  }
+
+  button[aria-label="Add attachment" i]:not(:disabled):hover>svg,
+  button[title="Create DM" i]:hover>svg,
+  button[aria-label="Cancel reply" i]:hover>svg {
+    rotate: 90deg;
+  }
+
+  button[aria-label="Emoji" i]:hover>svg {
+    rotate: 12deg;
+    scale: 1.14;
+  }
+
+  button[aria-label="Send message" i]:not(:disabled):hover>svg {
+    animation: bf-send 420ms cubic-bezier(0.2, 0, 0, 1);
+  }
+
+  button[aria-label="Disconnect" i]:hover>svg,
+  button[title="Disconnect" i]:hover>svg {
+    animation: bf-shake 380ms ease-in-out;
+  }
+
+  button[title="Turn On Camera" i]:not(:disabled):hover>svg {
+    animation: bf-flash 420ms ease-out;
+  }
+
+  button[title="Share Screen" i]:not(:disabled):hover>svg,
+  button[aria-label="Message" i]:hover>svg {
+    animation: bf-bob 400ms ease-out;
+  }
+
+  button[title="Turn Off Camera" i]>svg,
+  button[title="Stop Sharing" i]>svg {
+    animation: bf-pop 240ms cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+
+  button[aria-label="Download" i]:hover>svg,
+  button[title="Download" i]:hover>svg {
+    animation: bf-drop 420ms ease-out;
+  }
+
+  button[aria-label="Open sidebar" i]:hover>svg {
+    translate: 2px 0;
+  }
+
+  button[title="Close Sidebar" i]:hover>svg {
+    translate: -2px 0;
+  }
+
+  [data-bf-nav] svg {
+    transition: rotate 450ms cubic-bezier(0.34, 1.56, 0.64, 1), scale 160ms cubic-bezier(0.2, 0, 0, 1);
+  }
+
+  [data-bf-nav="settings"]:hover svg {
+    animation: bf-sliders 520ms ease-in-out;
+  }
+
+  [data-bf-nav="plugins"]:hover svg {
+    animation: bf-wiggle 450ms ease-out;
+  }
+
+  [data-bf-nav="themes"]:hover svg {
+    rotate: -30deg;
+  }
+
+  [data-bf-nav="credits"]:hover svg {
+    animation: bf-beat 700ms ease-in-out;
+  }
+
+  @keyframes bf-sliders {
+    35% {
+      scale: 1 0.82;
+    }
+
+    70% {
+      scale: 1 1.08;
+    }
+  }
+
+  @keyframes bf-beat {
+    15% {
+      scale: 1.2;
+    }
+
+    30% {
+      scale: 1;
+    }
+
+    45% {
+      scale: 1.14;
+    }
+  }
+
+  @keyframes bf-send {
+    45% {
+      translate: 7px -7px;
+      opacity: 0;
+    }
+
+    46% {
+      translate: -7px 7px;
+      opacity: 0;
+    }
+  }
+
+  @keyframes bf-shake {
+    20% {
+      translate: -2px 0;
+      rotate: -8deg;
+    }
+
+    45% {
+      translate: 2px 0;
+      rotate: 8deg;
+    }
+
+    70% {
+      translate: -1px 0;
+      rotate: -4deg;
+    }
+  }
+
+  @keyframes bf-flash {
+    35% {
+      scale: 1.18;
+      filter: brightness(1.6);
+    }
+  }
+
+  @keyframes bf-drop {
+    40% {
+      translate: 0 3px;
+    }
+
+    75% {
+      translate: 0 -1px;
+    }
   }
 
   @keyframes bf-mic-turn {
