@@ -58,23 +58,7 @@ html[data-bf-titlebar="inset"] body.chat-active {
   bottom: 0 !important;
   left: 0 !important;
   height: auto !important;
-  min-height: 0 !important;
   max-height: none !important;
-}
-html[data-bf-titlebar="inset"] body.chat-active > * {
-  height: 100% !important;
-  min-height: 0 !important;
-  max-height: 100% !important;
-}
-html[data-bf-titlebar="inset"] body.chat-active .h-screen,
-html[data-bf-titlebar="inset"] body.chat-active .min-h-screen,
-html[data-bf-titlebar="inset"] body.chat-active .h-dvh,
-html[data-bf-titlebar="inset"] body.chat-active .min-h-dvh,
-html[data-bf-titlebar="inset"] body.chat-active [class*="h-[100vh]"],
-html[data-bf-titlebar="inset"] body.chat-active [class*="h-[100dvh]"] {
-  height: 100% !important;
-  min-height: 0 !important;
-  max-height: 100% !important;
 }
 html[data-bf-titlebar="inset"] body:not(.chat-active) { padding-top: ${TITLE_BAR_HEIGHT}px !important; box-sizing: border-box !important; }
 `
