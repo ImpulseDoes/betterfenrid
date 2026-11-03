@@ -137,6 +137,37 @@ function setBadge(badge) {
     : null
 
   win.setOverlayIcon(image && !image.isEmpty() ? image : null, label)
+  stopTaskbarFlash()
+}
+
+function stopTaskbarFlash() {
+
+  if (!win || win.isDestroyed() || process.platform !== 'win32') return
+
+  win.flashFrame(false)
+}
+
+let flashGuard = null
+
+function guardTaskbarFlash() {
+
+  stopTaskbarFlash()
+
+  if (process.platform !== 'win32' || flashGuard) return
+
+  flashGuard = setInterval(stopTaskbarFlash, 50)
+}
+
+function releaseTaskbarFlash() {
+
+  if (flashGuard) {
+
+    clearInterval(flashGuard)
+    flashGuard = null
+
+  }
+
+  stopTaskbarFlash()
 }
 
 const media = new MediaBridge()
@@ -326,7 +357,15 @@ function createWindow() {
   view.webContents.once('dom-ready', reveal)
   setTimeout(reveal, 3000)
 
-  win.on('focus', () => view?.webContents.focus())
+  win.on('focus', () => {
+
+    releaseTaskbarFlash()
+    view?.webContents.focus()
+
+  })
+
+  win.on('blur', guardTaskbarFlash)
+  win.on('minimize', guardTaskbarFlash)
 
   let saveTimer = null
   const saveBounds = () => {
@@ -354,6 +393,7 @@ function createWindow() {
 
   win.on('closed', () => {
 
+    releaseTaskbarFlash()
     win = null
     view = null
   })
@@ -446,10 +486,12 @@ function createWindow() {
     Menu.buildFromTemplate(items).popup({ window: win })
   })
 
-  webContents.on('page-title-updated', (_event, title) => {
+  webContents.on('page-title-updated', (event, title) => {
 
+    event.preventDefault()
     titleBar.title = title
     win?.setTitle(title)
+    stopTaskbarFlash()
 
   })
 
@@ -588,12 +630,18 @@ function setUpIpc() {
 
   ipcMain.on('bf:open-external', (_event, url) => openExternal(url))
 
-  // Fenrid's unread count (pings + unread DMs) as a red dot on the taskbar icon, no flashing
   ipcMain.on('bf:badge', (event, badge) => {
 
     if (!view || event.sender !== view.webContents) return
 
     setBadge(badge)
+  })
+
+  ipcMain.on('bf:stop-flash', (event) => {
+
+    if (!view || event.sender !== view.webContents) return
+
+    stopTaskbarFlash()
   })
 
   ipcMain.handle('bf:mod-check', async (event) => {

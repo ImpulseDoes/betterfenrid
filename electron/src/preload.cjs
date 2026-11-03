@@ -231,6 +231,12 @@ if (location.hostname === 'fenrid.com') {
 
     },
 
+    stopFlash() {
+
+      ipcRenderer.send('bf:stop-flash')
+
+    },
+
     openExternal(url) {
 
       ipcRenderer.send('bf:open-external', String(url))
@@ -257,12 +263,31 @@ if (location.hostname === 'fenrid.com') {
   watchTitleBarColors()
   floatingTitleBar(info.icon)
 
-  // Fenrid reports unread pings + DMs through the Badging API. Windows can't show that, so pass it on
   webFrame.executeJavaScript(`(() => {
     const native = window.BetterFenridNative
     const set = (count) => { native.setBadge(Number(count) || 0); return Promise.resolve() }
     navigator.setAppBadge = (count) => set(count === undefined ? 1 : count)
     navigator.clearAppBadge = () => set(0)
+
+    const quiet = () => { try { native.stopFlash() } catch {} }
+    const focus = Window.prototype.focus
+
+    Window.prototype.focus = function () {
+      if (this === window) return quiet()
+      return focus.call(this)
+    }
+
+    const NativeNotification = window.Notification
+    
+    if (!NativeNotification) return
+
+    window.Notification = class Notification extends NativeNotification {
+    
+    constructor(title, options) {
+        quiet()
+        super(title, options)
+      }
+    }
   })()`).catch(() => {})
 
   // Same as a userscript at document-start, but no extension needed
