@@ -1,22 +1,21 @@
-export const ASSET_CDN = 'https://media.idoes.pl/needy/betterfenrid'
+export const ASSET_CDN = 'https://media.idoes.pl/betterfenrid'
 export const ASSET_GITHUB = 'https://cdn.jsdelivr.net/gh/ImpulseDoes/betterfenrid@main/src/themes/assets'
 
-const STORAGE_KEY = 'BetterFenrid:assetBase'
 const PROBE_FILE = 'impulse-home.jpg'
-const PROBE_MS = 800
+const PROBE_MS = 5000
 
-function imageOk(url: string, timeoutMs: number): Promise<boolean> {
+function imageOk(url: string, timeoutMs: number): Promise<boolean | null> {
 
   return new Promise((resolve) => {
 
     const img = new Image()
-    const done = (ok: boolean) => {
+    const done = (ok: boolean | null) => {
       img.onload = img.onerror = null
       img.src = ''
       resolve(ok)
     }
 
-    const timer = window.setTimeout(() => done(false), timeoutMs)
+    const timer = window.setTimeout(() => done(null), timeoutMs)
 
     img.onload = () => {
       window.clearTimeout(timer)
@@ -46,17 +45,11 @@ export function assetVars(files: Record<string, string>, base: string): string {
 
 export function startAssetBase(onChange: (base: string) => void): string {
 
-  void (async () => {
+  void imageOk(assetUrl(PROBE_FILE, ASSET_CDN), PROBE_MS).then((ok) => {
 
-    if (await imageOk(assetUrl(PROBE_FILE, ASSET_CDN), PROBE_MS)) {
+    if (ok === false) onChange(ASSET_GITHUB)
 
-      try { localStorage.setItem(STORAGE_KEY, ASSET_CDN) } catch { /* ignore */ }
-      onChange(ASSET_CDN)
-      return
-    }
+  })
 
-    try { localStorage.setItem(STORAGE_KEY, ASSET_GITHUB) } catch { /* ignore */ }
-  })()
-
-  return ASSET_GITHUB
+  return ASSET_CDN
 }

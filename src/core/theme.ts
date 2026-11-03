@@ -16,7 +16,7 @@ import softX from '../themes/soft-x.css'
 import synthwave84 from '../themes/synthwave-84.css'
 import tokyoNight from '../themes/tokyo-night.css'
 import translucence from '../themes/translucence.css'
-import { ASSET_GITHUB, assetVars, startAssetBase } from './assets'
+import { ASSET_CDN, assetVars, startAssetBase } from './assets'
 import { settings } from './settings'
 import { createStyle } from './styles'
 
@@ -209,7 +209,7 @@ export function startThemes() {
   const style = createStyle()
 
   let current = ''
-  let assetBase = ASSET_GITHUB
+  let assetBase = ASSET_CDN
 
   const apply = () => {
 
