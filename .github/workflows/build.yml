@@ -56,8 +56,6 @@ jobs:
             dist/betterfenrid.user.js
             dist/betterfenrid.js
 
-  # The portable Windows app. It downloads new mod builds by itself, so it's only rebuilt
-  # when the pushed commit's message has --exe in it (e.g. "fix tray icon --exe").
   desktop:
     needs: build
     if: github.event_name == 'push' && contains(github.event.head_commit.message, '--exe')
