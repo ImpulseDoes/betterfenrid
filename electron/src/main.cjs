@@ -48,39 +48,48 @@ let tray = null
 let quitting = false
 
 const TITLE_BAR_HEIGHT = 32
-
-const FLOATING_PAGES = /^\/(?:auth|login|register|signup|sign-up|forgot|reset|verify|invite)/
-const titleBar = { background: '#141418', foreground: '#b5b6bd', title: 'Better Fenrid', floating: false }
+const OVERLAY_PAGES = /^\/(?:auth|login|register|signup|sign-up|forgot|reset|verify|invite)/
+const titleBar = { background: '#141418', foreground: '#b5b6bd', title: 'Better Fenrid', mode: 'docked' }
+const INSET_CSS = `
+html[data-bf-titlebar="inset"] body.chat-active { top: ${TITLE_BAR_HEIGHT}px !important; }
+html[data-bf-titlebar="inset"] body:not(.chat-active) { padding-top: ${TITLE_BAR_HEIGHT}px !important; }
+`
 
 function overlayColors() {
 
-  return titleBar.floating
-    ? { color: '#00000000', symbolColor: '#ffffff', height: TITLE_BAR_HEIGHT }
-    : { color: titleBar.background, symbolColor: titleBar.foreground, height: TITLE_BAR_HEIGHT }
+  const colors = {
+    overlay: { color: '#00000000', symbolColor: '#ffffff' },
+    inset: { color: '#00000000', symbolColor: titleBar.foreground },
+    docked: { color: titleBar.background, symbolColor: titleBar.foreground },
+  }
+
+  return { ...colors[titleBar.mode], height: TITLE_BAR_HEIGHT }
 }
 
-function isFloatingPage(url) {
+function modeFor(url) {
 
   try {
 
     const { hostname, pathname } = new URL(url)
 
-    return hostname === 'fenrid.com' && FLOATING_PAGES.test(pathname)
+    if (hostname !== 'fenrid.com') return 'docked'
+
+    return OVERLAY_PAGES.test(pathname) ? 'overlay' : 'inset'
 
   } catch {
 
-    return false
+    return 'docked'
 
   }
 }
 
 let layoutView = () => { }
 
-function setFloating(floating) {
+function setMode(mode) {
 
-  if (titleBar.floating === floating) return
+  if (titleBar.mode === mode) return
 
-  titleBar.floating = floating
+  titleBar.mode = mode
 
   if (!win || win.isDestroyed()) return
 
@@ -101,8 +110,33 @@ function setTitleBarColors(colors) {
   if (!win || win.isDestroyed()) return
 
   win.setBackgroundColor(titleBar.background)
+  win.setTitleBarOverlay(overlayColors())
+  layoutView()
+}
 
-  if (!titleBar.floating) win.setTitleBarOverlay(overlayColors())
+// ---------- Unread badge ----------
+
+let badgeCount = 0
+
+function setBadge(badge) {
+
+  const count = Number.isSafeInteger(badge?.count) && badge.count > 0 ? badge.count : 0
+
+  if (count === badgeCount && count) return
+
+  badgeCount = count
+
+  const label = count ? `${count} unread` : ''
+
+  tray?.setToolTip(count ? `Better Fenrid (${label})` : 'Better Fenrid')
+
+  if (!win || win.isDestroyed() || process.platform !== 'win32') return
+
+  const image = count && typeof badge.image === 'string' && badge.image.startsWith('data:image/png;base64,')
+    ? nativeImage.createFromDataURL(badge.image)
+    : null
+
+  win.setOverlayIcon(image && !image.isEmpty() ? image : null, label)
 }
 
 const media = new MediaBridge()
@@ -263,10 +297,11 @@ function createWindow() {
     if (!win || win.isDestroyed() || !view) return
 
     const [width, height] = win.getContentSize()
-    const top = win.isFullScreen() || titleBar.floating ? 0 : TITLE_BAR_HEIGHT
+    const full = win.isFullScreen()
+    const top = full || titleBar.mode !== 'docked' ? 0 : TITLE_BAR_HEIGHT
 
     view.setBounds({ x: 0, y: top, width, height: height - top })
-    view.webContents.send('bf:titlebar:float', { floating: titleBar.floating && !win.isFullScreen(), height: TITLE_BAR_HEIGHT })
+    view.webContents.send('bf:titlebar:float', { mode: full ? 'none' : titleBar.mode, height: TITLE_BAR_HEIGHT, foreground: titleBar.foreground })
   }
 
   layoutView = layout
@@ -326,11 +361,16 @@ function createWindow() {
   const { webContents } = view
 
   // Float the title bar over full-page backgrounds, dock it inside the app
-  const followPage = (url) => setFloating(isFloatingPage(url))
+  const followPage = (url) => setMode(modeFor(url))
 
   webContents.on('did-navigate', (_event, url) => followPage(url))
   webContents.on('did-navigate-in-page', (_event, url, isMainFrame) => isMainFrame && followPage(url))
-  webContents.on('dom-ready', layout)
+  webContents.on('dom-ready', () => {
+
+    webContents.insertCSS(INSET_CSS).catch(() => { })
+    layout()
+
+  })
 
   // Videos and streams going full screen take the whole window, title bar included
   webContents.on('enter-html-full-screen', () => win?.setFullScreen(true))
@@ -411,11 +451,7 @@ function createWindow() {
     titleBar.title = title
     win?.setTitle(title)
 
-    if (win && !win.isFocused() && /^\(\d+\)/.test(title)) win.flashFrame(true)
-
   })
-
-  win.on('focus', () => win?.flashFrame(false))
 
   webContents.loadURL(HOME)
 
@@ -551,6 +587,14 @@ function setUpIpc() {
   })
 
   ipcMain.on('bf:open-external', (_event, url) => openExternal(url))
+
+  // Fenrid's unread count (pings + unread DMs) as a red dot on the taskbar icon, no flashing
+  ipcMain.on('bf:badge', (event, badge) => {
+
+    if (!view || event.sender !== view.webContents) return
+
+    setBadge(badge)
+  })
 
   ipcMain.handle('bf:mod-check', async (event) => {
 

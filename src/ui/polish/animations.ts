@@ -297,6 +297,7 @@ export function startAnimations(read: () => AnimationSettings): () => void {
     }
 
     const isMessage = (n: Node): n is Element => n instanceof Element && n.matches(MESSAGE)
+    const distanceToBottom = (el: Element) => el.scrollHeight - el.clientHeight - el.scrollTop
 
     const onMessages = (record: MutationRecord) => {
 
@@ -316,8 +317,29 @@ export function startAnimations(read: () => AnimationSettings): () => void {
             // Older messages loaded above aren't new
             if (n.nextElementSibling && isMessage(n.nextElementSibling)) continue
 
-            animate(n, HIDDEN[chosenStyle]('0px', `${MESSAGE_OFFSET}px`), Math.round(220 * scale()), enterEase(chosenStyle), true)
+            playMessage(n, list, chosenStyle)
         }
+    }
+
+    const playMessage = (message: Element, list: Element, chosenStyle: Style) => {
+
+        const parts = message.children.length ? [...message.children] : [message]
+        const atBottom = distanceToBottom(list) <= 1
+        const el = message as HTMLElement
+        const overflow = el.style.overflow
+
+        if (parts[0] !== message) el.style.overflow = 'clip'
+
+        const runs = parts.map((part) => animate(part, HIDDEN[chosenStyle]('0px', `${MESSAGE_OFFSET}px`), Math.round(220 * scale()), enterEase(chosenStyle), true))
+
+        const done = () => {
+
+            el.style.overflow = overflow
+
+            if (atBottom && list.isConnected && distanceToBottom(list) <= MESSAGE_OFFSET + 1) list.scrollTop = list.scrollHeight
+        }
+
+        Promise.all(runs.map((run) => run.finished)).then(done, done)
     }
 
     const observer = new MutationObserver((records) => {

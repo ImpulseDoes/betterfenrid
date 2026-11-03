@@ -290,12 +290,30 @@ export default definePlugin({
 
     }, TICK_MS)
 
+    const spacer = h('div', { class: `${PANEL}-spacer`, 'aria-hidden': 'true' })
+
+    const fitSpacer = () => {
+
+      spacer.style.height = panel.hidden ? '0px' : `${panel.offsetHeight}px`
+
+    }
+
+    const resize = new ResizeObserver(fitSpacer)
+
+    resize.observe(panel)
+
     const place = () => {
 
       const footer = document.querySelector(Selectors.userFooter)
 
-      if (footer && panel.parentElement !== footer) footer.append(panel)
+      if (!footer) return
+      if (panel.parentElement !== footer) footer.append(panel)
 
+      const fenridSpacer = footer.previousElementSibling
+
+      if (fenridSpacer?.matches(Selectors.userFooterSpacer) && spacer.nextElementSibling !== fenridSpacer) fenridSpacer.before(spacer)
+
+      fitSpacer()
     }
 
     ctx.addStyle(css)
@@ -304,7 +322,9 @@ export default definePlugin({
 
       stopListening()
       window.clearInterval(timer)
+      resize.disconnect()
       panel.remove()
+      spacer.remove()
 
     })
 

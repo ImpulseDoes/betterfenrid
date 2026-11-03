@@ -52,7 +52,7 @@ function readColors() {
   const root = getComputedStyle(document.documentElement)
   const rail = document.querySelector('.bg-server-sidebar')
   const hit = document.elementFromPoint(Math.round(innerWidth / 2), 1)
-  const top = rail ?? (hit && !hit.closest('[data-bf-titlebar]') ? hit : document.body)
+  const top = rail ?? (hit && !hit.closest('[data-bf-titlebar-bar]') ? hit : document.body)
   const background = root.getPropertyValue('--bf-titlebar-bg').trim() || (top && solidBackground(top))
   const foreground = root.getPropertyValue('--bf-titlebar-fg').trim() || (top && getComputedStyle(top).color)
 
@@ -64,6 +64,31 @@ function readColors() {
   return { background: hex(back), foreground: hex(front.map((n, i) => n * 0.72 + back[i] * 0.28)) }
 }
 
+// The red dot Windows puts over the taskbar icon, with the count like Discord's
+function badgeImage(count) {
+
+  const size = 32
+  const badge = document.createElement('canvas')
+
+  badge.width = badge.height = size
+
+  const ctx = badge.getContext('2d')
+  const text = count > 99 ? '99+' : String(count)
+
+  ctx.fillStyle = '#f23f43'
+  ctx.beginPath()
+  ctx.arc(size / 2, size / 2, size / 2, 0, Math.PI * 2)
+  ctx.fill()
+
+  ctx.fillStyle = '#fff'
+  ctx.font = `700 ${text.length > 2 ? 13 : text.length > 1 ? 17 : 21}px 'Segoe UI', sans-serif`
+  ctx.textAlign = 'center'
+  ctx.textBaseline = 'middle'
+  ctx.fillText(text, size / 2, size / 2 + 1)
+
+  return badge.toDataURL('image/png')
+}
+
 function floatingTitleBar(icon) {
 
   const bar = document.createElement('div')
@@ -71,7 +96,7 @@ function floatingTitleBar(icon) {
   const name = document.createElement('span')
 
   bar.setAttribute('aria-hidden', 'true')
-  bar.dataset.bfTitlebar = ''
+  bar.dataset.bfTitlebarBar = ''
 
   Object.assign(bar.style, {
     position: 'fixed',
@@ -103,26 +128,35 @@ function floatingTitleBar(icon) {
 
   bar.append(logo, name)
 
-  let floating = false
+  let mode = 'none'
 
   // Fenrid may rebuild <body>, so keep the bar on <html> and put it back if it goes missing
   const mount = () => {
 
-    if (!bar.isConnected) document.documentElement?.append(bar)
+    const root = document.documentElement
+
+    if (!root) return
+    if (!bar.isConnected) root.append(bar)
+    if (root.dataset.bfTitlebar !== mode) root.dataset.bfTitlebar = mode
 
   }
 
   ipcRenderer.on('bf:titlebar:float', (_event, state) => {
 
-    floating = Boolean(state?.floating)
-    bar.style.height = `${state?.height ?? 32}px`
-    bar.style.display = floating ? 'flex' : 'none'
+    mode = ['overlay', 'inset'].includes(state?.mode) ? state.mode : 'none'
 
-    if (floating) mount()
+    const shown = mode !== 'none'
+
+    bar.style.height = `${state?.height ?? 32}px`
+    bar.style.display = shown ? 'flex' : 'none'
+    bar.style.color = mode === 'inset' && state?.foreground ? state.foreground : '#fff'
+
+    if (shown) mount()
+    else if (document.documentElement) delete document.documentElement.dataset.bfTitlebar
 
   })
 
-  setInterval(() => floating && mount(), 1000)
+  setInterval(() => mode !== 'none' && mount(), 1000)
 }
 
 function watchTitleBarColors() {
@@ -189,6 +223,14 @@ if (location.hostname === 'fenrid.com') {
       },
     },
 
+    setBadge(count) {
+
+      const n = Number.isSafeInteger(count) && count > 0 ? count : 0
+
+      ipcRenderer.send('bf:badge', { count: n, image: n ? badgeImage(n) : null })
+
+    },
+
     openExternal(url) {
 
       ipcRenderer.send('bf:open-external', String(url))
@@ -214,6 +256,14 @@ if (location.hostname === 'fenrid.com') {
 
   watchTitleBarColors()
   floatingTitleBar(info.icon)
+
+  // Fenrid reports unread pings + DMs through the Badging API. Windows can't show that, so pass it on
+  webFrame.executeJavaScript(`(() => {
+    const native = window.BetterFenridNative
+    const set = (count) => { native.setBadge(Number(count) || 0); return Promise.resolve() }
+    navigator.setAppBadge = (count) => set(count === undefined ? 1 : count)
+    navigator.clearAppBadge = () => set(0)
+  })()`).catch(() => {})
 
   // Same as a userscript at document-start, but no extension needed
   const code = ipcRenderer.sendSync('bf:mod')

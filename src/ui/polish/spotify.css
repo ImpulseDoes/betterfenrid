@@ -13,6 +13,7 @@
   gap: 4px;
   padding: 8px 10px 6px;
   background: inherit;
+  backdrop-filter: blur(16px);
   border-top: 1px solid var(--color-borders-and-separators, rgba(255, 255, 255, 0.08));
   color: var(--bf-sp-text);
   font-size: 13px;
@@ -22,6 +23,18 @@
 
 .bf-spotify[hidden] {
   display: none;
+}
+
+.bf-spotify-spacer {
+  flex: none;
+  width: 0;
+  pointer-events: none;
+}
+
+@media (max-width: 1023px) {
+  .bf-spotify-spacer {
+    display: none;
+  }
 }
 
 @keyframes bf-spotify-in {

@@ -39,6 +39,7 @@ export const Selectors = {
   profileBadges: '[aria-label="Profile badges"]',
   accountCard: '.fixed[class*="bottom-[72px]"]',
   userFooter: '.fixed.bottom-0.left-0.h-\\[72px\\]',
+  userFooterSpacer: '.pointer-events-none.h-\\[72px\\].w-0',
   voiceParticipant: '.group\\/vcuser',
   serverRail: '.bg-server-sidebar:has(a[href="/channels/me"])',
   serverList: ':scope > .flex-1',
