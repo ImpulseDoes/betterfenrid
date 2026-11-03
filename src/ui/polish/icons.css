@@ -106,8 +106,8 @@
     transition: rotate 450ms cubic-bezier(0.34, 1.56, 0.64, 1), scale 160ms cubic-bezier(0.2, 0, 0, 1);
   }
 
-  [data-bf-nav="settings"]:hover svg {
-    animation: bf-sliders 520ms ease-in-out;
+  [data-bf-nav="settings"]:hover path {
+    animation: bf-sliders 900ms ease-in-out;
   }
 
   [data-bf-nav="plugins"]:hover svg {
@@ -118,31 +118,89 @@
     rotate: -30deg;
   }
 
+  [data-bf-nav="credits"] svg {
+    overflow: visible;
+    transition: color 200ms ease;
+  }
+
   [data-bf-nav="credits"]:hover svg {
-    animation: bf-beat 700ms ease-in-out;
+    color: #ff5c8a;
+  }
+
+  [data-bf-nav="credits"]:hover svg>path {
+    transform-box: fill-box;
+    transform-origin: center;
+    animation: bf-like 600ms ease-in-out;
+  }
+
+  [data-bf-nav="credits"]:hover [data-bf-ring] {
+    animation: bf-like-ring 450ms ease-out 140ms;
+  }
+
+  [data-bf-nav="credits"]:hover [data-bf-spark] {
+    transform-box: fill-box;
+    transform-origin: center;
+    animation: bf-like-spark 650ms cubic-bezier(0.2, 0, 0, 1) 200ms;
   }
 
   @keyframes bf-sliders {
-    35% {
-      scale: 1 0.82;
+
+    0%,
+    100% {
+      d: path("M3 5H13V7H3ZM15 3H17V9H15ZM17 5H21V7H17ZM3 11H7V13H3ZM7 9H9V15H7ZM11 11H21V13H11ZM3 17H9V19H3ZM11 15H13V21H11ZM13 17H21V19H13Z");
     }
 
-    70% {
-      scale: 1 1.08;
+    40% {
+      d: path("M3 5H6V7H3ZM8 3H10V9H8ZM10 5H21V7H10ZM3 11H14V13H3ZM14 9H16V15H14ZM18 11H21V13H18ZM3 17H13V19H3ZM15 15H17V21H15ZM17 17H21V19H17Z");
+    }
+
+    75% {
+      d: path("M3 5H14V7H3ZM16 3H18V9H16ZM18 5H21V7H18ZM3 11H6V13H3ZM6 9H8V15H6ZM10 11H21V13H10ZM3 17H8V19H3ZM10 15H12V21H10ZM12 17H21V19H12Z");
     }
   }
 
-  @keyframes bf-beat {
-    15% {
-      scale: 1.2;
+  @keyframes bf-like {
+    20% {
+      scale: 0.7;
     }
 
-    30% {
+    55% {
+      scale: 1.25;
+    }
+
+    75% {
+      scale: 0.95;
+    }
+  }
+
+  @keyframes bf-like-ring {
+    from {
+      r: 2px;
+      stroke-width: 3px;
+      opacity: 0.9;
+    }
+
+    to {
+      r: 14px;
+      stroke-width: 0;
+      opacity: 0;
+    }
+  }
+
+  @keyframes bf-like-spark {
+    0% {
+      scale: 0.4;
+      opacity: 0;
+    }
+
+    25% {
+      opacity: 1;
+    }
+
+    100% {
+      translate: var(--x) var(--y);
       scale: 1;
-    }
-
-    45% {
-      scale: 1.14;
+      opacity: 0;
     }
   }
 

@@ -94,3 +94,38 @@ export function fittedIcon(name: IconName, size = 20): SVGSVGElement {
 
   return svg
 }
+
+const SPARK_COLORS = ['#ff5c8a', '#ffd166', '#7c9cff']
+
+export function withBurst(svg: SVGSVGElement): SVGSVGElement {
+
+  const ring = document.createElementNS(SVG_NS, 'circle')
+
+  ring.setAttribute('data-bf-ring', '')
+  ring.setAttribute('cx', '12')
+  ring.setAttribute('cy', '12')
+  ring.setAttribute('r', '2')
+  ring.setAttribute('fill', 'none')
+  ring.setAttribute('stroke', SPARK_COLORS[0])
+  ring.setAttribute('opacity', '0')
+  svg.prepend(ring)
+
+  for (let i = 0; i < 7; i++) {
+
+    const angle = (i / 7) * Math.PI * 2 - Math.PI / 2
+    const spark = document.createElementNS(SVG_NS, 'circle')
+
+    spark.setAttribute('data-bf-spark', '')
+    spark.setAttribute('cx', '12')
+    spark.setAttribute('cy', '12')
+    spark.setAttribute('r', '1.4')
+    spark.setAttribute('fill', SPARK_COLORS[i % SPARK_COLORS.length])
+    spark.setAttribute('opacity', '0')
+    spark.style.setProperty('--x', `${(Math.cos(angle) * 15).toFixed(1)}px`)
+    spark.style.setProperty('--y', `${(Math.sin(angle) * 15).toFixed(1)}px`)
+    svg.append(spark)
+
+  }
+
+  return svg
+}

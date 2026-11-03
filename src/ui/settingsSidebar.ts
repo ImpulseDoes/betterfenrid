@@ -15,7 +15,7 @@ import { getPlugins, isEnabled } from '../core/plugins'
 import { Selectors } from '../core/selectors'
 import { settings } from '../core/settings'
 import { NAME, VERSION } from '../meta'
-import { fittedIcon, type IconName } from './icons'
+import { fittedIcon, withBurst, type IconName } from './icons'
 import { CreditsPage } from './pages/credits'
 import { PluginsPage } from './pages/plugins'
 import { SettingsPage } from './pages/settings'
@@ -252,7 +252,7 @@ function buildItem(template: Element, page: Page): Element {
   row.setAttribute(NAV, page.id)
 
   replaceText(row, S.templateItem, page.label)
-  replaceIcon(row, fittedIcon(page.icon))
+  replaceIcon(row, page.id === 'credits' ? withBurst(fittedIcon(page.icon)) : fittedIcon(page.icon))
 
   const open = (e: Event) => {
     e.preventDefault()
