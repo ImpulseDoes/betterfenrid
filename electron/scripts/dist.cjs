@@ -13,9 +13,10 @@ const env = { ...process.env }
 
 delete env.ELECTRON_RUN_AS_NODE
 
-const target = process.argv[2] === 'portable' ? 'portable' : 'nsis'
+// `portable` builds the single-file exe, `all` builds both, nothing builds the installer
+const targets = { portable: ['portable'], all: ['nsis', 'portable'] }[process.argv[2]] ?? ['nsis']
 
-execFileSync(process.platform === 'win32' ? 'npx.cmd' : 'npx', ['electron-builder', '--win', target, `-c.directories.output=${work}`], {
+execFileSync(process.platform === 'win32' ? 'npx.cmd' : 'npx', ['electron-builder', '--win', ...targets, `-c.directories.output=${work}`], {
   cwd: root,
   env,
   stdio: 'inherit',

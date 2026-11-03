@@ -3,7 +3,7 @@ import { toast } from '../../api/toast'
 import { h } from '../../core/dom'
 import { syncPlugins } from '../../core/plugins'
 import { settings } from '../../core/settings'
-import { checkForUpdates, openChangelog } from '../../core/updates'
+import { checkForUpdates, openChangelog, updatesInApp } from '../../core/updates'
 import { COMMIT, NAME, REPO_URL, VERSION } from '../../meta'
 import { Button, Row, Section, SettingControl, Switch, SwitchRow } from '../components'
 import type { PageContext } from '../settingsSidebar'
@@ -26,7 +26,7 @@ export function SettingsPage({ refresh }: PageContext): Node {
       NAME,
       'An open source client mod for Fenrid with plugins, themes and more.',
       Row('Version', `v${VERSION}${COMMIT ? ` (${COMMIT})` : ''}`, Button('Source on GitHub', () => window.open(REPO_URL, '_blank', 'noopener'), 'secondary')),
-      Row('Updates', 'Your userscript manager installs new versions on its own about once a day. Check now to get the latest one right away.', Button('Check for updates', checkForUpdates, 'secondary')),
+      Row('Updates', updatesInApp ? 'The desktop app downloads new versions on its own every couple of hours and switches to them the next time Fenrid reloads.' : 'Your userscript manager installs new versions on its own about once a day. Check now to get the latest one right away.', Button('Check for updates', checkForUpdates, 'secondary')),
       Row('Changelog', 'See what changed in recent versions.', Button('What\'s new', () => openChangelog(), 'secondary')),
     ),
     Section(

@@ -1,4 +1,5 @@
 import { openModal } from '../api/modal'
+import { toast } from '../api/toast'
 import { Button } from '../ui/components'
 import { CHANGELOG, COMMIT, DOWNLOAD_URL, NAME, REPO_URL, VERSION, type Commit } from '../meta'
 import { h } from './dom'
@@ -7,8 +8,31 @@ import { settings } from './settings'
 const NOTICE_DELAY_MS = 4_000
 const FALLBACK_COUNT = 10
 
-export function checkForUpdates() {
-  window.open(DOWNLOAD_URL, '_blank', 'noopener')
+const READY_TOAST_MS = 10_000
+const reloadHint = (version: string) => `${NAME} v${version} is downloaded. Press Ctrl+R to switch to it.`
+
+// The desktop app updates the mod by itself, the userscript goes through its manager
+export const updatesInApp = Boolean(window.BetterFenridNative?.updates)
+
+export async function checkForUpdates() {
+
+  const updates = window.BetterFenridNative?.updates
+
+  if (!updates) return void window.open(DOWNLOAD_URL, '_blank', 'noopener')
+
+  toast('Checking for updates…')
+
+  const result = await updates.check()
+
+  if (result.status === 'ready') toast(reloadHint(result.version ?? ''), 'success', READY_TOAST_MS)
+  else if (result.status === 'latest') toast(`You're on the latest version (v${VERSION})`, 'success')
+  else if (result.status === 'local') toast('Running a local build, updates are off')
+  else toast(`Could not check for updates: ${result.error ?? 'unknown error'}`, 'error', 5000)
+}
+
+export function watchAppUpdates() {
+
+  window.BetterFenridNative?.updates?.onReady(({ version }) => toast(reloadHint(version), 'success', READY_TOAST_MS))
 }
 
 function CommitItem(commit: Commit): Node {

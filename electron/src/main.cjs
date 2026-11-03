@@ -2,6 +2,7 @@ const { app, BaseWindow, BrowserWindow, Menu, Tray, WebContentsView, desktopCapt
 const fs = require('node:fs')
 const path = require('node:path')
 const { MediaBridge } = require('./media.cjs')
+const { ModUpdater } = require('./updater.cjs')
 
 const HOME = 'https://fenrid.com/channels/me'
 const ROOT = path.join(__dirname, '..')
@@ -139,7 +140,7 @@ function writeJson(name, value) {
   }
 }
 
-const config = readJson('config.json', { closeToTray: true, startHidden: false })
+const config = readJson('config.json', { closeToTray: true, startHidden: false, autoUpdate: true })
 
 function setConfig(key, value) {
 
@@ -147,40 +148,42 @@ function setConfig(key, value) {
   writeJson('config.json', config)
 }
 
-// mod boudle
+const LOCAL_MOD = process.env.BF_MOD_PATH || (app.isPackaged ? null : path.join(ROOT, '..', 'dist', 'betterfenrid.js'))
 
-// A copy in userData wins, so people can update the mod without reinstalling
-function modCandidates() {
+const updater = new ModUpdater({
 
-  return [
-    process.env.BF_MOD_PATH,
-    storePath('betterfenrid.js'),
-    app.isPackaged ? path.join(process.resourcesPath, 'betterfenrid.js') : null,
-    path.join(ROOT, '..', 'dist', 'betterfenrid.js'),
-  ].filter(Boolean)
-}
+  cacheFile: storePath('betterfenrid.js'),
+  bundledFile: app.isPackaged ? path.join(process.resourcesPath, 'betterfenrid.js') : null,
+  onReady: (version) => {
+
+    if (view && !view.webContents.isDestroyed()) view.webContents.send('bf:mod-update', { version })
+
+    refreshTray()
+  },
+})
 
 function findMod() {
 
-  return modCandidates().find((file) => fs.existsSync(file)) ?? null
+  return LOCAL_MOD && fs.existsSync(LOCAL_MOD) ? LOCAL_MOD : null
 }
 
 function readMod() {
 
-  const file = findMod()
+  if (LOCAL_MOD) {
 
-  if (!file) return null
+    try {
 
-  try {
+      return fs.readFileSync(LOCAL_MOD, 'utf8')
 
-    return fs.readFileSync(file, 'utf8')
+    } catch (err) {
 
-  } catch (err) {
+      console.error('Could not read the mod', err)
+      return null
 
-    console.error('Could not read the mod', err)
-    return null
-
+    }
   }
+
+  return updater.load()?.code ?? null
 }
 
 // helpers
@@ -548,6 +551,15 @@ function setUpIpc() {
   })
 
   ipcMain.on('bf:open-external', (_event, url) => openExternal(url))
+
+  ipcMain.handle('bf:mod-check', async (event) => {
+
+    if (!isInternal(event.sender.getURL())) return { status: 'error', error: 'Not allowed' }
+    if (LOCAL_MOD) return { status: 'local' }
+
+    return updater.check()
+  })
+
   ipcMain.on('bf:titlebar:colors', (event, colors) => {
 
     if (view && event.sender === view.webContents) setTitleBarColors(colors)
@@ -599,6 +611,8 @@ function setUpIpc() {
   ipcMain.on('bf:media:command', (_event, line) => media.command(line))
 }
 
+let refreshTray = () => { }
+
 function createTray() {
 
   tray = new Tray(nativeImage.createFromPath(TRAY_ICON).resize({ width: 32, height: 32 }))
@@ -606,6 +620,7 @@ function createTray() {
 
   const build = () => Menu.buildFromTemplate([
     { label: 'Open Better Fenrid', click: showWindow },
+    ...(updater.pending ? [{ label: `Reload to update the mod (v${updater.pending})`, click: () => view?.webContents.reload() }] : []),
     { type: 'separator' },
     { label: 'Close to tray', type: 'checkbox', checked: config.closeToTray, click: (item) => setConfig('closeToTray', item.checked) },
     {
@@ -614,6 +629,20 @@ function createTray() {
       checked: app.getLoginItemSettings().openAtLogin,
       click: (item) => app.setLoginItemSettings({ openAtLogin: item.checked, args: ['--hidden'] }),
     },
+    {
+      label: 'Update the mod automatically',
+      type: 'checkbox',
+      checked: config.autoUpdate,
+      enabled: !LOCAL_MOD,
+      click: (item) => {
+
+        setConfig('autoUpdate', item.checked)
+
+        if (item.checked) updater.start()
+        else updater.stop()
+
+      },
+    },
     { type: 'separator' },
     { label: 'Reload', click: () => view?.webContents.reload() },
     { label: 'Open data folder', click: () => shell.openPath(app.getPath('userData')) },
@@ -621,9 +650,11 @@ function createTray() {
     { label: 'Quit', click: () => { quitting = true; app.quit() } },
   ])
 
-  tray.setContextMenu(build())
+  refreshTray = () => tray?.setContextMenu(build())
+
+  refreshTray()
   tray.on('click', showWindow)
-  tray.on('right-click', () => tray.setContextMenu(build()))
+  tray.on('right-click', refreshTray)
 }
 
 function watchMod() {
@@ -671,6 +702,7 @@ app.whenReady().then(() => {
   createWindow()
 
   if (DEV) watchMod()
+  if (!LOCAL_MOD && config.autoUpdate) updater.start()
 
   app.on('activate', showWindow)
 })

@@ -13,6 +13,8 @@ permissions:
 jobs:
   build:
     runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.version.outputs.version }}
     steps:
       - uses: actions/checkout@v4
         with:
@@ -28,7 +30,11 @@ jobs:
 
       # Userscript managers only update when the version goes up, so every build gets its own
       - name: Set version
-        run: echo "BF_VERSION=$(node -p "require('./package.json').version").${{ github.run_number }}" >> "$GITHUB_ENV"
+        id: version
+        run: |
+          version="$(node -p "require('./package.json').version").${{ github.run_number }}"
+          echo "BF_VERSION=$version" >> "$GITHUB_ENV"
+          echo "version=$version" >> "$GITHUB_OUTPUT"
 
       - run: npm run build
 
@@ -49,3 +55,55 @@ jobs:
           files: |
             dist/betterfenrid.user.js
             dist/betterfenrid.js
+
+  desktop:
+    needs: build
+    if: github.event_name == 'push'
+    runs-on: windows-latest
+    defaults:
+      run:
+        shell: bash
+    env:
+      BF_VERSION: ${{ needs.build.outputs.version }}
+      # electron-builder fetches its own copy, the one from npm isn't needed
+      ELECTRON_SKIP_BINARY_DOWNLOAD: '1'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 50
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: |
+            package-lock.json
+            electron/package-lock.json
+
+      - run: npm ci
+      - run: npm run build
+
+      - name: Install app dependencies
+        working-directory: electron
+        run: npm ci
+
+      - name: Build the media helper
+        working-directory: electron
+        run: npm run helper
+
+      - name: Build installer and portable exe
+        working-directory: electron
+        run: node scripts/dist.cjs all
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: better-fenrid-desktop
+          path: electron/out/*.exe
+
+      - name: Attach to the release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: v${{ env.BF_VERSION }}
+          files: |
+            electron/out/Better-Fenrid-Setup.exe
+            electron/out/Better-Fenrid-Portable.exe

@@ -50,13 +50,17 @@
       "oneClick": false,
       "allowToChangeInstallationDirectory": true,
       "shortcutName": "Better Fenrid",
-      "differentialPackage": false
+      "differentialPackage": false,
+      "artifactName": "Better-Fenrid-Setup.${ext}"
     },
     "compression": "maximum",
     "electronLanguages": [
       "en-US",
       "pl"
     ],
-    "afterPack": "./scripts/after-pack.cjs"
+    "afterPack": "./scripts/after-pack.cjs",
+    "portable": {
+      "artifactName": "Better-Fenrid-Portable.${ext}"
+    }
   }
 }

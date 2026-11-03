@@ -194,6 +194,22 @@ if (location.hostname === 'fenrid.com') {
       ipcRenderer.send('bf:open-external', String(url))
 
     },
+
+    updates: {
+      check: () => ipcRenderer.invoke('bf:mod-check'),
+
+      // Called when a new mod build is downloaded and waits for a reload
+      onReady(listener) {
+
+        if (typeof listener !== 'function') throw new TypeError('listener must be a function')
+
+        const handler = (_event, update) => listener(update)
+
+        ipcRenderer.on('bf:mod-update', handler)
+
+        return () => ipcRenderer.removeListener('bf:mod-update', handler)
+      },
+    },
   })
 
   watchTitleBarColors()

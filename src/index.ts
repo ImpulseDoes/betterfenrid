@@ -8,7 +8,7 @@ import { registerPlugins, syncPlugins } from './core/plugins'
 import { settings } from './core/settings'
 import { createStyle } from './core/styles'
 import { startThemes } from './core/theme'
-import { showUpdateNotice } from './core/updates'
+import { showUpdateNotice, watchAppUpdates } from './core/updates'
 import { NAME, VERSION } from './meta'
 import { plugins } from './plugins'
 import { startSettingsInjection } from './ui/settingsSidebar'
@@ -21,6 +21,7 @@ function startUi() {
   startObserver()
   startSettingsInjection()
   showUpdateNotice()
+  watchAppUpdates()
 }
 
 // Runs before Fenrid's scripts, to catch its connections and avoid a flash of the stock theme
