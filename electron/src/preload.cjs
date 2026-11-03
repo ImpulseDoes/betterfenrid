@@ -81,11 +81,11 @@ function floatingTitleBar(icon) {
     height: '32px',
     display: 'none',
     alignItems: 'center',
-    gap: '8px',
-    padding: '0 12px',
+    gap: '10px',
+    padding: '0 14px',
     zIndex: '2147483647',
     color: '#fff',
-    font: "600 12px/1 'Segoe UI Variable Text', 'Segoe UI', system-ui, sans-serif",
+    font: "600 14px/1 'Segoe UI Variable Text', 'Segoe UI', system-ui, sans-serif",
     letterSpacing: '0.01em',
     textShadow: '0 1px 2px rgba(0, 0, 0, 0.35)',
     userSelect: 'none',
@@ -94,7 +94,7 @@ function floatingTitleBar(icon) {
 
   bar.style.setProperty('-webkit-app-region', 'drag')
 
-  Object.assign(logo.style, { width: '16px', height: '16px', borderRadius: '4px', boxShadow: '0 1px 3px rgba(0, 0, 0, 0.3)' })
+  Object.assign(logo.style, { width: '20px', height: '20px', borderRadius: '5px', boxShadow: '0 1px 3px rgba(0, 0, 0, 0.3)' })
   logo.src = icon
   logo.alt = ''
   logo.draggable = false

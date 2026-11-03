@@ -1,8 +1,7 @@
 const { spawn } = require('node:child_process')
 const path = require('node:path')
 const readline = require('node:readline')
-
-const SCRIPT = path.join(__dirname, 'media.ps1').replace(/app\.asar([\\/])/, 'app.asar.unpacked$1')
+const HELPER = path.join(__dirname, 'media', 'media-helper.exe').replace(/app\.asar([\\/])/, 'app.asar.unpacked$1')
 
 class MediaBridge {
 
@@ -66,7 +65,7 @@ class MediaBridge {
 
     clearTimeout(this.restartTimer)
 
-    const child = spawn('powershell.exe', ['-NoLogo', '-NoProfile', '-NonInteractive', '-ExecutionPolicy', 'Bypass', '-File', SCRIPT], {
+    const child = spawn(HELPER, [String(process.pid)], {
       windowsHide: true,
       stdio: ['pipe', 'pipe', 'pipe'],
     })
@@ -103,7 +102,7 @@ class MediaBridge {
     })
 
     child.stderr.on('data', (data) => console.warn('[media]', String(data).trim()))
-    child.stdin.on('error', () => {})
+    child.stdin.on('error', () => { })
 
     child.on('exit', () => {
 

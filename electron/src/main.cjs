@@ -1,4 +1,4 @@
-const { app, BrowserWindow, Menu, Tray, WebContentsView, desktopCapturer, ipcMain, nativeImage, session, shell } = require('electron')
+const { app, BaseWindow, BrowserWindow, Menu, Tray, WebContentsView, desktopCapturer, ipcMain, nativeImage, session, shell } = require('electron')
 const fs = require('node:fs')
 const path = require('node:path')
 const { MediaBridge } = require('./media.cjs')
@@ -24,6 +24,13 @@ const ALLOWED_PERMISSIONS = new Set([
 
 app.setAppUserModelId('com.impulsedoes.betterfenrid')
 
+app.commandLine.appendSwitch('disable-features', [
+  'HardwareMediaKeyHandling',
+  'MediaRouter',
+  'SpareRendererForSitePerProcess',
+  'AutofillServerCommunication',
+].join(','))
+
 if (!app.requestSingleInstanceLock()) {
 
   app.quit()
@@ -31,7 +38,7 @@ if (!app.requestSingleInstanceLock()) {
 
 }
 
-/** @type {BrowserWindow | null} */
+/** @type {BaseWindow | null} */
 let win = null
 /** @type {WebContentsView | null} */
 let view = null
@@ -78,13 +85,6 @@ function setFloating(floating) {
 
   layoutView()
   win.setTitleBarOverlay(overlayColors())
-  sendTitleBar('bf:titlebar:state', titleBar)
-}
-
-function sendTitleBar(channel, value) {
-
-  if (win && !win.isDestroyed()) win.webContents.send(channel, value)
-
 }
 
 const COLOR = /^(#[0-9a-f]{6}|#[0-9a-f]{8})$/i
@@ -102,8 +102,6 @@ function setTitleBarColors(colors) {
   win.setBackgroundColor(titleBar.background)
 
   if (!titleBar.floating) win.setTitleBarOverlay(overlayColors())
-
-  sendTitleBar('bf:titlebar:state', titleBar)
 }
 
 const media = new MediaBridge()
@@ -229,7 +227,7 @@ function createWindow() {
 
   const saved = readJson('window.json', { width: 1280, height: 800, maximized: false })
 
-  win = new BrowserWindow({
+  win = new BaseWindow({
     x: saved.x,
     y: saved.y,
     width: saved.width,
@@ -242,11 +240,6 @@ function createWindow() {
     backgroundColor: titleBar.background,
     titleBarStyle: 'hidden',
     titleBarOverlay: overlayColors(),
-    webPreferences: {
-      preload: path.join(__dirname, 'titlebar-preload.cjs'),
-      contextIsolation: true,
-      sandbox: true,
-    },
   })
 
   view = new WebContentsView({
@@ -256,7 +249,6 @@ function createWindow() {
       contextIsolation: true,
       sandbox: true,
       spellcheck: true,
-      backgroundThrottling: false,
     },
   })
 
@@ -282,23 +274,22 @@ function createWindow() {
 
   if (saved.maximized) win.maximize()
 
-  win.loadFile(path.join(__dirname, 'titlebar.html'))
+  let shown = false
+  const reveal = () => {
 
-  win.once('ready-to-show', () => {
+    if (shown || !win || win.isDestroyed()) return
+
+    shown = true
 
     if (!(config.startHidden && process.argv.includes('--hidden'))) win.show()
 
-  })
+  }
 
-  win.on('focus', () => {
+  view.webContents.once('dom-ready', reveal)
+  setTimeout(reveal, 3000)
 
-    view?.webContents.focus()
-    sendTitleBar('bf:titlebar:focus', true)
-  })
+  win.on('focus', () => view?.webContents.focus())
 
-  win.on('blur', () => sendTitleBar('bf:titlebar:focus', false))
-
-  // Remember where the window was
   let saveTimer = null
   const saveBounds = () => {
 
@@ -416,7 +407,6 @@ function createWindow() {
 
     titleBar.title = title
     win?.setTitle(title)
-    sendTitleBar('bf:titlebar:state', titleBar)
 
     if (win && !win.isFocused() && /^\(\d+\)/.test(title)) win.flashFrame(true)
 
@@ -547,7 +537,7 @@ function setUpIpc() {
 
   ipcMain.on('bf:info', (event) => {
 
-    event.returnValue = { version: app.getVersion(), icon: nativeImage.createFromPath(TRAY_ICON).resize({ width: 32, height: 32 }).toDataURL() }
+    event.returnValue = { version: app.getVersion(), icon: nativeImage.createFromPath(TRAY_ICON).resize({ width: 64, height: 64 }).toDataURL() }
 
   })
 
@@ -562,16 +552,6 @@ function setUpIpc() {
 
     if (view && event.sender === view.webContents) setTitleBarColors(colors)
 
-  })
-
-  ipcMain.on('bf:titlebar:ready', (event) => {
-
-    if (win && event.sender === win.webContents) {
-
-      event.sender.send('bf:titlebar:state', titleBar)
-      event.sender.send('bf:titlebar:focus', win.isFocused())
-
-    }
   })
 
   ipcMain.on('bf:media:subscribe', (event, id) => {
@@ -618,12 +598,6 @@ function setUpIpc() {
 
   ipcMain.on('bf:media:command', (_event, line) => media.command(line))
 }
-
-// windows fucking tray OMFEFYGFG&afgtweyrgfe4tfg4wyrw23rfg3e67y
-// what is sanity without a brain? Feeling? I have a heat strokes while wiriting FUCKING SHELL CODE
-// MICROSOFT FUCK YOU
-// I FELL LIKE IM GOING INSTAUWASBRDHgafdgq8tf w2qfd
-// Welcome that will be $1.59 HAHAHAHAHDHADgftg6dgfde7sfg!@@@@@@@@@@@@@@#E@QW$2qw4e2wq4r
 
 function createTray() {
 

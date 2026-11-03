@@ -9,9 +9,11 @@
   "main": "src/main.cjs",
   "scripts": {
     "mod": "npm --prefix .. run build",
-    "start": "npm run mod && electron .",
-    "dev": "electron . --dev",
-    "dist": "npm run mod && node scripts/dist.cjs"
+    "start": "npm run mod && npm run helper && electron .",
+    "dev": "npm run helper && electron . --dev",
+    "dist": "npm run mod && npm run helper && node scripts/dist.cjs",
+    "dist:portable": "npm run mod && npm run helper && node scripts/dist.cjs portable",
+    "helper": "node scripts/build-helper.cjs"
   },
   "devDependencies": {
     "electron": "^45.2.1",
@@ -26,11 +28,12 @@
     },
     "files": [
       "src/**",
+      "!src/media/*.cs",
       "assets/**",
       "package.json"
     ],
     "asarUnpack": [
-      "src/media.ps1"
+      "src/media/media-helper.exe"
     ],
     "extraResources": [
       {
@@ -40,14 +43,20 @@
     ],
     "win": {
       "target": [
-        "nsis",
-        "portable"
+        "nsis"
       ]
     },
     "nsis": {
       "oneClick": false,
       "allowToChangeInstallationDirectory": true,
-      "shortcutName": "Better Fenrid"
-    }
+      "shortcutName": "Better Fenrid",
+      "differentialPackage": false
+    },
+    "compression": "maximum",
+    "electronLanguages": [
+      "en-US",
+      "pl"
+    ],
+    "afterPack": "./scripts/after-pack.cjs"
   }
 }

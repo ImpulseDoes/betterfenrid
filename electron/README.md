@@ -4,7 +4,7 @@ Fenrid in its own window with Better Fenrid built in, so no userscript manager i
 
 ## What it adds
 
-- **Spotify Controls**: a player above your profile in the bottom left with the cover, the track, play/pause, skip, shuffle, repeat and a seek bar. It talks to the Spotify app through Windows' media controls, so you don't log in to anything. The *Other players too* setting also lets it control other media apps.
+- **Spotify Controls**: a player above your profile in the bottom left with the cover, the track, play/pause, skip, shuffle, repeat and a seek bar. It talks to the Spotify app through Windows' media controls via a 12 KB helper (`src/media/MediaHelper.cs`, built with the C# compiler that ships with Windows), so you don't log in to anything. The *Other players too* setting also lets it control other media apps.
 - **Screen sharing** with a picker for screens and windows, plus system audio.
 - **Tray icon**: closing the window sends the app to the tray. The tray menu can turn that off, set the app to start with Windows, reload Fenrid, or open the data folder.
 - **Desktop basics**: the window remembers its size and position, links to other sites open in your browser, the taskbar flashes when the title shows unread messages, and there's spell check with suggestions.
@@ -24,8 +24,11 @@ npm start        # builds the mod in the repo root, then opens the app
 ## Building an installer
 
 ```sh
-npm run dist     # out/Better Fenrid Setup x.y.z.exe and a portable .exe
+npm run dist            # out/Better Fenrid Setup x.y.z.exe (~92 MB)
+npm run dist:portable   # out/Better Fenrid x.y.z.exe, a single file, no install
 ```
+
+To keep it small, the build only ships English and Polish for Chromium's own UI, drops the DirectX shader compiler (only WebGPU uses it), and compresses at the maximum level.
 
 ## Where the mod comes from
 
