@@ -16,3 +16,17 @@ declare module '*.gif' {
   const dataUrl: string;
   export default dataUrl;
 }
+
+interface BetterFenridNative {
+  version: string;
+  platform: string;
+  media: {
+    subscribe(listener: (message: any) => void): () => void;
+    command(line: string): void;
+  };
+  openExternal(url: string): void;
+}
+
+interface Window {
+  BetterFenridNative?: BetterFenridNative;
+}

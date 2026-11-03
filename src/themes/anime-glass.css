@@ -1,0 +1,112 @@
+/* Shared glass-over-wallpaper shell used by Impulse, Sakura, NAAT, SoftX and Amethyst. */
+
+:root,
+.dark {
+  --anime-shade: rgb(0 0 0 / 80%);
+  --anime-settings-shade: rgb(0 0 0 / 72%);
+  --anime-glass: rgb(0 0 0 / 60%);
+  --anime-solid: rgb(12 12 14 / 92%);
+  --anime-accent: rgb(67 181 129);
+  --anime-accent-hover: rgb(60 202 138);
+  --anime-blur: 8px;
+  --anime-primary-fg: #fff;
+  --onyx-base: rgb(8 8 10 / 88%);
+  --onyx-raised: rgb(15 15 17 / 88%);
+  --onyx-raised-2: rgb(38 38 42 / 88%);
+  --onyx-raised-3: rgb(56 56 62 / 90%);
+  --onyx-line: rgb(255 255 255 / 8%);
+  --onyx-line-strong: rgb(255 255 255 / 14%);
+  --background: transparent;
+  --foreground: var(--text-primary);
+  --server-sidebar: transparent;
+  --channel-sidebar: transparent;
+  --main-chat-area: transparent;
+  --member-list: transparent;
+  --sidebar: transparent;
+  --message-embed-background: var(--anime-glass);
+  --popups-and-modals: var(--anime-solid);
+  --borders-and-separators: var(--onyx-line);
+  --secondary-button: rgb(200 200 200 / 10%);
+  --secondary-button-hover: rgb(200 200 200 / 20%);
+  --muted: rgb(200 200 200 / 5%);
+  --accent: rgb(200 200 200 / 5%);
+  --primary-action: var(--anime-accent);
+  --primary-hover: var(--anime-accent-hover);
+  --primary-foreground: var(--anime-primary-fg);
+  --sidebar-primary-foreground: var(--anime-primary-fg);
+  --accent-vibrant: #dcddde;
+  --success-green: var(--anime-accent);
+  --error-red: #f04747;
+  --warning-yellow: #faa61a;
+  --danger-button: #f04747;
+  --danger-button-hover: #d84040;
+  --danger-button-foreground: #fff;
+  --danger-secondary-button: rgb(240 71 71 / 15%);
+  --danger-secondary-button-hover: rgb(240 71 71 / 25%);
+  --danger-secondary-foreground: #fff;
+  --text-primary: #fff;
+  --text-secondary: #dcddde;
+  --text-muted: rgb(190 192 196);
+  --interactive-hover: #fff;
+  --hover-overlay: rgb(255 255 255 / 6%);
+  --active-overlay: rgb(255 255 255 / 11%);
+  color-scheme: dark;
+}
+
+html {
+  background: linear-gradient(var(--anime-shade), var(--anime-shade)), var(--anime-background) center / cover no-repeat fixed #000 !important;
+}
+
+body {
+  background: transparent !important;
+}
+
+.text-background,
+.text-main-chat-area {
+  color: #0b0b0d;
+}
+
+.bg-popups-and-modals,
+.bg-popover,
+.bg-message-embed-background,
+[role="menu"] {
+  backdrop-filter: blur(var(--anime-blur));
+  -webkit-backdrop-filter: blur(var(--anime-blur));
+}
+
+.fenrid-settings-root {
+  --popups-and-modals: rgb(0 0 0 / 35%);
+  background: linear-gradient(var(--anime-settings-shade), var(--anime-settings-shade)), var(--anime-background) center / cover no-repeat;
+}
+
+.bf-panel {
+  --bf-panel-bg: transparent !important;
+}
+
+.dark ::-webkit-scrollbar-thumb {
+  background-color: rgb(200 200 200 / 20%);
+}
+
+[data-mentioned-current-user="true"] {
+  background: rgb(250 166 26 / 5%);
+  box-shadow: inset 2px 0 0 #faa61a;
+}
+
+[data-mentioned-current-user="true"]:hover {
+  background: rgb(250 166 26 / 8%);
+}
+
+.w-1.rounded-r-full.bg-text-primary {
+  background-color: var(--anime-accent);
+}
+
+.dark .ProseMirror :not(pre)>code {
+  background: var(--anime-glass);
+}
+
+.dark .chat-app .ProseMirror pre,
+.dark .ProseMirror pre,
+.dark .ProseMirror codeBlock {
+  border-color: transparent;
+  background: var(--anime-glass) !important;
+}

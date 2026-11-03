@@ -29,6 +29,7 @@ import readAllButton from './readAllButton'
 import resizableSidebar from './resizableSidebar'
 import showHiddenThings from './showHiddenThings'
 import silentTyping from './silentTyping'
+import spotifyControls from './spotifyControls'
 import translate from './translate'
 import typingIndicator from './typingIndicator'
 import viewRaw from './viewRaw'
@@ -67,6 +68,7 @@ export const plugins = [
     resizableSidebar,
     showHiddenThings,
     silentTyping,
+    spotifyControls,
     translate,
     typingIndicator,
     viewRaw,

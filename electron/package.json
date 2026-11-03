@@ -1,0 +1,53 @@
+{
+  "name": "better-fenrid-desktop",
+  "productName": "Better Fenrid",
+  "version": "0.1.0",
+  "description": "Fenrid in its own window, with Better Fenrid built in.",
+  "author": "impulsedoes",
+  "license": "MIT",
+  "private": true,
+  "main": "src/main.cjs",
+  "scripts": {
+    "mod": "npm --prefix .. run build",
+    "start": "npm run mod && electron .",
+    "dev": "electron . --dev",
+    "dist": "npm run mod && node scripts/dist.cjs"
+  },
+  "devDependencies": {
+    "electron": "^45.2.1",
+    "electron-builder": "^26.18.0"
+  },
+  "build": {
+    "appId": "com.impulsedoes.betterfenrid",
+    "productName": "Better Fenrid",
+    "icon": "assets/icon.png",
+    "directories": {
+      "output": "out"
+    },
+    "files": [
+      "src/**",
+      "assets/**",
+      "package.json"
+    ],
+    "asarUnpack": [
+      "src/media.ps1"
+    ],
+    "extraResources": [
+      {
+        "from": "../dist/betterfenrid.js",
+        "to": "betterfenrid.js"
+      }
+    ],
+    "win": {
+      "target": [
+        "nsis",
+        "portable"
+      ]
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "shortcutName": "Better Fenrid"
+    }
+  }
+}

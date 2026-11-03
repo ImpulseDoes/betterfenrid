@@ -10,7 +10,9 @@
     "build": "node scripts/build.mjs",
     "watch": "node scripts/build.mjs --watch",
     "themes": "node scripts/generate-onyx.mjs",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "desktop": "npm --prefix electron start",
+    "desktop:dist": "npm --prefix electron run dist"
   },
   "keywords": [
     "fenrid",

@@ -1,0 +1,17 @@
+/* Classic NotAnotherAnimeTheme cyan on a wallpaper (puckzxz/NotAnotherAnimeTheme). */
+
+:root,
+.dark {
+  --anime-shade: rgb(0 0 0 / 78%);
+  --anime-settings-shade: rgb(0 0 0 / 70%);
+  --anime-glass: rgb(8 16 22 / 58%);
+  --anime-solid: rgb(10 14 18 / 92%);
+  --anime-accent: #1edcbb;
+  --anime-accent-hover: #5af0d4;
+  --anime-blur: 8px;
+  --anime-primary-fg: #06241e;
+  --onyx-base: rgb(8 12 16 / 88%);
+  --onyx-raised: rgb(14 20 26 / 88%);
+  --text-secondary: #c5e8e2;
+  --success-green: #1edcbb;
+}

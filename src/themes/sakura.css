@@ -1,0 +1,20 @@
+/* Cherry-blossom glass, after popular BetterDiscord Sakura / pink NAAT setups. */
+
+:root,
+.dark {
+  --anime-shade: rgb(48 10 28 / 72%);
+  --anime-settings-shade: rgb(36 8 22 / 78%);
+  --anime-glass: rgb(40 12 28 / 58%);
+  --anime-solid: rgb(32 10 22 / 92%);
+  --anime-accent: #f4a0c0;
+  --anime-accent-hover: #ffc0d6;
+  --anime-blur: 10px;
+  --anime-primary-fg: #2a1018;
+  --onyx-base: rgb(36 12 24 / 86%);
+  --onyx-raised: rgb(48 16 32 / 86%);
+  --onyx-raised-2: rgb(72 28 48 / 88%);
+  --onyx-raised-3: rgb(92 36 60 / 90%);
+  --success-green: #86efac;
+  --text-secondary: #f6d5e2;
+  --text-muted: #d9a8ba;
+}

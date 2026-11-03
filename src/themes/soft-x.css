@@ -1,0 +1,28 @@
+/* SoftX-inspired: comfy lavender glass and heavier blur (DiscordStyles/SoftX). */
+
+:root,
+.dark {
+  --anime-shade: rgb(18 14 28 / 68%);
+  --anime-settings-shade: rgb(16 12 26 / 78%);
+  --anime-glass: rgb(24 18 38 / 52%);
+  --anime-solid: rgb(18 14 28 / 90%);
+  --anime-accent: #c4b5fd;
+  --anime-accent-hover: #ddd6fe;
+  --anime-blur: 18px;
+  --anime-primary-fg: #1e1530;
+  --onyx-base: rgb(22 18 34 / 80%);
+  --onyx-raised: rgb(32 26 48 / 78%);
+  --onyx-raised-2: rgb(48 38 68 / 80%);
+  --onyx-raised-3: rgb(64 50 88 / 84%);
+  --text-secondary: #ddd6fe;
+  --text-muted: #a78bce;
+  --success-green: #86efac;
+}
+
+.bg-channel-sidebar,
+.bg-server-sidebar,
+.bg-member-list,
+.bg-main-chat-area {
+  backdrop-filter: blur(var(--anime-blur));
+  -webkit-backdrop-filter: blur(var(--anime-blur));
+}

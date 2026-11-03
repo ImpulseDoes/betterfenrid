@@ -11,7 +11,7 @@ A client mod for [Fenrid](https://fenrid.com). It adds plugins, custom themes an
 
 - **Settings section**: a *Better Fenrid* section in Fenrid's settings sidebar, with Settings, Plugins and Themes pages.
 - **Plugins**: turn them on and off instantly, with no reload. Each plugin can have its own settings.
-- **Themes**: comes with built-in presets ported from popular BetterDiscord themes (Catppuccin Mocha, Dracula, Nord, Tokyo Night, Dark Matter, Frosted Glass, Translucence, Rosé Pine, Synthwave '84, Onyx, and Impulse's Default). You can switch back to Fenrid's own look and add custom CSS on top, applied live.
+- **Themes**: comes with built-in presets ported from popular BetterDiscord themes (Catppuccin Mocha, Dracula, Nord, Tokyo Night, Dark Matter, Frosted Glass, Translucence, Rosé Pine, Synthwave '84, Onyx, Impulse's Default, Not Another Anime, Sakura, LilyPichu, SoftX, and Amethyst). You can switch back to Fenrid's own look and add custom CSS on top, applied live. Wallpaper themes load images from `media.idoes.pl`, and fall back to this GitHub repo via jsDelivr so they are not inlined in the userscript.
 - **Context menu items**: plugins can add their own items to the message, channel and user right-click menus.
 - **Backup**: export, import and reset your settings.
 
@@ -108,6 +108,7 @@ src/
 │  └─ styles.css
 ├─ plugins/              built-in plugins (registered in plugins/index.ts)
 └─ themes/               theme presets (registered in core/theme.ts)
+   └─ assets/            wallpapers (served from the CDN / GitHub, not bundled)
 ```
 
 ### How it works

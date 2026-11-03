@@ -1,0 +1,18 @@
+/* ClearVision Amethyst-inspired magenta glass. */
+
+:root,
+.dark {
+  --anime-shade: rgb(22 8 36 / 74%);
+  --anime-settings-shade: rgb(16 6 28 / 80%);
+  --anime-glass: rgb(32 12 48 / 56%);
+  --anime-solid: rgb(20 8 32 / 92%);
+  --anime-accent: #c084fc;
+  --anime-accent-hover: #e9d5ff;
+  --anime-blur: 12px;
+  --anime-primary-fg: #1a0a28;
+  --onyx-base: rgb(24 10 40 / 86%);
+  --onyx-raised: rgb(36 16 56 / 86%);
+  --text-secondary: #e9d5ff;
+  --text-muted: #c4b5fd;
+  --success-green: #86efac;
+}

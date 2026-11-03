@@ -1,0 +1,79 @@
+/* LilyPichu by Nyria — Fenrid port of the rose / cream palette (NYRI4/LilyPichu). */
+
+:root,
+.dark {
+  --onyx-base: #220f14;
+  --onyx-raised: #3b1d24;
+  --onyx-raised-2: #49292f;
+  --onyx-raised-3: #5e3640;
+  --onyx-line: rgb(255 199 212 / 18%);
+  --onyx-line-strong: rgb(255 199 212 / 32%);
+
+  --background: #220f14;
+  --foreground: #f8e1e5;
+  --server-sidebar: #220f14;
+  --channel-sidebar: #3b1d24;
+  --main-chat-area: #5e3640;
+  --member-list: #3b1d24;
+  --sidebar: #3b1d24;
+  --message-embed-background: #49292f;
+  --popups-and-modals: #3b1d24;
+  --borders-and-separators: var(--onyx-line);
+  --secondary-button: #49292f;
+  --secondary-button-hover: #5e3640;
+  --muted: #3b1d24;
+  --accent: #49292f;
+
+  --primary-action: #c5536c;
+  --primary-hover: #d66a80;
+  --primary-foreground: #fff;
+  --sidebar-primary-foreground: #fff;
+
+  --danger-button: #e05a6e;
+  --danger-button-hover: #c94b5e;
+  --danger-button-foreground: #fff;
+  --danger-secondary-button: rgb(197 83 108 / 18%);
+  --danger-secondary-button-hover: rgb(197 83 108 / 28%);
+  --danger-secondary-foreground: #f8e1e5;
+
+  --accent-vibrant: #fab1bd;
+  --success-green: #7dce9a;
+  --error-red: #e05a6e;
+  --warning-yellow: #f0c27a;
+
+  --text-primary: #f8e1e5;
+  --text-secondary: #e2c1c7;
+  --text-muted: #ad8c91;
+  --interactive-hover: #ffc7d4;
+  --hover-overlay: rgb(197 83 108 / 16%);
+  --active-overlay: rgb(197 83 108 / 26%);
+  color-scheme: dark;
+}
+
+html,
+body {
+  background: #220f14 !important;
+}
+
+.fenrid-settings-root {
+  background: #3b1d24;
+}
+
+.w-1.rounded-r-full.bg-text-primary {
+  background-color: #c5536c;
+}
+
+[data-mentioned-current-user="true"] {
+  background: rgb(197 83 108 / 16%);
+  box-shadow: inset 2px 0 0 #c5536c;
+}
+
+.dark .ProseMirror :not(pre)>code {
+  background: #49292f;
+}
+
+.dark .chat-app .ProseMirror pre,
+.dark .ProseMirror pre,
+.dark .ProseMirror codeBlock {
+  background: #49292f !important;
+}

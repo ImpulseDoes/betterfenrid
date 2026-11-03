@@ -1,0 +1,221 @@
+.bf-spotify {
+  --bf-sp-text: var(--color-text-primary, var(--text-primary, #f0f1f4));
+  --bf-sp-muted: var(--color-text-secondary, var(--text-secondary, #a2a3ad));
+  --bf-sp-accent: var(--color-primary-action, var(--primary-action, #1db954));
+  --bf-sp-hover: var(--hover-overlay, rgba(255, 255, 255, 0.08));
+
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: calc(100% + var(--fenrid-voice-footer-height, 0px));
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 8px 10px 6px;
+  background: inherit;
+  border-top: 1px solid var(--color-borders-and-separators, rgba(255, 255, 255, 0.08));
+  color: var(--bf-sp-text);
+  font-size: 13px;
+  line-height: 1.25;
+  animation: bf-spotify-in 0.22s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.bf-spotify[hidden] {
+  display: none;
+}
+
+@keyframes bf-spotify-in {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+}
+
+.bf-spotify-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+
+.bf-spotify-art {
+  flex: none;
+  width: 40px;
+  height: 40px;
+  border-radius: 6px;
+  object-fit: cover;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.35);
+  transition: filter 0.2s ease;
+}
+
+.bf-spotify-art[hidden] {
+  display: none;
+}
+
+.bf-spotify-art-empty {
+  display: grid;
+  place-items: center;
+  background: var(--bf-sp-hover);
+  color: var(--bf-sp-muted);
+  box-shadow: none;
+}
+
+.bf-spotify-paused .bf-spotify-art {
+  filter: grayscale(0.4) brightness(0.8);
+}
+
+.bf-spotify-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.bf-spotify-title,
+.bf-spotify-artist {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.bf-spotify-title {
+  font-weight: 600;
+}
+
+.bf-spotify-artist {
+  margin-top: 2px;
+  color: var(--bf-sp-muted);
+  font-size: 12px;
+}
+
+.bf-spotify-controls {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+
+.bf-spotify-button {
+  display: grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  padding: 0;
+  border: 0;
+  border-radius: 6px;
+  background: transparent;
+  color: var(--bf-sp-muted);
+  cursor: pointer;
+  transition: background-color 0.15s ease, color 0.15s ease, transform 0.12s ease;
+}
+
+.bf-spotify-button:hover {
+  background: var(--bf-sp-hover);
+  color: var(--bf-sp-text);
+}
+
+.bf-spotify-button:active {
+  transform: scale(0.9);
+}
+
+.bf-spotify-toggle {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: var(--bf-sp-text);
+  color: #111;
+}
+
+.bf-spotify-toggle:hover {
+  background: var(--bf-sp-text);
+  color: #111;
+  transform: scale(1.06);
+}
+
+.bf-spotify-seek {
+  gap: 6px;
+}
+
+.bf-spotify-seek .bf-spotify-button {
+  width: 24px;
+  height: 24px;
+}
+
+.bf-spotify-on {
+  position: relative;
+  color: var(--bf-sp-accent);
+}
+
+.bf-spotify-on:hover {
+  color: var(--bf-sp-accent);
+}
+
+.bf-spotify-on::after {
+  content: '';
+  position: absolute;
+  bottom: 1px;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: currentColor;
+}
+
+.bf-spotify-time {
+  flex: none;
+  min-width: 30px;
+  color: var(--bf-sp-muted);
+  font-size: 11px;
+  font-variant-numeric: tabular-nums;
+  text-align: center;
+}
+
+.bf-spotify-bar {
+  --bf-progress: 0%;
+  flex: 1;
+  min-width: 0;
+  height: 14px;
+  margin: 0;
+  background: transparent;
+  cursor: pointer;
+  appearance: none;
+}
+
+.bf-spotify-bar:disabled {
+  cursor: default;
+  opacity: 0.5;
+}
+
+.bf-spotify-bar::-webkit-slider-runnable-track {
+  height: 4px;
+  border-radius: 2px;
+  background: linear-gradient(to right, var(--bf-sp-text) var(--bf-progress), var(--bf-sp-hover) var(--bf-progress));
+}
+
+.bf-spotify-bar:hover::-webkit-slider-runnable-track {
+  background: linear-gradient(to right, var(--bf-sp-accent) var(--bf-progress), var(--bf-sp-hover) var(--bf-progress));
+}
+
+.bf-spotify-bar::-webkit-slider-thumb {
+  width: 12px;
+  height: 12px;
+  margin-top: -4px;
+  border: 0;
+  border-radius: 50%;
+  background: var(--bf-sp-text);
+  opacity: 0;
+  transition: opacity 0.15s ease;
+  appearance: none;
+}
+
+.bf-spotify-bar:hover::-webkit-slider-thumb,
+.bf-spotify-bar:active::-webkit-slider-thumb,
+.bf-spotify-bar:focus-visible::-webkit-slider-thumb {
+  opacity: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+
+  .bf-spotify,
+  .bf-spotify-button,
+  .bf-spotify-art {
+    animation: none;
+    transition: none;
+  }
+}
