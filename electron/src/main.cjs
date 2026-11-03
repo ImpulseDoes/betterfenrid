@@ -51,8 +51,16 @@ const TITLE_BAR_HEIGHT = 32
 const OVERLAY_PAGES = /^\/(?:auth|login|register|signup|sign-up|forgot|reset|verify|invite)/
 const titleBar = { background: '#141418', foreground: '#b5b6bd', title: 'Better Fenrid', mode: 'docked' }
 const INSET_CSS = `
-html[data-bf-titlebar="inset"] body.chat-active { top: ${TITLE_BAR_HEIGHT}px !important; }
-html[data-bf-titlebar="inset"] body:not(.chat-active) { padding-top: ${TITLE_BAR_HEIGHT}px !important; }
+html[data-bf-titlebar="inset"] { height: 100%; overflow: hidden; }
+html[data-bf-titlebar="inset"] body.chat-active {
+  top: ${TITLE_BAR_HEIGHT}px !important;
+  right: 0 !important;
+  bottom: 0 !important;
+  left: 0 !important;
+  height: auto !important;
+  max-height: none !important;
+}
+html[data-bf-titlebar="inset"] body:not(.chat-active) { padding-top: ${TITLE_BAR_HEIGHT}px !important; box-sizing: border-box !important; }
 `
 
 function overlayColors() {
