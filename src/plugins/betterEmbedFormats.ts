@@ -1,9 +1,7 @@
-import { toast } from '../api/toast'
 import { h } from '../core/dom'
 import { definePlugin } from '../core/plugins'
 import { findProps } from '../core/react'
 import { Selectors } from '../core/selectors'
-import { tooltip } from '../ui/tooltip'
 import css from '../ui/polish/embeds.css'
 
 const CARD = 'bf-embed'
@@ -40,7 +38,6 @@ interface Media {
   github?: { owner: string; repo: string }
 }
 
-const oembed = new Map<string, Promise<{ title?: string; thumbnail?: string } | null>>()
 const repos = new Map<string, Promise<{ description?: string; stars?: number; forks?: number; language?: string; image?: string } | null>>()
 
 function icon(name: keyof typeof PATHS, size = 16): SVGSVGElement {
@@ -263,22 +260,6 @@ function mediaOf(el: Element): Media | null {
   return null
 }
 
-function spotifyMeta(url: string) {
-
-  const hit = oembed.get(url)
-
-  if (hit) return hit
-
-  const pending = fetch(`https://open.spotify.com/oembed?url=${encodeURIComponent(url)}`)
-    .then((res) => (res.ok ? res.json() : null))
-    .then((data) => (data ? { title: textOf(data.title), thumbnail: textOf(data.thumbnail_url) } : null))
-    .catch(() => null)
-
-  oembed.set(url, pending)
-
-  return pending
-}
-
 function githubMeta(owner: string, repo: string) {
 
   const key = `${owner}/${repo}`
@@ -302,14 +283,6 @@ function githubMeta(owner: string, repo: string) {
   return pending
 }
 
-function copy(url: string) {
-
-  void navigator.clipboard.writeText(url).then(
-    () => toast('Link copied', 'success'),
-    () => toast('Could not copy the link', 'error'),
-  )
-}
-
 function closePlayers(except?: Element) {
 
   for (const card of document.querySelectorAll(`.${CARD}`)) {
@@ -327,19 +300,6 @@ function closePlayers(except?: Element) {
 
     preview?.setAttribute('aria-pressed', 'false')
   }
-}
-
-function inDesktop() {
-
-  return Boolean(window.BetterFenridNative)
-}
-
-function openUrl(url: string) {
-
-  const native = window.BetterFenridNative
-
-  if (native?.openExternal) native.openExternal(url)
-  else window.open(url, '_blank', 'noopener,noreferrer')
 }
 
 function iframe(src: string, title: string): HTMLIFrameElement {
@@ -372,19 +332,6 @@ function fill(card: HTMLElement, media: Media) {
 
 function enrich(card: HTMLElement, media: Media) {
 
-  if (media.site === 'spotify') {
-
-    void spotifyMeta(media.url).then((data) => {
-
-      if (!data || !card.isConnected) return
-
-      if (data.title && isLinkText(media.title)) media.title = data.title
-      if (data.thumbnail) media.image = data.thumbnail
-
-      fill(card, media)
-    })
-  }
-
   if (media.site === 'github' && media.github) {
 
     void githubMeta(media.github.owner, media.github.repo).then((data) => {
@@ -411,87 +358,36 @@ function enrich(card: HTMLElement, media: Media) {
 
 function spotifyCard(media: Media): HTMLElement {
 
-  const player = h('div', { class: `${CARD}-player`, hidden: true })
+  const type = media.spotify?.type ?? 'track'
+  const id = media.spotify?.id
+  const tall = type !== 'track' && type !== 'episode'
+  const height = tall ? 352 : 152
 
-  const preview = tooltip(
-    h(
-      'button',
-      {
-        class: `${CARD}-preview`,
-        type: 'button',
-        'aria-pressed': 'false',
-        onClick: () => {
+  if (id) {
 
-          const open = player.hidden
+    const card = h('div', { class: `${CARD} ${CARD}-spotify ${CARD}-spotify-player`, [KEY]: media.key })
 
-          closePlayers(open ? preview.closest(`.${CARD}`) ?? undefined : undefined)
+    card.style.height = `${height}px`
+    card.append(iframe(`https://open.spotify.com/embed/${type}/${id}?utm_source=generator&theme=0`, media.title || 'Spotify'))
 
-          if (!open || !media.spotify) {
+    return card
+  }
 
-            player.hidden = true
-            player.replaceChildren()
-            preview.setAttribute('aria-pressed', 'false')
-
-            return
-          }
-
-          if (!inDesktop()) {
-
-            openUrl(media.url)
-            return
-          }
-
-          player.hidden = false
-          preview.setAttribute('aria-pressed', 'true')
-          player.replaceChildren(iframe(`https://open.spotify.com/embed/${media.spotify.type}/${media.spotify.id}?utm_source=generator&theme=0`, media.title || 'Spotify'))
-          player.style.height = media.spotify.type === 'track' || media.spotify.type === 'episode' ? '152px' : '352px'
-        },
-      },
-      icon('preview', 12),
-      'Preview',
-    ),
-    'Play a preview',
-  )
-
-  const add = tooltip(h('button', { class: `${CARD}-icon`, type: 'button', onClick: () => copy(media.url) }, icon('plus', 16)), 'Copy link')
-  const more = tooltip(h('a', { class: `${CARD}-icon`, href: media.url, target: '_blank', rel: 'noopener noreferrer' }, icon('more', 16)), 'Open')
-
-  const play = tooltip(
-    h('a', { class: `${CARD}-play`, href: media.url, target: '_blank', rel: 'noopener noreferrer' }, icon('play', 16)),
-    'Play on Spotify',
-  )
-
-  const card = h(
-    'div',
-    { class: `${CARD} ${CARD}-spotify`, [KEY]: media.key },
+  return h(
+    'a',
+    { class: `${CARD} ${CARD}-spotify`, [KEY]: media.key, href: media.url, target: '_blank', rel: 'noopener noreferrer' },
     h(
       'div',
       { class: `${CARD}-row` },
-      h('a', { class: `${CARD}-cover`, href: media.url, target: '_blank', rel: 'noopener noreferrer' }, h('img', { alt: '', src: media.image || undefined, hidden: !media.image })),
+      h('span', { class: `${CARD}-brand` }, icon('spotify', 20)),
       h(
         'div',
-        { class: `${CARD}-body` },
-        h(
-          'div',
-          { class: `${CARD}-top` },
-          h(
-            'div',
-            { class: `${CARD}-copy` },
-            h('a', { class: `${CARD}-title`, href: media.url, target: '_blank', rel: 'noopener noreferrer' }, media.title || 'Spotify'),
-            h('div', { class: `${CARD}-sub` }, media.subtitle || 'Spotify'),
-          ),
-          h('span', { class: `${CARD}-brand` }, icon('spotify', 16)),
-        ),
-        h('div', { class: `${CARD}-actions` }, preview, add, more),
+        { class: `${CARD}-copy` },
+        h('div', { class: `${CARD}-title` }, media.title || 'Spotify'),
+        h('div', { class: `${CARD}-sub` }, media.subtitle || 'Open in Spotify'),
       ),
-      play,
     ),
-    player,
   )
-
-  enrich(card, media)
-
-  return card
 }
 
 function youtubeCard(media: Media): HTMLElement {
@@ -505,12 +401,6 @@ function youtubeCard(media: Media): HTMLElement {
       onClick: () => {
 
         if (!media.youtube || !player.hidden) return
-
-        if (!inDesktop()) {
-
-          openUrl(media.url)
-          return
-        }
 
         closePlayers()
         thumb.hidden = true

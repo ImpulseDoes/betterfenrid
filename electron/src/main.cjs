@@ -58,7 +58,23 @@ html[data-bf-titlebar="inset"] body.chat-active {
   bottom: 0 !important;
   left: 0 !important;
   height: auto !important;
+  min-height: 0 !important;
   max-height: none !important;
+}
+html[data-bf-titlebar="inset"] body.chat-active > * {
+  height: 100% !important;
+  min-height: 0 !important;
+  max-height: 100% !important;
+}
+html[data-bf-titlebar="inset"] body.chat-active .h-screen,
+html[data-bf-titlebar="inset"] body.chat-active .min-h-screen,
+html[data-bf-titlebar="inset"] body.chat-active .h-dvh,
+html[data-bf-titlebar="inset"] body.chat-active .min-h-dvh,
+html[data-bf-titlebar="inset"] body.chat-active [class*="h-[100vh]"],
+html[data-bf-titlebar="inset"] body.chat-active [class*="h-[100dvh]"] {
+  height: 100% !important;
+  min-height: 0 !important;
+  max-height: 100% !important;
 }
 html[data-bf-titlebar="inset"] body:not(.chat-active) { padding-top: ${TITLE_BAR_HEIGHT}px !important; box-sizing: border-box !important; }
 `
@@ -587,11 +603,154 @@ async function showPicker() {
   })
 }
 
+const FRAME_HOSTS = [
+  'https://open.spotify.com',
+  'https://embed.spotify.com',
+  'https://www.youtube.com',
+  'https://youtube.com',
+  'https://www.youtube-nocookie.com',
+  'https://github.com',
+  'https://gist.github.com',
+  'https://www.github.com',
+]
+
+const IMAGE_HOSTS = [
+  'https://github.com',
+  'https://avatars.githubusercontent.com',
+  'https://*.githubusercontent.com',
+  'https://i.ytimg.com',
+  'https://i.scdn.co',
+  'https://mosaic.scdn.co',
+]
+
+const CONNECT_HOSTS = [
+  'https://api.github.com',
+]
+
+function cspSources(value, name) {
+
+  const match = value.match(new RegExp(`(?:^|;)\\s*${name}\\s+([^;]+)`, 'i'))
+
+  return match ? match[1].trim().split(/\s+/).filter(Boolean) : []
+}
+
+function allowCsp(value, name, extra) {
+
+  const current = cspSources(value, name)
+
+  if (current.length) {
+
+    const add = extra.filter((source) => !current.includes(source))
+
+    if (!add.length) return value
+
+    return value.replace(new RegExp(`((?:^|;)\\s*)${name}\\s+([^;]+)`, 'i'), (_, pre, rest) => `${pre}${name} ${rest.trim()} ${add.join(' ')}`)
+  }
+
+  const fallback = cspSources(value, 'default-src')
+  const merged = [...new Set([...(fallback.length ? fallback : ["'self'"]), ...extra])]
+
+  return `${value}; ${name} ${merged.join(' ')}`
+}
+
+function loosenFenridCsp(value) {
+
+  let next = allowCsp(value, 'frame-src', FRAME_HOSTS)
+
+  if (cspSources(value, 'child-src').length) next = allowCsp(next, 'child-src', FRAME_HOSTS)
+
+  next = allowCsp(next, 'img-src', IMAGE_HOSTS)
+
+  return allowCsp(next, 'connect-src', CONNECT_HOSTS)
+}
+
+function stripFrameLock(value) {
+
+  return value
+    .replace(/frame-ancestors\s+[^;]+;?/gi, '')
+    .replace(/;\s*;/g, ';')
+    .replace(/^\s*;\s*|\s*;\s*$/g, '')
+    .trim()
+}
+
+function headerKey(headers, name) {
+
+  return Object.keys(headers).find((key) => key.toLowerCase() === name)
+}
+
+function onEmbedBeforeSendHeaders(details, callback) {
+
+  const headers = details.requestHeaders
+
+  if (/youtube\.com\/embed\//.test(details.url)) headers.Referer = 'https://www.youtube.com/'
+
+  callback({ requestHeaders: headers })
+}
+
+function onEmbedHeadersReceived(details, callback) {
+
+  const headers = details.responseHeaders ?? {}
+  let host = ''
+
+  try { host = new URL(details.url).hostname } catch { }
+
+  const drop = (name) => {
+
+    const key = headerKey(headers, name)
+
+    if (key) delete headers[key]
+  }
+
+  if (/(^|\.)(spotify\.com|youtube\.com|youtube-nocookie\.com|github\.com)$/.test(host)) {
+
+    drop('x-frame-options')
+
+    const csp = headerKey(headers, 'content-security-policy')
+
+    if (csp) {
+
+      headers[csp] = headers[csp].map(stripFrameLock).filter(Boolean)
+
+      if (!headers[csp].length) delete headers[csp]
+    }
+  }
+
+  const csp = headerKey(headers, 'content-security-policy')
+
+  if (csp && /(^|\.)fenrid\.com$/.test(host)) headers[csp] = headers[csp].map(loosenFenridCsp)
+
+  callback({ responseHeaders: headers })
+}
+
+let cspOn = false
+
+function setContentSecurityPolicy(on) {
+
+  on = Boolean(on)
+
+  if (on === cspOn) return
+
+  cspOn = on
+
+  const ses = session.fromPartition('persist:fenrid')
+
+  if (on) {
+
+    ses.webRequest.onBeforeSendHeaders(onEmbedBeforeSendHeaders)
+    ses.webRequest.onHeadersReceived(onEmbedHeadersReceived)
+
+  } else {
+
+    ses.webRequest.onBeforeSendHeaders.removeListener(onEmbedBeforeSendHeaders)
+    ses.webRequest.onHeadersReceived.removeListener(onEmbedHeadersReceived)
+
+  }
+}
+
 function setUpSession() {
 
   const ses = session.fromPartition('persist:fenrid')
 
-  // Look like the browser Fenrid already supports
   ses.setUserAgent(ses.getUserAgent().replace(/\s(Electron|BetterFenrid|better-fenrid-desktop|Better Fenrid)\/\S+/g, ''))
 
   ses.setPermissionRequestHandler((webContents, permission, callback) => {
@@ -601,47 +760,6 @@ function setUpSession() {
   })
 
   ses.setPermissionCheckHandler((_webContents, permission, origin) => isInternal(origin) && ALLOWED_PERMISSIONS.has(permission))
-
-  ses.webRequest.onBeforeSendHeaders((details, callback) => {
-
-    const headers = details.requestHeaders
-
-    if (/youtube\.com\/embed\//.test(details.url)) headers.Referer = 'https://www.youtube.com/'
-
-    callback({ requestHeaders: headers })
-  })
-
-  ses.webRequest.onHeadersReceived((details, callback) => {
-
-    const headers = details.responseHeaders ?? {}
-    let host = ''
-
-    try { host = new URL(details.url).hostname } catch { }
-
-    const drop = (name) => {
-
-      for (const key of Object.keys(headers)) if (key.toLowerCase() === name) delete headers[key]
-
-    }
-
-    if (/(^|\.)(spotify\.com|youtube\.com|youtube-nocookie\.com)$/.test(host)) {
-
-      drop('x-frame-options')
-      drop('content-security-policy')
-    }
-
-    const csp = Object.keys(headers).find((key) => key.toLowerCase() === 'content-security-policy')
-    const frames = ' https://open.spotify.com https://embed.spotify.com https://www.youtube-nocookie.com https://www.youtube.com'
-
-    if (csp && /(^|\.)fenrid\.com$/.test(host)) {
-
-      headers[csp] = headers[csp].map((value) => /frame-src/i.test(value)
-        ? value.replace(/frame-src([^;]*)/i, (_, rest) => `frame-src${rest}${frames}`)
-        : `${value}; frame-src 'self'${frames}`)
-    }
-
-    callback({ responseHeaders: headers })
-  })
 
   ses.setDisplayMediaRequestHandler(async (_request, callback) => {
 
@@ -678,6 +796,14 @@ function setUpIpc() {
   })
 
   ipcMain.on('bf:open-external', (_event, url) => openExternal(url))
+
+  ipcMain.on('bf:csp', (event, on) => {
+
+    if (!view || event.sender !== view.webContents) return
+    if (!isInternal(event.sender.getURL())) return
+
+    setContentSecurityPolicy(Boolean(on))
+  })
 
   ipcMain.on('bf:badge', (event, badge) => {
 

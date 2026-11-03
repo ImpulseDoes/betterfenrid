@@ -1,0 +1,40 @@
+{
+  "manifest_version": 3,
+  "name": "Better Fenrid CSP",
+  "version": "0.1.0",
+  "description": "Lets Better Fenrid Strip (CSP) Content Security Policy",
+  "permissions": [
+    "declarativeNetRequest"
+  ],
+  "host_permissions": [
+    "https://fenrid.com/*",
+    "https://*.fenrid.com/*",
+    "https://*.spotify.com/*",
+    "https://*.youtube.com/*",
+    "https://*.youtube-nocookie.com/*",
+    "https://*.github.com/*",
+    "https://*.githubusercontent.com/*"
+  ],
+  "declarative_net_request": {
+    "rule_resources": [
+      {
+        "id": "embeds",
+        "enabled": true,
+        "path": "rules.json"
+      }
+    ]
+  },
+  "content_scripts": [
+    {
+      "matches": ["https://fenrid.com/*", "https://*.fenrid.com/*"],
+      "js": ["page.js"],
+      "run_at": "document_start"
+    }
+  ],
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "embeds@betterfenrid",
+      "strict_min_version": "113.0"
+    }
+  }
+}
