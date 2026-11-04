@@ -105,18 +105,56 @@
   color: var(--bf-embed-spotify);
 }
 
-.bf-embed-spotify-player {
+.bf-embed-spotify {
   max-width: 456px;
-  background: #000;
+  background: linear-gradient(135deg, color-mix(in srgb, var(--bf-embed-spotify) 16%, var(--bf-embed-bg)), var(--bf-embed-bg) 60%);
   border-radius: 12px;
 }
 
-.bf-embed-spotify-player iframe {
-  display: block;
-  width: 100%;
-  height: 100%;
+.bf-embed-spotify .bf-embed-cover {
+  width: 104px;
+  min-height: 104px;
+  margin: 10px 0 10px 10px;
+  border-radius: 8px;
+  background: #121212;
+}
+
+.bf-embed-cover-icon {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  color: var(--bf-embed-spotify);
+}
+
+.bf-embed-spotify .bf-embed-body {
+  padding: 12px 14px 12px 14px;
+}
+
+.bf-embed-listen {
+  display: inline-flex;
+  align-items: center;
+  align-self: flex-start;
+  gap: 6px;
+  padding: 6px 14px 6px 10px;
   border: 0;
-  border-radius: 12px;
+  border-radius: 999px;
+  background: var(--bf-embed-spotify);
+  color: #000;
+  font: inherit;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: transform 0.12s ease, filter 0.12s ease;
+}
+
+.bf-embed-listen:hover {
+  filter: brightness(1.08);
+  transform: scale(1.04);
+}
+
+.bf-embed-listen:active {
+  transform: scale(0.97);
 }
 
 .bf-embed-youtube .bf-embed-brand {
@@ -262,18 +300,51 @@
 
 .bf-embed-github {
   max-width: 432px;
-  padding: 12px 14px;
+  gap: 4px;
+  padding: 12px 14px 14px;
+  border-left: 4px solid var(--bf-embed-github);
+  border-radius: 4px 8px 8px 4px;
 }
 
-.bf-embed-github .bf-embed-row {
-  align-items: flex-start;
-  gap: 12px;
+.bf-embed-provider {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--bf-embed-muted);
+  font-size: 12px;
+  font-weight: 600;
 }
 
-.bf-embed-github .bf-embed-cover {
-  width: 40px;
-  height: 40px;
-  border-radius: 8px;
+.bf-embed-github .bf-embed-title {
+  color: var(--text-link, #00a8fc);
+  white-space: normal;
+}
+
+.bf-embed-github .bf-embed-sub {
+  display: -webkit-box;
+  white-space: normal;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+}
+
+.bf-embed-github .bf-embed-sub:empty {
+  display: none;
+}
+
+.bf-embed-og {
+  display: block;
+  margin-top: 8px;
+  overflow: hidden;
+  aspect-ratio: 2 / 1;
+  border-radius: 6px;
+  background: rgb(255 255 255 / 6%);
+}
+
+.bf-embed-og img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
 .bf-embed-meta {

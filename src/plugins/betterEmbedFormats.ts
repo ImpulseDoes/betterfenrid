@@ -447,7 +447,7 @@ function outermost(el: Element) {
 export default definePlugin({
   id: 'betterEmbedFormats',
   name: 'Better Embed Formats',
-  description: 'Turns Spotify, YouTube and GitHub links into Discord-style cards: a Spotify player, a YouTube video you can play, and a GitHub repo card.',
+  description: 'Turns Spotify, YouTube and GitHub links into Discord-style cards.',
   authors: ['Better Fenrid'],
   enabledByDefault: true,
   settings: {
