@@ -1,6 +1,7 @@
 import { execFileSync } from 'node:child_process'
 import { readFileSync } from 'node:fs'
 import { context, build } from 'esbuild'
+import { listWalls, WALLS_BASE } from './walls.mjs'
 
 const pkg = JSON.parse(readFileSync(new URL('../package.json', import.meta.url), 'utf8'))
 const watch = process.argv.includes('--watch')
@@ -53,7 +54,11 @@ const common = {
   format: 'iife',
   target: 'es2022',
   loader: { '.css': 'text', '.jpg': 'dataurl', '.png': 'dataurl', '.gif': 'dataurl' },
-  define: { __BF_VERSION__: JSON.stringify(version), __BF_CHANGELOG__: JSON.stringify(changelog()) },
+  define: {
+    __BF_VERSION__: JSON.stringify(version),
+    __BF_CHANGELOG__: JSON.stringify(changelog()),
+    __BF_WALLS__: JSON.stringify({ base: WALLS_BASE, files: await listWalls() }),
+  },
   legalComments: 'none',
   logLevel: 'info',
 }

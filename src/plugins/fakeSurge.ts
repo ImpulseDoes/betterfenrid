@@ -120,7 +120,7 @@ export default definePlugin({
     id: 'fakeSurge',
     name: 'Fake Surge',
     description: 'Lets you pick Surge-locked emojis, sent as image links and shown as emojis for you, and stream in higher quality (like Vencord\'s FakeNitro).',
-    authors: ['Better Fenrid community'],
+    authors: ['Better Fenrid'],
     enabledByDefault: false,
 
     settings: {

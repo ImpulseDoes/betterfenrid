@@ -35,6 +35,7 @@ import translate from './translate'
 import typingIndicator from './typingIndicator'
 import viewRaw from './viewRaw'
 import voiceTimers from './voiceTimers'
+import wallpaperManager from './wallpaperManager'
 import whoReacted from './whoReacted'
 
 export const plugins = [
@@ -75,5 +76,6 @@ export const plugins = [
     typingIndicator,
     viewRaw,
     voiceTimers,
+    wallpaperManager,
     whoReacted,
 ]
