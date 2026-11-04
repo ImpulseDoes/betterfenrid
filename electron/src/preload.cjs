@@ -89,6 +89,79 @@ function badgeImage(count) {
   return badge.toDataURL('image/png')
 }
 
+function unreadBadge() {
+
+  let fromTitle = 0
+  let fromServer = 0
+  let sent = -1
+  let timer = null
+
+  const send = () => {
+
+    const count = Math.max(fromTitle, fromServer)
+
+    if (count === sent) return
+
+    sent = count
+    ipcRenderer.send('bf:badge', { count, image: count ? badgeImage(count) : null })
+  }
+
+  const setServer = (count) => {
+
+    fromServer = Number.isSafeInteger(count) && count > 0 ? count : 0
+    send()
+  }
+
+  const fetchServer = async () => {
+
+    try {
+
+      const res = await fetch('/api/notifications/badge', { credentials: 'include', cache: 'no-store' })
+
+      if (res.ok) setServer((await res.json())?.count)
+
+    } catch { }
+  }
+
+  const refresh = () => {
+
+    fetchServer()
+    clearTimeout(timer)
+    timer = setTimeout(fetchServer, 2000)
+  }
+
+  const readTitle = () => {
+
+    const match = /^\((\d+)\)/.exec(document.title)
+    const count = match ? Number(match[1]) : 0
+
+    if (count === fromTitle) return
+
+    fromTitle = count
+    send()
+    refresh()
+  }
+
+  const start = () => {
+
+    readTitle()
+    refresh()
+
+    new MutationObserver(readTitle).observe(document.head ?? document.documentElement, { subtree: true, childList: true, characterData: true })
+
+    window.addEventListener('focus', refresh)
+    document.addEventListener('visibilitychange', refresh)
+
+    setInterval(readTitle, 2000)
+    setInterval(fetchServer, 60000)
+  }
+
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', start, { once: true })
+  else start()
+
+  return setServer
+}
+
 function floatingTitleBar(icon) {
 
   const bar = document.createElement('div')
@@ -191,6 +264,7 @@ function watchTitleBarColors() {
 if (location.hostname === 'fenrid.com') {
 
   const info = ipcRenderer.sendSync('bf:info')
+  const setServerBadge = unreadBadge()
 
   contextBridge.exposeInMainWorld('BetterFenridNative', {
     version: info.version,
@@ -225,9 +299,7 @@ if (location.hostname === 'fenrid.com') {
 
     setBadge(count) {
 
-      const n = Number.isSafeInteger(count) && count > 0 ? count : 0
-
-      ipcRenderer.send('bf:badge', { count: n, image: n ? badgeImage(n) : null })
+      setServerBadge(Number(count))
 
     },
 
@@ -288,7 +360,7 @@ if (location.hostname === 'fenrid.com') {
         super(title, options)
       }
     }
-  })()`).catch(() => {})
+  })()`).catch(() => { })
 
   // Same as a userscript at document-start, but no extension needed
   const code = ipcRenderer.sendSync('bf:mod')

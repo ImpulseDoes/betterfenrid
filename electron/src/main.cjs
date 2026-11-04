@@ -119,9 +119,8 @@ function setTitleBarColors(colors) {
   layoutView()
 }
 
-// ---------- Unread badge ----------
-
 let badgeCount = 0
+let badgeImage = null
 
 function setBadge(badge) {
 
@@ -131,18 +130,21 @@ function setBadge(badge) {
 
   badgeCount = count
 
-  const label = count ? `${count} unread` : ''
-
-  tray?.setToolTip(count ? `Better Fenrid (${label})` : 'Better Fenrid')
-
-  if (!win || win.isDestroyed() || process.platform !== 'win32') return
-
   const image = count && typeof badge.image === 'string' && badge.image.startsWith('data:image/png;base64,')
     ? nativeImage.createFromDataURL(badge.image)
     : null
 
-  win.setOverlayIcon(image && !image.isEmpty() ? image : null, label)
-  stopTaskbarFlash()
+  badgeImage = image && !image.isEmpty() ? image : null
+
+  tray?.setToolTip(count ? `Better Fenrid (${count} unread)` : 'Better Fenrid')
+  showBadge()
+}
+
+function showBadge() {
+
+  if (!win || win.isDestroyed() || process.platform !== 'win32') return
+
+  win.setOverlayIcon(badgeCount ? badgeImage : null, badgeCount ? `${badgeCount} unread` : '')
 }
 
 function stopTaskbarFlash() {
@@ -371,6 +373,8 @@ function createWindow() {
 
   win.on('blur', guardTaskbarFlash)
   win.on('minimize', guardTaskbarFlash)
+  win.on('show', showBadge)
+  win.on('restore', showBadge)
 
   let saveTimer = null
   const saveBounds = () => {

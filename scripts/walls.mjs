@@ -11,7 +11,15 @@ async function fromManifest() {
 
   const list = await res.json()
 
-  return Array.isArray(list) ? list.filter((file) => typeof file === 'string') : null
+  return Array.isArray(list) ? list.map(fileOf).filter(Boolean) : null
+}
+
+function fileOf(entry) {
+
+  if (typeof entry === 'string') return entry
+  if (entry && typeof entry.id === 'string' && typeof entry.ext === 'string') return `${entry.id}.${entry.ext.replace(/^\./, '')}`
+
+  return null
 }
 
 const clean = (files) => [...new Set(files)].filter((file) => file && !file.includes('/') && IMAGE.test(file)).sort((a, b) => a.localeCompare(b, undefined, { numeric: true }))
