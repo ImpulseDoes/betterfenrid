@@ -18,6 +18,31 @@ const WALLS: Wall[] = __BF_WALLS__.files.map((file) => ({
 }))
 
 const thumbUrl = (url: string) => `https://wsrv.nl/?url=${encodeURIComponent(url)}&w=400&h=250&fit=cover&output=webp&q=70`
+const proxiedUrl = (url: string) => `https://wsrv.nl/?url=${encodeURIComponent(url)}&w=3840&we&output=webp&q=88`
+
+const loads = (url: string) => new Promise<boolean>((resolve) => {
+
+  const img = new Image()
+
+  img.onload = () => resolve(true)
+  img.onerror = () => resolve(false)
+  img.src = url
+})
+
+const sources = new Map<string, string>()
+
+async function resolveSource(url: string): Promise<string> {
+
+  const known = sources.get(url)
+
+  if (known) return known
+
+  const source = (await loads(url)) ? url : proxiedUrl(url)
+
+  sources.set(url, source)
+
+  return source
+}
 
 const isImageUrl = (url: string) => /^https:\/\/\S+$/i.test(url.trim())
 
@@ -332,11 +357,25 @@ const plugin = definePlugin({
     const style = ctx.addStyle('')
 
     let current = ''
+    let wanted = ''
 
     const apply = () => {
 
       const url = ctx.settings.wallpaper
-      const next = url && isImageUrl(url) ? wallpaperCss(url, Number(ctx.settings.dim) || 0) : ''
+      const valid = Boolean(url && isImageUrl(url))
+
+      wanted = valid ? url : ''
+
+      if (!valid) return paint('')
+
+      const source = sources.get(url)
+
+      if (source) return paint(wallpaperCss(source, Number(ctx.settings.dim) || 0))
+
+      void resolveSource(url).then(() => wanted === url && apply())
+    }
+
+    const paint = (next: string) => {
 
       if (next === current) return
 
