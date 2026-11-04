@@ -208,8 +208,13 @@ function mediaFromEmbed(embed: Record<string, any>): Media | null {
 
     if (title) media.title = title
     if (description) media.subtitle = description.split('\n')[0] ?? media.subtitle
-    if (media.site === 'github') media.subtitle = media.subtitle.replace(/\s*Contribute to \S+ development by creating an account on GitHub\.?$/i, '')
+    if (media.site === 'github') {
 
+      media.subtitle = media.subtitle.replace(/\s*Contribute to \S+ development by creating an account on GitHub\.?$/i, '')
+
+      if (media.github && /^GitHub - /i.test(media.title)) media.title = `${media.github.owner}/${media.github.repo}`
+
+    }
   }
 
   const image = imageOf(embed)
@@ -322,6 +327,8 @@ function openSpotify(media: Media) {
 function spotifyCard(media: Media): HTMLElement {
 
   const cover = h('img', { alt: '', src: media.image || null, crossorigin: 'anonymous', hidden: !media.image })
+
+  cover.addEventListener('error', () => { cover.hidden = true })
 
   return h(
     'div',
