@@ -59,12 +59,18 @@ export function SettingsPage({ refresh }: PageContext): Node {
         {
           type: 'string',
           label: 'Font',
-          description: 'The name of a font installed on your computer. Leave empty for Fenrid\'s own. Code keeps its font.',
+          description: 'A font installed on your computer, or one from Google Fonts with the switch below. Leave empty for Fenrid\'s own. Code keeps its font.',
           placeholder: 'Segoe UI',
           default: '',
         },
         s.core.font,
         (v) => settings.update((x) => { x.core.font = String(v) }),
+      ),
+      SwitchRow(
+        'Get the font from Google Fonts',
+        'Use any font from fonts.google.com by its exact name. It\'s downloaded once and kept, so Google isn\'t asked again every time Fenrid opens.',
+        s.core.googleFont,
+        (v) => settings.update((x) => { x.core.googleFont = v }),
       ),
     ),
     Section(

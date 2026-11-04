@@ -6,6 +6,7 @@ export interface CoreSettings {
   updateNotices: boolean
   lastCommit: string | null
   font: string
+  googleFont: boolean
 }
 
 export interface ThemeSettings {
@@ -26,7 +27,7 @@ export interface Settings {
 }
 
 const DEFAULTS: Settings = {
-  core: { debug: false, showFooterVersion: true, updateNotices: true, lastCommit: null, font: '' },
+  core: { debug: false, showFooterVersion: true, updateNotices: true, lastCommit: null, font: '', googleFont: false },
   theme: { preset: 'onyx', enabled: true, css: '' },
   plugins: {},
 }
