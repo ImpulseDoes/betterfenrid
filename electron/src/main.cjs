@@ -8,6 +8,7 @@ const HOME = 'https://fenrid.com/channels/me'
 const ROOT = path.join(__dirname, '..')
 const ICON = path.join(ROOT, 'assets', 'icon.png')
 const TRAY_ICON = path.join(ROOT, 'assets', 'tray.png')
+const CUSTOM_ICON = () => path.join(app.getPath('userData'), 'app-icon.png')
 const DEV = !app.isPackaged || process.argv.includes('--dev')
 
 const INTERNAL_HOSTS = [/^(.+\.)?fenrid\.com$/, /^challenges\.cloudflare\.com$/]
@@ -117,6 +118,41 @@ function setTitleBarColors(colors) {
   win.setBackgroundColor(titleBar.background)
   win.setTitleBarOverlay(overlayColors())
   layoutView()
+}
+
+function customIcon() {
+
+  try {
+
+    const image = nativeImage.createFromPath(CUSTOM_ICON())
+
+    return image.isEmpty() ? null : image
+
+  } catch {
+
+    return null
+
+  }
+}
+
+const windowIcon = () => customIcon() ?? nativeImage.createFromPath(ICON)
+const trayIcon = () => (customIcon() ?? nativeImage.createFromPath(TRAY_ICON)).resize({ width: 32, height: 32, quality: 'best' })
+const defaultIcon = () => nativeImage.createFromPath(TRAY_ICON).resize({ width: 64, height: 64, quality: 'best' }).toDataURL()
+
+function setAppIcon(dataUrl) {
+
+  const image = typeof dataUrl === 'string' && dataUrl.startsWith('data:image/') ? nativeImage.createFromDataURL(dataUrl) : null
+
+  try {
+
+    if (image && !image.isEmpty()) fs.writeFileSync(CUSTOM_ICON(), image.resize({ width: 256, height: 256, quality: 'best' }).toPNG())
+    else fs.rmSync(CUSTOM_ICON(), { force: true })
+
+  } catch { }
+
+  if (win && !win.isDestroyed()) win.setIcon(windowIcon())
+
+  tray?.setImage(trayIcon())
 }
 
 let badgeCount = 0
@@ -311,7 +347,7 @@ function createWindow() {
     minHeight: 520,
     show: false,
     title: 'Better Fenrid',
-    icon: ICON,
+    icon: windowIcon(),
     backgroundColor: titleBar.background,
     titleBarStyle: 'hidden',
     titleBarOverlay: overlayColors(),
@@ -626,7 +662,7 @@ function setUpIpc() {
 
   ipcMain.on('bf:info', (event) => {
 
-    event.returnValue = { version: app.getVersion(), icon: nativeImage.createFromPath(TRAY_ICON).resize({ width: 64, height: 64 }).toDataURL() }
+    event.returnValue = { version: app.getVersion(), icon: (customIcon() ?? nativeImage.createFromPath(TRAY_ICON)).resize({ width: 64, height: 64, quality: 'best' }).toDataURL() }
 
   })
 
@@ -637,6 +673,19 @@ function setUpIpc() {
   })
 
   ipcMain.on('bf:open-external', (_event, url) => openExternal(url))
+
+  ipcMain.on('bf:default-icon', (event) => {
+
+    event.returnValue = defaultIcon()
+
+  })
+
+  ipcMain.on('bf:app-icon', (event, dataUrl) => {
+
+    if (!view || event.sender !== view.webContents) return
+
+    setAppIcon(dataUrl)
+  })
 
   ipcMain.on('bf:badge', (event, badge) => {
 
@@ -715,7 +764,7 @@ let refreshTray = () => { }
 
 function createTray() {
 
-  tray = new Tray(nativeImage.createFromPath(TRAY_ICON).resize({ width: 32, height: 32 }))
+  tray = new Tray(trayIcon())
   tray.setToolTip('Better Fenrid')
 
   const build = () => Menu.buildFromTemplate([

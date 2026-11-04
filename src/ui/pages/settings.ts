@@ -8,6 +8,60 @@ import { COMMIT, NAME, REPO_URL, VERSION } from '../../meta'
 import { Button, Row, Section, SettingControl, Switch, SwitchRow } from '../components'
 import type { PageContext } from '../settingsSidebar'
 import { SoundsSection } from './sounds'
+import { makeAppIcon } from '../../core/appIcon'
+
+function AppIconRow(refresh: () => void): Node {
+
+  const icon = settings.get().core.appIcon
+
+  const picker = h('input', {
+    type: 'file',
+    accept: 'image/png,image/jpeg,image/webp,image/gif',
+    hidden: true,
+    onChange: async () => {
+
+      const file = picker.files?.[0]
+
+      picker.value = ''
+
+      if (!file) return
+
+      try {
+
+        const appIcon = await makeAppIcon(file)
+
+        settings.update((x) => { x.core.appIcon = appIcon })
+        toast('App icon changed', 'success')
+        refresh()
+
+      } catch {
+
+        toast('That file doesn\'t look like a picture', 'error')
+
+      }
+    },
+  })
+
+  const preview = h('span', { class: 'bf-app-icon-preview' }, icon ? h('img', { src: icon, alt: '' }) : null)
+
+  return Row(
+    'App icon',
+    `Your own picture instead of Fenrid's logo: on the Direct Messages button and the browser tab, and in the desktop app on the window, taskbar and tray. It's cropped to a square.`,
+    h(
+      'div',
+      { class: 'bf-sound-buttons' },
+      preview,
+      Button(icon ? 'Change' : 'Upload', () => picker.click(), 'secondary'),
+      icon ? Button('Reset', () => {
+
+        settings.update((x) => { x.core.appIcon = '' })
+        refresh()
+
+      }, 'secondary') : null,
+      picker,
+    ),
+  )
+}
 
 export function SettingsPage({ refresh }: PageContext): Node {
 
@@ -73,6 +127,7 @@ export function SettingsPage({ refresh }: PageContext): Node {
         s.core.googleFont,
         (v) => settings.update((x) => { x.core.googleFont = v }),
       ),
+      AppIconRow(refresh),
     ),
     SoundsSection(refresh),
     Section(

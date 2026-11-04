@@ -1,6 +1,8 @@
 const { contextBridge, ipcRenderer, webFrame } = require('electron')
 
 let canvas = null
+let barLogo = null
+let defaultIcon = ''
 
 function paint(color, base) {
 
@@ -194,6 +196,7 @@ function floatingTitleBar(icon) {
 
   Object.assign(logo.style, { width: '20px', height: '20px', borderRadius: '5px', boxShadow: '0 1px 3px rgba(0, 0, 0, 0.3)' })
   logo.src = icon
+  barLogo = logo
   logo.alt = ''
   logo.draggable = false
 
@@ -264,6 +267,8 @@ function watchTitleBarColors() {
 if (location.hostname === 'fenrid.com') {
 
   const info = ipcRenderer.sendSync('bf:info')
+
+  defaultIcon = ipcRenderer.sendSync('bf:default-icon')
   const setServerBadge = unreadBadge()
 
   contextBridge.exposeInMainWorld('BetterFenridNative', {
@@ -306,6 +311,16 @@ if (location.hostname === 'fenrid.com') {
     stopFlash() {
 
       ipcRenderer.send('bf:stop-flash')
+
+    },
+
+    setAppIcon(dataUrl) {
+
+      const icon = typeof dataUrl === 'string' && dataUrl.startsWith('data:image/') ? dataUrl : null
+
+      if (barLogo) barLogo.src = icon ?? defaultIcon
+
+      ipcRenderer.send('bf:app-icon', icon)
 
     },
 

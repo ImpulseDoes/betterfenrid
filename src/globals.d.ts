@@ -25,6 +25,7 @@ interface BetterFenridNative {
     command(line: string): void;
   };
   openExternal(url: string): void;
+  setAppIcon?(dataUrl: string | null): void;
   updates?: {
     check(): Promise<{ status: 'latest' | 'ready' | 'local' | 'error'; version?: string; error?: string }>;
     onReady(listener: (update: { version: string }) => void): () => void;

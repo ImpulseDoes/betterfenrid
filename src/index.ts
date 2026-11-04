@@ -7,6 +7,7 @@ import { installModuleHooks, moduleStatus } from './core/modules'
 import { registerPlugins, syncPlugins } from './core/plugins'
 import { settings } from './core/settings'
 import { createStyle } from './core/styles'
+import { startAppIcon } from './core/appIcon'
 import { startFonts } from './core/fonts'
 import { startSounds } from './core/sounds'
 import { startThemes } from './core/theme'
@@ -37,6 +38,7 @@ function init() {
   createStyle(css)
   startThemes()
   startFonts()
+  startAppIcon()
   startSounds()
 
   registerPlugins(plugins)

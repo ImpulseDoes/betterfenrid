@@ -10,6 +10,7 @@ export interface CoreSettings {
   typingSound: string
   sendSound: string
   soundVolume: number
+  appIcon: string
 }
 
 export interface ThemeSettings {
@@ -30,7 +31,7 @@ export interface Settings {
 }
 
 const DEFAULTS: Settings = {
-  core: { debug: false, showFooterVersion: true, updateNotices: true, lastCommit: null, font: '', googleFont: false, typingSound: 'off', sendSound: 'off', soundVolume: 60 },
+  core: { debug: false, showFooterVersion: true, updateNotices: true, lastCommit: null, font: '', googleFont: false, typingSound: 'off', sendSound: 'off', soundVolume: 60, appIcon: '' },
   theme: { preset: 'onyx', enabled: true, css: '' },
   plugins: {},
 }
