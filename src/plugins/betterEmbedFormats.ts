@@ -38,8 +38,6 @@ interface Media {
   github?: { owner: string; repo: string }
 }
 
-const repos = new Map<string, Promise<{ description?: string; stars?: number; forks?: number; language?: string; image?: string } | null>>()
-
 function icon(name: keyof typeof PATHS, size = 16): SVGSVGElement {
 
   const el = document.createElementNS(SVG, 'svg')
@@ -210,6 +208,7 @@ function mediaFromEmbed(embed: Record<string, any>): Media | null {
 
     if (title) media.title = title
     if (description) media.subtitle = description.split('\n')[0] ?? media.subtitle
+    if (media.site === 'github') media.subtitle = media.subtitle.replace(/\s*Contribute to \S+ development by creating an account on GitHub\.?$/i, '')
 
   }
 
@@ -260,29 +259,6 @@ function mediaOf(el: Element): Media | null {
   return null
 }
 
-function githubMeta(owner: string, repo: string) {
-
-  const key = `${owner}/${repo}`
-  const hit = repos.get(key)
-
-  if (hit) return hit
-
-  const pending = fetch(`https://api.github.com/repos/${owner}/${repo}`, { headers: { Accept: 'application/vnd.github+json' } })
-    .then((res) => (res.ok ? res.json() : null))
-    .then((data) => data && {
-      description: textOf(data.description),
-      stars: Number(data.stargazers_count) || 0,
-      forks: Number(data.forks_count) || 0,
-      language: textOf(data.language),
-      image: textOf(data.owner?.avatar_url),
-    })
-    .catch(() => null)
-
-  repos.set(key, pending)
-
-  return pending
-}
-
 function closePlayers(except?: Element) {
 
   for (const card of document.querySelectorAll(`.${CARD}`)) {
@@ -330,61 +306,45 @@ function fill(card: HTMLElement, media: Media) {
   }
 }
 
-function enrich(card: HTMLElement, media: Media) {
+function openSpotify(media: Media) {
 
-  if (media.site === 'github' && media.github) {
+  const type = media.spotify?.type ?? 'track'
+  const id = media.spotify?.id
 
-    void githubMeta(media.github.owner, media.github.repo).then((data) => {
+  if (!id || window.BetterFenridNative) return void window.open(media.url, '_blank', 'noopener')
 
-      if (!data || !card.isConnected) return
+  const tall = type !== 'track' && type !== 'episode'
+  const popup = window.open(`https://open.spotify.com/embed/${type}/${id}?utm_source=generator&theme=0`, 'bf-spotify-player', `popup,width=420,height=${tall ? 380 : 172}`)
 
-      if (data.description) media.subtitle = data.description
-      if (data.image) media.image = data.image
-
-      fill(card, media)
-
-      const meta = card.querySelector(`.${CARD}-meta`)
-
-      if (!meta) return
-
-      meta.replaceChildren(
-        ...(data.language ? [h('span', {}, data.language)] : []),
-        h('span', {}, icon('star', 12), String(data.stars ?? 0)),
-        h('span', {}, icon('fork', 12), String(data.forks ?? 0)),
-      )
-    })
-  }
+  if (!popup) window.open(media.url, '_blank', 'noopener')
 }
 
 function spotifyCard(media: Media): HTMLElement {
 
-  const type = media.spotify?.type ?? 'track'
-  const id = media.spotify?.id
-  const tall = type !== 'track' && type !== 'episode'
-  const height = tall ? 352 : 152
-
-  if (id) {
-
-    const card = h('div', { class: `${CARD} ${CARD}-spotify ${CARD}-spotify-player`, [KEY]: media.key })
-
-    card.style.height = `${height}px`
-    card.append(iframe(`https://open.spotify.com/embed/${type}/${id}?utm_source=generator&theme=0`, media.title || 'Spotify'))
-
-    return card
-  }
+  const cover = h('img', { alt: '', src: media.image || null, crossorigin: 'anonymous', hidden: !media.image })
 
   return h(
-    'a',
-    { class: `${CARD} ${CARD}-spotify`, [KEY]: media.key, href: media.url, target: '_blank', rel: 'noopener noreferrer' },
+    'div',
+    { class: `${CARD} ${CARD}-spotify`, [KEY]: media.key },
     h(
       'div',
       { class: `${CARD}-row` },
-      h('span', { class: `${CARD}-brand` }, icon('spotify', 20)),
+      h('a', { class: `${CARD}-cover`, href: media.url, target: '_blank', rel: 'noopener noreferrer' }, h('span', { class: `${CARD}-cover-icon` }, icon('spotify', 32)), cover),
       h(
         'div',
-        { class: `${CARD}-copy` },
-        h('div', { class: `${CARD}-title` }, media.title || 'Spotify'),
-        h('div', { class: `${CARD}-sub` }, media.subtitle || 'Open in Spotify'),
+        { class: `${CARD}-body` },
+        h(
+          'div',
+          { class: `${CARD}-top` },
+          h(
+            'div',
+            { class: `${CARD}-copy` },
+            h('a', { class: `${CARD}-title`, href: media.url, target: '_blank', rel: 'noopener noreferrer' }, media.title || 'Spotify'),
+            h('div', { class: `${CARD}-sub` }, media.subtitle || 'Spotify'),
+          ),
+          h('span', { class: `${CARD}-brand` }, icon('spotify', 20)),
+        ),
+        h('button', { class: `${CARD}-listen`, type: 'button', onClick: () => openSpotify(media) }, icon('play', 16), 'Play'),
       ),
     ),
   )
@@ -440,33 +400,26 @@ function youtubeCard(media: Media): HTMLElement {
   return card
 }
 
+const githubPreview = (owner: string, repo: string) => `https://opengraph.githubassets.com/1/${encodeURIComponent(owner)}/${encodeURIComponent(repo)}`
+
 function githubCard(media: Media): HTMLElement {
 
-  const card = h(
+  const preview = media.github
+    ? h(
+      'a',
+      { class: `${CARD}-og`, href: media.url, target: '_blank', rel: 'noopener noreferrer' },
+      h('img', { alt: '', src: githubPreview(media.github.owner, media.github.repo), crossorigin: 'anonymous', loading: 'lazy' }),
+    )
+    : null
+
+  return h(
     'div',
     { class: `${CARD} ${CARD}-github`, [KEY]: media.key },
-    h(
-      'div',
-      { class: `${CARD}-row` },
-      h('a', { class: `${CARD}-cover`, href: media.url, target: '_blank', rel: 'noopener noreferrer' }, h('img', { alt: '', src: media.image })),
-      h(
-        'div',
-        { class: `${CARD}-copy` },
-        h(
-          'div',
-          { class: `${CARD}-top` },
-          h('a', { class: `${CARD}-title`, href: media.url, target: '_blank', rel: 'noopener noreferrer' }, media.title),
-          h('span', { class: `${CARD}-brand` }, icon('github', 16)),
-        ),
-        h('div', { class: `${CARD}-sub` }, media.subtitle || 'GitHub'),
-        h('div', { class: `${CARD}-meta` }),
-      ),
-    ),
+    h('div', { class: `${CARD}-provider` }, icon('github', 14), 'GitHub'),
+    h('a', { class: `${CARD}-title`, href: media.url, target: '_blank', rel: 'noopener noreferrer' }, media.title),
+    h('div', { class: `${CARD}-sub` }, media.subtitle === 'GitHub' ? '' : media.subtitle),
+    preview,
   )
-
-  enrich(card, media)
-
-  return card
 }
 
 function render(media: Media): HTMLElement {
@@ -501,7 +454,7 @@ export default definePlugin({
     spotify: {
       type: 'boolean',
       label: 'Spotify',
-      description: 'Player card with artwork, preview and a play button, like Discord.',
+      description: 'Card with the artwork and a Play button that opens Spotify\'s player.',
       default: true,
     },
     youtube: {
@@ -513,7 +466,7 @@ export default definePlugin({
     github: {
       type: 'boolean',
       label: 'GitHub',
-      description: 'Repository card with the description, stars and language.',
+      description: 'Repository card with the description and GitHub\'s preview of stars, forks and contributors.',
       default: true,
     },
   },
