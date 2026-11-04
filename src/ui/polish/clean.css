@@ -36,3 +36,27 @@ svg:has(>path[d^="M528 32H48C21.5 32 0 53.5 0 80v16h576"]) {
 svg>path[d^="M528 32H48C21.5 32 0 53.5 0 80v16h576"] {
   display: none;
 }
+
+button[aria-label="Add attachment" i],
+button[aria-label="Add attachment" i]>span {
+  background: none !important;
+  box-shadow: none !important;
+}
+
+button[aria-label="Add attachment" i] {
+  color: color-mix(in srgb, var(--color-text-primary, var(--text-primary, #f0f1f4)) 65%, transparent);
+  transition: color 150ms ease;
+}
+
+button[aria-label="Add attachment" i]:not(:disabled):hover {
+  color: var(--color-text-primary, var(--text-primary, #f0f1f4));
+}
+
+button[aria-label="Add attachment" i] svg {
+  width: 22px;
+  height: 22px;
+}
+
+button[aria-label="Add attachment" i] svg>path[d^="M224,128a8,8,0,0,1-8,8H136v80"] {
+  d: path("M232,128a15,15,0,0,1-15,15H143v74a15,15,0,0,1-30,0V143H39a15,15,0,0,1,0-30h74V39a15,15,0,0,1,30,0v74h74A15,15,0,0,1,232,128Z");
+}
