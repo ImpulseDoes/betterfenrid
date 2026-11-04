@@ -35,10 +35,23 @@ function wallpaperCss(url: string, dim: number): string {
   const image = cssUrl(url)
   const vars = themeWallpaperVars()
 
-  if (vars.length) return `:root { ${vars.map((name) => `--${name}: ${image} !important;`).join(' ')} }`
+  const strength = Math.min(95, Math.max(0, dim))
+
+  if (vars.length) {
+
+    const tint = `rgb(from var(--${vars[0].replace(/-background$/, '-shade')}, #000) r g b / ${strength}%)`
+
+    return `
+:root { ${vars.map((name) => `--${name}: ${image} !important;`).join(' ')} }
+
+html:root {
+  background: linear-gradient(${tint}, ${tint}), ${image} center / cover no-repeat fixed #000 !important;
+}
+`
+  }
 
   const base = currentTheme()?.preview?.bg ?? '#0e0f12'
-  const shade = `color-mix(in srgb, var(--bf-wall-base) ${Math.min(95, Math.max(0, dim))}%, transparent)`
+  const shade = `color-mix(in srgb, var(--bf-wall-base) ${strength}%, transparent)`
 
   return `
 html:root {
@@ -302,8 +315,8 @@ const plugin = definePlugin({
     dim: {
       type: 'number',
       label: 'Dim',
-      description: 'How much of the theme\'s color covers the wallpaper, in percent. Themes that come with their own wallpaper keep their own dimming.',
-      default: 70,
+      description: 'How much of the theme\'s color covers the wallpaper, in percent. Lower it for dark wallpapers.',
+      default: 55,
       min: 0,
       max: 95,
       step: 5,
