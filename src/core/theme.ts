@@ -6,6 +6,7 @@ import dracula from '../themes/dracula.css'
 import frostedGlass from '../themes/frosted-glass.css'
 import impulse from '../themes/impulse.css'
 import lilyPichu from '../themes/lily-pichu.css'
+import mrsWicket from '../themes/mrs-wicket.css'
 import naat from '../themes/naat.css'
 import nord from '../themes/nord.css'
 import onyx from '../themes/onyx.css'
@@ -156,6 +157,15 @@ export const THEMES: ThemeDef[] = [
     preview: { bg: '#0e0a16', surface: '#1e1626', accent: '#e8b45a', text: '#fff7ea' },
     assets: { 'anime-background': 'shaula-background.jpg' },
     css: `${animeGlass}\n${shaula}\n${hardcodedColors}`,
+  },
+  {
+    id: 'mrs-wicket',
+    name: 'Mrs Wicket',
+    author: 'Better Fenrid',
+    description: 'Mr. Bean\'s landlady and Scrapper behind purple glass, with her cane\'s yellow.',
+    preview: { bg: '#2e162c', surface: '#46243f', accent: '#f0cc4a', text: '#fff4ee' },
+    assets: { 'anime-background': 'mrs-wicket-background.jpg' },
+    css: `${animeGlass}\n${mrsWicket}\n${hardcodedColors}`,
   },
   {
     id: 'lily-pichu',

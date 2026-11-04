@@ -1,0 +1,23 @@
+/* Mrs Wicket Theme FOR ⸝⸝♡ E G W E A*/
+
+:root,
+.dark {
+  --anime-shade: rgb(46 22 44 / 58%);
+  --anime-settings-shade: rgb(38 18 36 / 74%);
+  --anime-glass: rgb(58 30 56 / 58%);
+  --anime-solid: rgb(44 22 42 / 94%);
+  --anime-accent: #f0cc4a;
+  --anime-accent-hover: #f7dc78;
+  --anime-blur: 10px;
+  --anime-primary-fg: #2e1a10;
+  --onyx-base: rgb(52 26 50 / 84%);
+  --onyx-raised: rgb(70 36 66 / 86%);
+  --onyx-raised-2: rgb(104 58 100 / 88%);
+  --onyx-raised-3: rgb(128 76 122 / 90%);
+  --onyx-line: rgb(242 176 176 / 14%);
+  --onyx-line-strong: rgb(242 176 176 / 24%);
+  --success-green: #9be59b;
+  --error-red: #e5484d;
+  --text-secondary: #fbe4dc;
+  --text-muted: #e0b4c0;
+}
