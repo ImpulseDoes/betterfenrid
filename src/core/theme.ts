@@ -12,6 +12,7 @@ import onyx from '../themes/onyx.css'
 import hardcodedColors from '../themes/onyx.generated.css'
 import rosePine from '../themes/rose-pine.css'
 import sakura from '../themes/sakura.css'
+import shaula from '../themes/shaula.css'
 import softX from '../themes/soft-x.css'
 import synthwave84 from '../themes/synthwave-84.css'
 import tokyoNight from '../themes/tokyo-night.css'
@@ -123,7 +124,7 @@ export const THEMES: ThemeDef[] = [
   {
     id: 'impulse',
     name: "Impulse's Default",
-    author: 'Impulse',
+    author: 'Better Fenrid',
     description: 'Anime background behind frosted glass panels with emerald green accents.',
     preview: { bg: '#08080a', surface: '#0f0f11', accent: '#43b581', text: '#ffffff' },
     assets: IMPULSE_ASSETS,
@@ -146,6 +147,15 @@ export const THEMES: ThemeDef[] = [
     preview: { bg: '#2a1018', surface: '#3c1828', accent: '#f4a0c0', text: '#ffe4ef' },
     assets: IMPULSE_BG,
     css: `${animeGlass}\n${sakura}\n${hardcodedColors}`,
+  },
+  {
+    id: 'shaula',
+    name: 'Shaula',
+    author: 'Better Fenrid',
+    description: 'Shaula from Re:Zero behind dark glass, with sand-gold accents.',
+    preview: { bg: '#0e0a16', surface: '#1e1626', accent: '#e8b45a', text: '#fff7ea' },
+    assets: { 'anime-background': 'shaula-background.jpg' },
+    css: `${animeGlass}\n${shaula}\n${hardcodedColors}`,
   },
   {
     id: 'lily-pichu',

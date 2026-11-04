@@ -1,0 +1,21 @@
+/* Shaula Theme Made FOR ONE AND ONLY @z !!!!!!! */
+
+:root,
+.dark {
+  --anime-shade: rgb(14 10 22 / 62%);
+  --anime-settings-shade: rgb(12 8 18 / 76%);
+  --anime-glass: rgb(20 14 28 / 56%);
+  --anime-solid: rgb(18 12 24 / 92%);
+  --anime-accent: #e8b45a;
+  --anime-accent-hover: #f6cd80;
+  --anime-blur: 10px;
+  --anime-primary-fg: #1c1206;
+  --onyx-base: rgb(20 14 26 / 84%);
+  --onyx-raised: rgb(30 22 38 / 84%);
+  --onyx-raised-2: rgb(52 38 58 / 88%);
+  --onyx-raised-3: rgb(70 52 74 / 90%);
+  --success-green: #9be59b;
+  --error-red: #e5484d;
+  --text-secondary: #f1e3cc;
+  --text-muted: #c2ab8c;
+}
