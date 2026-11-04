@@ -1571,3 +1571,98 @@ a[data-bf-fake-surge],
   display: flex !important;
   flex-direction: column;
 }
+
+.bf-bulk-leave-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.bf-bulk-leave-count {
+  flex: 1;
+  color: var(--bf-text-muted);
+  font-size: 14px;
+}
+
+.bf-bulk-leave-list {
+  display: grid;
+  gap: 2px;
+  max-height: min(420px, 50vh);
+  overflow-y: auto;
+  margin: 0 -8px;
+}
+
+.bf-bulk-leave-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px;
+  border-radius: 8px;
+  cursor: pointer;
+  user-select: none;
+}
+
+.bf-bulk-leave-row[hidden] {
+  display: none;
+}
+
+.bf-bulk-leave-row:hover {
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.bf-bulk-leave-row.bf-bulk-leave-selected {
+  background: color-mix(in srgb, var(--bf-danger) 12%, transparent);
+}
+
+.bf-bulk-leave-row.bf-bulk-leave-left {
+  cursor: default;
+  opacity: 0.45;
+}
+
+.bf-bulk-leave-row input {
+  width: 18px;
+  height: 18px;
+  margin: 0;
+  flex: none;
+  accent-color: var(--bf-danger);
+  cursor: inherit;
+}
+
+.bf-bulk-leave-icon {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 36px;
+  height: 36px;
+  overflow: hidden;
+  border-radius: 10px;
+  background: var(--bf-bg-secondary);
+  color: var(--bf-text-soft);
+  font-size: 12px;
+  font-weight: 600;
+  object-fit: cover;
+}
+
+.bf-bulk-leave-name {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  font-size: 15px;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.bf-bulk-leave-status {
+  flex: none;
+  max-width: 45%;
+  overflow: hidden;
+  color: var(--bf-text-muted);
+  font-size: 13px;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.bf-bulk-leave-status.bf-bulk-leave-failed {
+  color: var(--bf-danger);
+}

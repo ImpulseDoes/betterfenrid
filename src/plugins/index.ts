@@ -3,6 +3,7 @@ import badges from './badges'
 import betterEmbedFormats from './betterEmbedFormats'
 import betterFenrid from './betterFenrid'
 import betterFolders from './betterFolders'
+import bulkLeaveServers from './bulkLeaveServers'
 import cameraQuality from './cameraQuality'
 import clearUrls from './clearUrls'
 import communityStatistics from './communityStatistics'
@@ -44,6 +45,7 @@ export const plugins = [
     betterEmbedFormats,
     betterFenrid,
     betterFolders,
+    bulkLeaveServers,
     cameraQuality,
     clearUrls,
     communityStatistics,
