@@ -17,6 +17,8 @@ const WALLS: Wall[] = __BF_WALLS__.files.map((file) => ({
   name: file.replace(/\.[^.]+$/, '').replace(/[-_]+/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase()),
 }))
 
+const thumbUrl = (url: string) => `https://wsrv.nl/?url=${encodeURIComponent(url)}&w=400&h=250&fit=cover&output=webp&q=70`
+
 const isImageUrl = (url: string) => /^https:\/\/\S+$/i.test(url.trim())
 
 const cssUrl = (url: string) => `url(${JSON.stringify(url)})`
@@ -102,6 +104,16 @@ const PAGE_CSS = `
   height: 100%;
   object-fit: cover;
   display: block;
+  opacity: 0;
+  transition: opacity 0.25s ease;
+}
+
+.bf-wall img.bf-wall-loaded {
+  opacity: 1;
+}
+
+.bf-wall-broken img {
+  visibility: hidden;
 }
 
 .bf-wall-none {
@@ -197,11 +209,17 @@ function WallpaperPage(): Node {
     tile('', [h('span', { class: 'bf-wall-none' }, 'Theme default')], 'Theme default'),
     ...WALLS.map((wall) => {
 
-      const img = h('img', { src: wall.url, alt: '', loading: 'lazy', decoding: 'async', draggable: 'false' })
+      const img = h('img', { src: thumbUrl(wall.url), alt: '', loading: 'lazy', decoding: 'async', draggable: 'false' })
       const button = tile(wall.url, [img, h('span', { class: 'bf-wall-name' }, wall.name)], wall.name)
 
-      // Drop anything that was removed from the bucket since this build
-      img.addEventListener('error', () => button.remove(), { once: true })
+      img.addEventListener('load', () => img.classList.add('bf-wall-loaded'))
+
+      img.addEventListener('error', () => {
+
+        if (img.src !== wall.url) img.src = wall.url
+        else button.classList.add('bf-wall-broken')
+
+      })
 
       return button
     }),

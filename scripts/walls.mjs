@@ -22,7 +22,9 @@ function fileOf(entry) {
   return null
 }
 
-const clean = (files) => [...new Set(files)].filter((file) => file && !file.includes('/') && IMAGE.test(file)).sort((a, b) => a.localeCompare(b, undefined, { numeric: true }))
+const stem = (file) => file.replace(/\.[^.]+$/, '')
+
+const clean = (files) => [...new Set(files)].filter((file) => file && !file.includes('/') && IMAGE.test(file)).sort((a, b) => stem(a).localeCompare(stem(b), undefined, { numeric: true }))
 
 export async function listWalls() {
 
