@@ -7,6 +7,7 @@ import { checkForUpdates, openChangelog, updatesInApp } from '../../core/updates
 import { COMMIT, NAME, REPO_URL, VERSION } from '../../meta'
 import { Button, Row, Section, SettingControl, Switch, SwitchRow } from '../components'
 import type { PageContext } from '../settingsSidebar'
+import { SoundsSection } from './sounds'
 
 export function SettingsPage({ refresh }: PageContext): Node {
 
@@ -73,6 +74,7 @@ export function SettingsPage({ refresh }: PageContext): Node {
         (v) => settings.update((x) => { x.core.googleFont = v }),
       ),
     ),
+    SoundsSection(refresh),
     Section(
       'Backup',
       `Move your ${NAME} setup to another browser, or start fresh.`,

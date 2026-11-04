@@ -8,6 +8,7 @@ import { registerPlugins, syncPlugins } from './core/plugins'
 import { settings } from './core/settings'
 import { createStyle } from './core/styles'
 import { startFonts } from './core/fonts'
+import { startSounds } from './core/sounds'
 import { startThemes } from './core/theme'
 import { showUpdateNotice, watchAppUpdates } from './core/updates'
 import { NAME, VERSION } from './meta'
@@ -36,6 +37,7 @@ function init() {
   createStyle(css)
   startThemes()
   startFonts()
+  startSounds()
 
   registerPlugins(plugins)
   syncPlugins()

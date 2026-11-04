@@ -13,6 +13,7 @@ A client mod for [Fenrid](https://fenrid.com). It adds plugins, custom themes an
 - **Plugins**: turn them on and off instantly, with no reload. Each plugin can have its own settings.
 - **Themes**: comes with built-in presets ported from popular BetterDiscord themes (Catppuccin Mocha, Dracula, Nord, Tokyo Night, Dark Matter, Frosted Glass, Translucence, Rosé Pine, Synthwave '84, Onyx, Impulse's Default, Not Another Anime, Sakura, Shaula, LilyPichu, SoftX, and Amethyst). You can switch back to Fenrid's own look and add custom CSS on top, applied live. Wallpaper themes load images from `media.idoes.pl`, and fall back to this GitHub repo via jsDelivr so they are not inlined in the userscript.
 - **Custom font**: use a font installed on your computer, or any font from Google Fonts. A Google font is downloaded once and its rules are kept in your browser, so Google isn't asked again each time Fenrid opens.
+- **Sounds**: typing and sending sounds (built-in ones, or your own file), and your own files in place of any of Fenrid's sounds: new message, calls, joins and leaves, mute and deafen. Your files stay in your browser.
 - **Context menu items**: plugins can add their own items to the message, channel and user right-click menus.
 - **Backup**: export, import and reset your settings.
 

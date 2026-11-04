@@ -109,6 +109,16 @@
   line-height: 1.45;
 }
 
+.bf-sound-buttons {
+  display: flex;
+  flex: none;
+  gap: 8px;
+}
+
+.bf-sound-heading {
+  margin-top: 20px;
+}
+
 .bf-field {
   display: flex;
   flex-direction: column;
