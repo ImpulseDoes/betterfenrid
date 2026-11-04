@@ -323,4 +323,326 @@
       scale: 0.7;
     }
   }
+
+  button[class*="mb-[3px]"] svg:has(>path[d^="M400 224h-24v-72C376 68.2"]),
+  button[class*="mb-[3px]"] svg:has(>path[d^="M278.9 511.5l-61-17.7"]),
+  button[class*="mb-[3px]"] svg:has(>path[d^="M497 273L329 441"]) {
+    overflow: visible;
+  }
+
+  button[class*="mb-[3px]"]:hover svg>path[d^="M215.03 71.05L126.06 160H24"] {
+    animation: bf-waves 1100ms ease-out;
+  }
+
+  button[class*="mb-[3px]"]:hover svg:has(>path[d^="M336.5 160C322 70.7 287.8 8 248 8"]) {
+    animation: bf-globe 900ms ease-in-out;
+  }
+
+  button[class*="mb-[3px]"]:hover svg:has(>path[d^="M0 256a256 256 0 1 1 512 0A256"]) {
+    animation: bf-hop 600ms ease-out;
+  }
+
+  button[class*="mb-[3px]"]:hover svg:has(>path[d^="M0 432c0 26.5 21.5 48 48 48h480"]) {
+    animation: bf-swipe 600ms ease-in-out;
+  }
+
+  button[class*="mb-[3px]"]:hover svg:has(>path[d^="M377 105L279.1 7c-4.5-4.5"]) {
+    animation: bf-receipt 650ms ease-in-out;
+  }
+
+  button[class*="mb-[3px]"]:hover svg:has(>path[d^="M224 256c70.7 0 128-57.3 128-128"]) {
+    animation: bf-hello 500ms ease-out;
+  }
+
+  button[class*="mb-[3px]"]:hover svg:has(>path[d^="M466.5 83.7l-192-80"]) {
+    animation: bf-shield 600ms ease-out;
+  }
+
+  button[class*="mb-[3px]"]:hover svg>path[d^="M400 224h-24v-72C376 68.2"] {
+    animation: bf-unlock 900ms ease-in-out;
+  }
+
+  button[class*="mb-[3px]"]:hover svg:has(>path[d^="M624 416H381.54"]) {
+    animation: bf-boot 700ms linear;
+  }
+
+  button[class*="mb-[3px]"]:hover svg:has(>path[d^="M320,32a32,32,0,0,0-64,0v96h64Z"]) {
+    animation: bf-plug 600ms ease-in-out;
+  }
+
+  button[class*="mb-[3px]"]:hover svg:has(>path[d^="M256 8C119.034 8 8 119.033"]) {
+    animation: bf-ban 650ms cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+
+  button[class*="mb-[3px]"]:hover svg>path[d^="M278.9 511.5l-61-17.7"] {
+    animation: bf-brackets 700ms ease-in-out;
+  }
+
+  button[class*="mb-[3px]"]:hover svg>path[d^="M497 273L329 441"] {
+    animation: bf-exit 800ms ease-in-out;
+  }
+
+  button[class*="mb-[3px]"]:hover svg:has(>path[d^="M576 240c0-23.63-12.95"]) {
+    animation: bf-honk 600ms ease-in-out;
+  }
+
+  [data-bf-nav="experiments"] svg {
+    overflow: visible;
+  }
+
+  [data-bf-nav="experiments"]:hover svg>path {
+    transform-box: fill-box;
+    transform-origin: 50% 100%;
+    animation: bf-wiggle 600ms ease-out;
+  }
+
+  [data-bf-nav="experiments"]:hover [data-bf-bubble] {
+    transform-box: fill-box;
+    transform-origin: center;
+    animation: bf-bubble 900ms ease-out both;
+  }
+
+  [data-bf-nav="wallpapers"]:hover svg {
+    transform-origin: 50% 0;
+    animation: bf-ring 800ms ease-in-out;
+  }
+
+  @keyframes bf-waves {
+
+    0%,
+    100% {
+      clip-path: inset(0 0 0 0);
+    }
+
+    12%,
+    30% {
+      clip-path: inset(0 55% 0 0);
+    }
+
+    40%,
+    55% {
+      clip-path: inset(0 33% 0 0);
+    }
+
+    65%,
+    80% {
+      clip-path: inset(0 16% 0 0);
+    }
+  }
+
+  @keyframes bf-globe {
+    from {
+      transform: perspective(60px) rotateY(0);
+    }
+
+    to {
+      transform: perspective(60px) rotateY(360deg);
+    }
+  }
+
+  @keyframes bf-hop {
+    25% {
+      translate: 0 1px;
+      scale: 1.1 0.9;
+    }
+
+    55% {
+      translate: 0 -3px;
+      scale: 0.95 1.05;
+    }
+
+    80% {
+      translate: 0 0;
+      scale: 1.04 0.96;
+    }
+  }
+
+  @keyframes bf-swipe {
+    35% {
+      translate: 3px -1px;
+      rotate: -10deg;
+    }
+
+    70% {
+      translate: -1px 0;
+      rotate: 3deg;
+    }
+  }
+
+  @keyframes bf-receipt {
+    30% {
+      translate: 0 -3px;
+      rotate: -6deg;
+    }
+
+    60% {
+      translate: 0 1px;
+      rotate: 4deg;
+    }
+
+    85% {
+      rotate: -1deg;
+    }
+  }
+
+  @keyframes bf-hello {
+    30% {
+      scale: 1.15;
+    }
+
+    55% {
+      scale: 0.94;
+    }
+
+    75% {
+      scale: 1.04;
+    }
+  }
+
+  @keyframes bf-shield {
+    25% {
+      scale: 0.85;
+    }
+
+    55% {
+      scale: 1.15;
+      filter: brightness(1.5);
+    }
+
+    80% {
+      scale: 0.98;
+    }
+  }
+
+  @keyframes bf-unlock {
+
+    0%,
+    100% {
+      d: path("M400 224h-24v-72C376 68.2 307.8 0 224 0S72 68.2 72 152v72H48c-26.5 0-48 21.5-48 48v192c0 26.5 21.5 48 48 48h352c26.5 0 48-21.5 48-48V272c0-26.5-21.5-48-48-48zm-104 0H152v-72c0-39.7 32.3-72 72-72s72 32.3 72 72v72z");
+    }
+
+    30%,
+    55% {
+      d: path("M400 224h-24v-104C376 36.2 307.8 -32 224 -32S72 36.2 72 120v104H48c-26.5 0-48 21.5-48 48v192c0 26.5 21.5 48 48 48h352c26.5 0 48-21.5 48-48V272c0-26.5-21.5-48-48-48zm-104 0H152v-104c0-39.7 32.3-72 72-72s72 32.3 72 72v104z");
+    }
+
+    70% {
+      d: path("M400 224h-24v-64C376 76.2 307.8 8 224 8S72 76.2 72 160v64H48c-26.5 0-48 21.5-48 48v192c0 26.5 21.5 48 48 48h352c26.5 0 48-21.5 48-48V272c0-26.5-21.5-48-48-48zm-104 0H152v-64c0-39.7 32.3-72 72-72s72 32.3 72 72v64z");
+    }
+  }
+
+  @keyframes bf-boot {
+    15% {
+      opacity: 0.3;
+    }
+
+    30% {
+      opacity: 1;
+    }
+
+    45% {
+      opacity: 0.5;
+    }
+
+    65% {
+      opacity: 1;
+      scale: 1.08;
+      filter: brightness(1.4);
+    }
+  }
+
+  @keyframes bf-plug {
+    30% {
+      translate: 0 2px;
+    }
+
+    55% {
+      translate: 0 -3px;
+    }
+
+    75% {
+      translate: 0 0;
+      rotate: -4deg;
+    }
+
+    90% {
+      rotate: 2deg;
+    }
+  }
+
+  @keyframes bf-ban {
+    20% {
+      rotate: -20deg;
+    }
+
+    to {
+      rotate: 180deg;
+    }
+  }
+
+  @keyframes bf-brackets {
+
+    0%,
+    100% {
+      d: path("M278.9 511.5l-61-17.7c-6.4-1.8-10-8.5-8.2-14.9L346.2 8.7c1.8-6.4 8.5-10 14.9-8.2l61 17.7c6.4 1.8 10 8.5 8.2 14.9L293.8 503.3c-1.9 6.4-8.5 10.1-14.9 8.2zm-114-112.2l43.5-46.4c4.6-4.9 4.3-12.7-.8-17.2L117 256l90.6-79.7c5.1-4.5 5.5-12.3.8-17.2l-43.5-46.4c-4.5-4.8-12.1-5.1-17-.5L3.8 247.2c-5.1 4.7-5.1 12.8 0 17.5l144.1 135.1c4.9 4.6 12.5 4.4 17-.5zm327.2.6l144.1-135.1c5.1-4.7 5.1-12.8 0-17.5L492.1 112.1c-4.8-4.5-12.4-4.3-17 .5L431.6 159c-4.6 4.9-4.3 12.7.8 17.2L523 256l-90.6 79.7c-5.1 4.5-5.5 12.3-.8 17.2l43.5 46.4c4.5 4.9 12.1 5.1 17 .6z");
+    }
+
+    45% {
+      d: path("M278.9 511.5l-61-17.7c-6.4-1.8-10-8.5-8.2-14.9L346.2 8.7c1.8-6.4 8.5-10 14.9-8.2l61 17.7c6.4 1.8 10 8.5 8.2 14.9L293.8 503.3c-1.9 6.4-8.5 10.1-14.9 8.2zm-146-112.2l43.5-46.4c4.6-4.9 4.3-12.7-.8-17.2L85 256l90.6-79.7c5.1-4.5 5.5-12.3.8-17.2l-43.5-46.4c-4.5-4.8-12.1-5.1-17-.5L-28.2 247.2c-5.1 4.7-5.1 12.8 0 17.5l144.1 135.1c4.9 4.6 12.5 4.4 17-.5zm391.2.6l144.1-135.1c5.1-4.7 5.1-12.8 0-17.5L524.1 112.1c-4.8-4.5-12.4-4.3-17 .5L463.6 159c-4.6 4.9-4.3 12.7.8 17.2L555 256l-90.6 79.7c-5.1 4.5-5.5 12.3-.8 17.2l43.5 46.4c4.5 4.9 12.1 5.1 17 .6z");
+    }
+  }
+
+  @keyframes bf-exit {
+
+    0%,
+    100% {
+      d: path("M497 273L329 441c-15 15-41 4.5-41-17v-96H152c-13.3 0-24-10.7-24-24v-96c0-13.3 10.7-24 24-24h136V88c0-21.4 25.9-32 41-17l168 168c9.3 9.4 9.3 24.6 0 34zM192 436v-40c0-6.6-5.4-12-12-12H96c-17.7 0-32-14.3-32-32V160c0-17.7 14.3-32 32-32h84c6.6 0 12-5.4 12-12V76c0-6.6-5.4-12-12-12H96c-53 0-96 43-96 96v192c0 53 43 96 96 96h84c6.6 0 12-5.4 12-12z");
+    }
+
+    40% {
+      d: path("M537 273L369 441c-15 15-41 4.5-41-17v-96H192c-13.3 0-24-10.7-24-24v-96c0-13.3 10.7-24 24-24h136V88c0-21.4 25.9-32 41-17l168 168c9.3 9.4 9.3 24.6 0 34zM192 436v-40c0-6.6-5.4-12-12-12H96c-17.7 0-32-14.3-32-32V160c0-17.7 14.3-32 32-32h84c6.6 0 12-5.4 12-12V76c0-6.6-5.4-12-12-12H96c-53 0-96 43-96 96v192c0 53 43 96 96 96h84c6.6 0 12-5.4 12-12z");
+    }
+
+    70% {
+      d: path("M489 273L321 441c-15 15-41 4.5-41-17v-96H144c-13.3 0-24-10.7-24-24v-96c0-13.3 10.7-24 24-24h136V88c0-21.4 25.9-32 41-17l168 168c9.3 9.4 9.3 24.6 0 34zM192 436v-40c0-6.6-5.4-12-12-12H96c-17.7 0-32-14.3-32-32V160c0-17.7 14.3-32 32-32h84c6.6 0 12-5.4 12-12V76c0-6.6-5.4-12-12-12H96c-53 0-96 43-96 96v192c0 53 43 96 96 96h84c6.6 0 12-5.4 12-12z");
+    }
+  }
+
+  @keyframes bf-honk {
+    20% {
+      rotate: -12deg;
+      scale: 1.1;
+    }
+
+    40% {
+      rotate: 8deg;
+      scale: 1.15;
+    }
+
+    60% {
+      rotate: -6deg;
+      scale: 1.05;
+    }
+
+    80% {
+      rotate: 3deg;
+    }
+  }
+
+  @keyframes bf-bubble {
+    0% {
+      scale: 0.3;
+      opacity: 0;
+    }
+
+    20% {
+      opacity: 1;
+    }
+
+    100% {
+      translate: var(--x) var(--y);
+      scale: 1;
+      opacity: 0;
+    }
+  }
 }

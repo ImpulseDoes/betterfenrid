@@ -131,3 +131,29 @@ export function withBurst(svg: SVGSVGElement): SVGSVGElement {
 
   return svg
 }
+const BUBBLES = [
+  { x: -1.5, y: -7, r: 1.1, delay: 0 },
+  { x: 1.8, y: -9, r: 0.8, delay: 160 },
+  { x: 0.2, y: -6, r: 0.6, delay: 320 },
+]
+
+export function withBubbles(svg: SVGSVGElement): SVGSVGElement {
+
+  for (const { x, y, r, delay } of BUBBLES) {
+
+    const bubble = document.createElementNS(SVG_NS, 'circle')
+
+    bubble.setAttribute('data-bf-bubble', '')
+    bubble.setAttribute('cx', '12')
+    bubble.setAttribute('cy', '5')
+    bubble.setAttribute('r', String(r))
+    bubble.setAttribute('opacity', '0')
+    bubble.style.setProperty('--x', `${x}px`)
+    bubble.style.setProperty('--y', `${y}px`)
+    bubble.style.animationDelay = `${delay}ms`
+    svg.append(bubble)
+
+  }
+
+  return svg
+}

@@ -15,7 +15,7 @@ import { getPlugins, isEnabled } from '../core/plugins'
 import { Selectors } from '../core/selectors'
 import { settings } from '../core/settings'
 import { NAME, VERSION } from '../meta'
-import { fittedIcon, withBurst, type IconName } from './icons'
+import { fittedIcon, withBubbles, withBurst, type IconName } from './icons'
 import { CreditsPage } from './pages/credits'
 import { PluginsPage } from './pages/plugins'
 import { SettingsPage } from './pages/settings'
@@ -41,6 +41,10 @@ const PAGES: Page[] = [
 ]
 
 const CREDITS: Page = { id: 'credits', label: 'Credits', title: 'Credits', icon: 'heart', render: CreditsPage }
+const ICON_EXTRAS: Record<string, (svg: SVGSVGElement) => SVGSVGElement> = {
+  credits: withBurst,
+  experiments: withBubbles,
+}
 
 function visiblePages(): Page[] {
 
@@ -252,7 +256,7 @@ function buildItem(template: Element, page: Page): Element {
   row.setAttribute(NAV, page.id)
 
   replaceText(row, S.templateItem, page.label)
-  replaceIcon(row, page.id === 'credits' ? withBurst(fittedIcon(page.icon)) : fittedIcon(page.icon))
+  replaceIcon(row, (ICON_EXTRAS[page.id] ?? ((svg) => svg))(fittedIcon(page.icon)))
 
   const open = (e: Event) => {
     e.preventDefault()
