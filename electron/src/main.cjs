@@ -52,13 +52,10 @@ const OVERLAY_PAGES = /^\/(?:auth|login|register|signup|sign-up|forgot|reset|ver
 const titleBar = { background: '#141418', foreground: '#b5b6bd', title: 'Better Fenrid', mode: 'docked' }
 const INSET_CSS = `
 html[data-bf-titlebar="inset"] { height: 100%; overflow: hidden; }
-html[data-bf-titlebar="inset"] body.chat-active {
-  top: ${TITLE_BAR_HEIGHT}px !important;
-  right: 0 !important;
-  bottom: 0 !important;
-  left: 0 !important;
-  height: auto !important;
-  max-height: none !important;
+html[data-bf-titlebar="inset"] body.chat-active { top: 0 !important; }
+html[data-bf-titlebar="inset"] body.chat-active .chat-app {
+  top: calc(var(--fenrid-visual-viewport-offset-top, 0px) + ${TITLE_BAR_HEIGHT}px) !important;
+  height: calc(var(--fenrid-visual-viewport-height, 100dvh) - ${TITLE_BAR_HEIGHT}px) !important;
 }
 html[data-bf-titlebar="inset"] body:not(.chat-active) { padding-top: ${TITLE_BAR_HEIGHT}px !important; box-sizing: border-box !important; }
 `
