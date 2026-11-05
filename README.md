@@ -40,6 +40,7 @@ A client mod for [Fenrid](https://fenrid.com). It adds plugins, custom themes an
 | Image Link | Never hides image links in messages, even when the image is all the message has. The link appears above the image. GIFs are optional. Off by default. |
 | Loading Messages | Replaces the messages on Fenrid's loading screen with your own, and the signature under them. Mix them with Fenrid's if you like. Off by default. |
 | Mention Avatars | Shows user avatars inside mentions. |
+| Message Colors | Writes your messages in a color you pick: 9 presets or any #RRGGBB. Other Better Fenrid users see it too, through a few invisible characters added to your messages. Everyone else sees normal text. Off by default. |
 | Microphone Quality | Picks the bitrate of your microphone in calls, up to 510 kbps. Works from the next time you join a call. Off by default. |
 | No Link Warning | Opens links straight away, without the *Leaving Fenrid* warning. Works for every link, or only the sites you list. Off by default. |
 | No Reply Mentions | Turns off the reply ping by default. You can still turn it on for a single reply. Off by default. |

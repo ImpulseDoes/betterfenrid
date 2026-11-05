@@ -18,6 +18,7 @@ import hideBlocked from './hideBlocked'
 import imageLink from './imageLink'
 import loadingMessages from './loadingMessages'
 import mentionAvatars from './mentionAvatars'
+import messageColors from './messageColors'
 import microphoneQuality from './microphoneQuality'
 import noLinkWarning from './noLinkWarning'
 import noReplyMentions from './noReplyMentions'
@@ -60,6 +61,7 @@ export const plugins = [
     imageLink,
     loadingMessages,
     mentionAvatars,
+    messageColors,
     microphoneQuality,
     noLinkWarning,
     noReplyMentions,
