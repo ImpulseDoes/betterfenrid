@@ -1,5 +1,6 @@
 import { h } from '../core/dom'
 import { definePlugin, getPluginSetting, setPluginSetting, type Plugin } from '../core/plugins'
+import { SEE_THROUGH_CSS } from '../core/seeThrough'
 import { settings } from '../core/settings'
 import { THEMES } from '../core/theme'
 import { Button, Row, Section, SettingControl } from '../ui/components'
@@ -83,28 +84,7 @@ html:root {
   --bf-wall-base: ${base};
   background: linear-gradient(${shade}, ${shade}), ${image} center / cover no-repeat fixed #000 !important;
 }
-
-html:root > body {
-  --background: transparent !important;
-  --main-chat-area: transparent !important;
-  --server-sidebar: color-mix(in srgb, var(--bf-wall-base) 35%, transparent) !important;
-  --channel-sidebar: color-mix(in srgb, var(--bf-wall-base) 20%, transparent) !important;
-  --member-list: color-mix(in srgb, var(--bf-wall-base) 20%, transparent) !important;
-  --sidebar: color-mix(in srgb, var(--bf-wall-base) 20%, transparent) !important;
-  background: transparent !important;
-}
-
-html:root > body .text-background,
-html:root > body .text-main-chat-area {
-  color: var(--bf-wall-base);
-}
-
-.bg-popups-and-modals,
-.bg-popover,
-[role="menu"] {
-  backdrop-filter: blur(8px);
-}
-`
+${SEE_THROUGH_CSS}`
 }
 
 const PAGE_CSS = `

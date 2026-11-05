@@ -30,6 +30,7 @@ import profileThemes from './profileThemes'
 import quoteMessage from './quoteMessage'
 import readAllButton from './readAllButton'
 import resizableSidebar from './resizableSidebar'
+import shaders from './shaders'
 import showHiddenThings from './showHiddenThings'
 import silentTyping from './silentTyping'
 import spotifyControls from './spotifyControls'
@@ -73,6 +74,7 @@ export const plugins = [
     quoteMessage,
     readAllButton,
     resizableSidebar,
+    shaders,
     showHiddenThings,
     silentTyping,
     spotifyControls,
