@@ -8,6 +8,7 @@ import { definePlugin } from '../core/plugins'
 import { Button } from '../ui/components'
 
 const STATS_TIMEOUT_MS = 2_500
+const LOCALE = 'en-US'
 const CHANNEL_TYPE = { TEXT: 0, VOICE: 2, CATEGORY: 4 }
 
 type Data = Record<string, any>
@@ -116,7 +117,7 @@ function createdAt(serverId: string, server: Data, roles: Data[] | null, channel
 function age(date: Date): string {
 
   const days = Math.floor((Date.now() - date.getTime()) / 86_400_000)
-  const rtf = new Intl.RelativeTimeFormat(undefined, { numeric: 'auto' })
+  const rtf = new Intl.RelativeTimeFormat(LOCALE, { numeric: 'auto' })
 
   if (days >= 365) return rtf.format(-Math.floor(days / 365), 'year')
   if (days >= 30) return rtf.format(-Math.floor(days / 30), 'month')
@@ -125,7 +126,7 @@ function age(date: Date): string {
 }
 
 function count(value: number | undefined | null): string {
-  return value == null ? '—' : new Intl.NumberFormat().format(value)
+  return value == null ? '—' : new Intl.NumberFormat(LOCALE).format(value)
 }
 
 function Stat(label: string, value: string): Node {
@@ -177,7 +178,7 @@ function Statistics(serverId: string, { server, owner, live, channels, roles, em
           h('span', { class: 'bf-stat-owner' }, ownerAvatar ? h('img', { class: 'bf-reactor', src: ownerAvatar, alt: '' }) : null, owner.display_name ?? owner.username ?? 'Unknown'),
         )
         : null,
-      created ? Detail('Created', `${created.toLocaleDateString(undefined, { dateStyle: 'long' })}, ${created.toLocaleTimeString(undefined, { timeStyle: 'short' })} (${age(created)})`) : null,
+      created ? Detail('Created', `${created.toLocaleDateString(LOCALE, { dateStyle: 'long' })}, ${created.toLocaleTimeString(LOCALE, { timeStyle: 'short' })} (${age(created)})`) : null,
       features.length ? Detail('Features', features.map((f) => f.toLowerCase().replaceAll('_', ' ')).join(', ')) : null,
       Detail('Community ID', serverId),
     ),
