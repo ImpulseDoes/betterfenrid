@@ -5,16 +5,12 @@ import { settings } from '../../core/settings'
 import { THEMES } from '../../core/theme'
 import type { Effect, Frame } from './effect'
 import { createGlass } from './glass'
-import { createRain } from './rain'
 
 const EFFECTS: Record<string, { label: string; create: (gl: WebGLRenderingContext) => Effect }> = {
   glass: { label: 'Rain on glass', create: createGlass },
-  rain: { label: 'Falling rain', create: createRain },
 }
 
 const QUALITY: Record<string, number> = { low: 0.5, medium: 0.75, high: 1 }
-
-const HEX = /^#?([0-9a-f]{6})$/i
 
 const BASE_CSS = `
 .bf-shader {
@@ -41,17 +37,10 @@ function lightning(since: number): number {
 export default definePlugin({
   id: 'shaders',
   name: 'Shaders',
-  description: 'Animated effects drawn by your graphics card behind Fenrid, on top of your wallpaper.',
+  description: 'Rain running down a window in front of your wallpaper, drawn by your graphics card behind Fenrid.',
   authors: ['Better Fenrid'],
   enabledByDefault: false,
   settings: {
-    shader: {
-      type: 'select',
-      label: 'Effect',
-      description: 'Rain on glass: drops run down a window in front of your wallpaper, which shows upside down inside them. Falling rain: streaks falling past.',
-      default: 'glass',
-      options: Object.entries(EFFECTS).map(([value, { label }]) => ({ label, value })),
-    },
     amount: {
       type: 'number',
       label: 'Amount',
@@ -73,38 +62,7 @@ export default definePlugin({
     fog: {
       type: 'boolean',
       label: 'Fogged glass',
-      description: 'Rain on glass: blurs the wallpaper around the drops.',
-      default: true,
-    },
-    wind: {
-      type: 'number',
-      label: 'Wind',
-      description: 'Falling rain: below zero blows to the left, above zero to the right.',
-      default: 15,
-      min: -100,
-      max: 100,
-      step: 5,
-    },
-    opacity: {
-      type: 'number',
-      label: 'Opacity',
-      description: 'Falling rain, in percent.',
-      default: 70,
-      min: 10,
-      max: 100,
-      step: 5,
-    },
-    color: {
-      type: 'string',
-      label: 'Color',
-      description: 'Falling rain, as #RRGGBB.',
-      placeholder: '#a8c8ff',
-      default: '#a8c8ff',
-    },
-    glass: {
-      type: 'boolean',
-      label: 'Drops on the glass',
-      description: 'Falling rain: drops that land on the screen, sit there and slide off.',
+      description: 'Blurs the wallpaper around the drops.',
       default: true,
     },
     lightning: {
@@ -159,7 +117,7 @@ export default definePlugin({
 
       if (!gl || gl.isContextLost()) return
 
-      const id = EFFECTS[ctx.settings.shader] ? ctx.settings.shader : 'glass'
+      const id = 'glass'
 
       if (effect && effectId === id) return
 
@@ -179,31 +137,12 @@ export default definePlugin({
       }
     }
 
-    let color: [number, number, number] = [0.66, 0.78, 1]
-    let warned = ''
-
     const applySettings = () => {
 
       const theme = THEMES.find((t) => t.id === settings.get().theme.preset)
       const base = theme?.preview?.bg ?? '#0e0f12'
-      const opacity = ctx.settings.shader === 'rain' ? Math.min(100, Math.max(0, Number(ctx.settings.opacity) || 0)) / 100 : 1
 
-      layer.set(`
-.bf-shader {
-  opacity: ${opacity};
-}
-${theme?.assets ? '' : `html:root { --bf-wall-base: ${base}; background-color: ${base} !important; }\n${SEE_THROUGH_CSS}`}`)
-
-      const raw = ctx.settings.color.trim()
-      const hex = raw.match(HEX)?.[1]
-
-      if (hex) color = [0, 2, 4].map((i) => parseInt(hex.slice(i, i + 2), 16) / 255) as [number, number, number]
-      else if (raw && warned !== raw) {
-
-        warned = raw
-        toast('The color has to look like #a8c8ff', 'error', 3000)
-
-      }
+      layer.set(`${theme?.assets ? '' : `html:root { --bf-wall-base: ${base}; background-color: ${base} !important; }\n${SEE_THROUGH_CSS}`}`)
 
       pickEffect()
     }
@@ -211,7 +150,6 @@ ${theme?.assets ? '' : `html:root { --bf-wall-base: ${base}; background-color: $
     let frame = 0
     let lastDraw = 0
     let time = 0
-    let flow = 0
     let strikeAt = -1
     let nextStrike = 6 + Math.random() * 10
 
@@ -228,7 +166,6 @@ ${theme?.assets ? '' : `html:root { --bf-wall-base: ${base}; background-color: $
 
       lastDraw = now
       time += real
-      flow += real * speed
 
       if (!gl || !effect || gl.isContextLost()) return
 
@@ -257,13 +194,9 @@ ${theme?.assets ? '' : `html:root { --bf-wall-base: ${base}; background-color: $
         height,
         scale: width / window.innerWidth,
         step: real * speed,
-        flow,
         time,
         flash: ctx.settings.lightning && strikeAt >= 0 ? lightning(time - strikeAt) : 0,
         amount: (Number(ctx.settings.amount) || 0) / 100,
-        wind: Math.max(-1, Math.min(1, (Number(ctx.settings.wind) || 0) / 100)),
-        color,
-        drops: ctx.settings.glass,
         fog: ctx.settings.fog,
         quality,
       }
