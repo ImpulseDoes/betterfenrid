@@ -16,7 +16,6 @@ uniform float uWind;    // -1..1
 uniform vec3 uColor;
 uniform float uDrops;   // 0 or 1
 uniform float uFlash;   // 0..1, lightning
-uniform float uFog;     // 0 or 1, only behind Fenrid
 
 float hash(vec2 p) {
   p = fract(p * vec2(123.34, 456.21));
@@ -107,7 +106,7 @@ void main() {
     alpha += g.x * 0.75 + g.y * 0.9 + g.z * 0.2;
   }
 
-  float fog = (1.0 - smoothstep(0.0, 0.45, gl_FragCoord.y / uRes.y)) * 0.16 * uFog;
+  float fog = (1.0 - smoothstep(0.0, 0.45, gl_FragCoord.y / uRes.y)) * 0.16;
 
   color += uColor * 0.5 * fog + vec3(0.82, 0.88, 1.0) * uFlash;
   alpha = clamp(alpha + fog + uFlash, 0.0, 1.0);
@@ -122,7 +121,7 @@ const SHADERS: Record<string, { label: string; fragment: string }> = {
 
 const VERTEX = 'attribute vec2 a; void main() { gl_Position = vec4(a, 0.0, 1.0); }'
 
-const UNIFORMS = ['uRes', 'uScale', 'uTime', 'uFlow', 'uAmount', 'uWind', 'uColor', 'uDrops', 'uFlash', 'uFog'] as const
+const UNIFORMS = ['uRes', 'uScale', 'uTime', 'uFlow', 'uAmount', 'uWind', 'uColor', 'uDrops', 'uFlash'] as const
 
 const QUALITY: Record<string, number> = { low: 0.5, medium: 0.75, high: 1 }
 
@@ -135,6 +134,7 @@ const BASE_CSS = `
   display: block;
   width: 100vw;
   height: 100vh;
+  z-index: -1;
   pointer-events: none;
 }
 `
@@ -181,7 +181,7 @@ function lightning(since: number): number {
 export default definePlugin({
   id: 'shaders',
   name: 'Shaders',
-  description: 'Animated effects drawn by your graphics card, over or behind Fenrid. For now: rain.',
+  description: 'Animated effects drawn by your graphics card behind Fenrid, on top of your wallpaper. For now: rain.',
   authors: ['Better Fenrid'],
   enabledByDefault: false,
   settings: {
@@ -190,16 +190,6 @@ export default definePlugin({
       label: 'Effect',
       default: 'rain',
       options: Object.entries(SHADERS).map(([value, { label }]) => ({ label, value })),
-    },
-    placement: {
-      type: 'select',
-      label: 'Where',
-      description: 'Behind Fenrid makes the panels see-through, like a wallpaper. Works together with Wallpaper Manager.',
-      default: 'over',
-      options: [
-        { label: 'Over Fenrid', value: 'over' },
-        { label: 'Behind Fenrid', value: 'behind' },
-      ],
     },
     amount: {
       type: 'number',
@@ -284,7 +274,7 @@ export default definePlugin({
 
     ctx.addStyle(BASE_CSS)
 
-    const placement = ctx.addStyle('')
+    const layer = ctx.addStyle('')
     const canvas = document.createElement('canvas')
 
     canvas.className = 'bf-shader'
@@ -341,18 +331,14 @@ export default definePlugin({
 
     const applySettings = () => {
 
-      const behind = ctx.settings.placement === 'behind'
       const theme = THEMES.find((t) => t.id === settings.get().theme.preset)
       const base = theme?.preview?.bg ?? '#0e0f12'
-      // Themes with their own picture are see-through already
-      const seeThrough = behind && !theme?.assets
 
-      placement.set(`
+      layer.set(`
 .bf-shader {
-  z-index: ${behind ? -1 : 2147483000};
   opacity: ${Math.min(100, Math.max(0, Number(ctx.settings.opacity) || 0)) / 100};
 }
-${seeThrough ? `html:root { --bf-wall-base: ${base}; background-color: ${base} !important; }\n${SEE_THROUGH_CSS}` : ''}`)
+${theme?.assets ? '' : `html:root { --bf-wall-base: ${base}; background-color: ${base} !important; }\n${SEE_THROUGH_CSS}`}`)
 
       const raw = ctx.settings.color.trim()
       const hex = raw.match(HEX)?.[1]
@@ -421,7 +407,6 @@ ${seeThrough ? `html:root { --bf-wall-base: ${base}; background-color: ${base} !
       gl.uniform3f(u.uColor, ...color)
       gl.uniform1f(u.uDrops, ctx.settings.glass ? 1 : 0)
       gl.uniform1f(u.uFlash, ctx.settings.lightning && strikeAt >= 0 ? lightning(clock - strikeAt) : 0)
-      gl.uniform1f(u.uFog, ctx.settings.placement === 'behind' ? 1 : 0)
 
       gl.clearColor(0, 0, 0, 0)
       gl.clear(gl.COLOR_BUFFER_BIT)

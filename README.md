@@ -52,7 +52,7 @@ A client mod for [Fenrid](https://fenrid.com). It adds plugins, custom themes an
 | Profile Themes | Two-color profile themes and animated banners without Flare. Set them in the plugin, then save your profile: the theme is hidden in your bio as invisible characters, so everyone with the plugin sees it, like Vencord's FakeProfileThemes. Off by default. |
 | Quote Message | Adds *Quote Message* to the message menu: pastes the message into your message box as a quote. |
 | Resizable Channel List | Drag the edge of the channel list to make it wider or narrower, like on Discord. Double click the edge to reset it. |
-| Shaders | Animated effects drawn by your graphics card, over Fenrid or behind it like a wallpaper. For now: rain, with drops on the glass and optional lightning. You set how heavy, fast and windy it is, its color, and the frame rate and quality to go easy on your graphics card. Off by default. |
+| Shaders | Animated effects drawn by your graphics card behind Fenrid, on top of your wallpaper: the panels turn see-through like with Wallpaper Manager. For now: rain, with drops on the glass and optional lightning. You set how heavy, fast and windy it is, its color, and the frame rate and quality to go easy on your graphics card. Off by default. |
 | Show Hidden Things | Shows a clock next to members who are timed out, which Fenrid has the data for but doesn't display. |
 | Silent Typing | Hides that you are typing. Off by default. |
 | Translate | Adds *Translate* to the message menu: opens the message in Google Translate. |
