@@ -89,6 +89,41 @@ async function loadStatistics(serverId: string) {
   }
 }
 
+function toDate(value: unknown): Date | null {
+
+  if (typeof value !== 'string' && typeof value !== 'number') return null
+
+  const date = new Date(value)
+
+  return Number.isNaN(date.getTime()) ? null : date
+}
+
+function createdAt(serverId: string, server: Data, roles: Data[] | null, channels: Data[] | null): Date | null {
+
+  const direct = toDate(server.created_at ?? server.createdAt)
+
+  if (direct) return direct
+
+  const everyone = toDate(roles?.find((r) => String(r.id) === serverId)?.created_at)
+
+  if (everyone) return everyone
+
+  const dates = [...(roles ?? []), ...(channels ?? [])].map((x) => toDate(x.created_at)).filter((d): d is Date => !!d)
+
+  return dates.length ? new Date(Math.min(...dates.map((d) => d.getTime()))) : null
+}
+
+function age(date: Date): string {
+
+  const days = Math.floor((Date.now() - date.getTime()) / 86_400_000)
+  const rtf = new Intl.RelativeTimeFormat(undefined, { numeric: 'auto' })
+
+  if (days >= 365) return rtf.format(-Math.floor(days / 365), 'year')
+  if (days >= 30) return rtf.format(-Math.floor(days / 30), 'month')
+
+  return rtf.format(-days, 'day')
+}
+
 function count(value: number | undefined | null): string {
   return value == null ? '—' : new Intl.NumberFormat().format(value)
 }
@@ -109,6 +144,7 @@ function Statistics(serverId: string, { server, owner, live, channels, roles, em
   const iconUrl = server.iconUrl ?? server.image_url
   const ownerAvatar = avatarUrl(owner)
   const features: string[] = Array.isArray(server.features) ? server.features : []
+  const created = createdAt(serverId, server, roles, channels)
 
   return h(
     'div',
@@ -141,7 +177,7 @@ function Statistics(serverId: string, { server, owner, live, channels, roles, em
           h('span', { class: 'bf-stat-owner' }, ownerAvatar ? h('img', { class: 'bf-reactor', src: ownerAvatar, alt: '' }) : null, owner.display_name ?? owner.username ?? 'Unknown'),
         )
         : null,
-      server.created_at ? Detail('Created', new Date(server.created_at).toLocaleDateString()) : null,
+      created ? Detail('Created', `${created.toLocaleDateString(undefined, { dateStyle: 'long' })}, ${created.toLocaleTimeString(undefined, { timeStyle: 'short' })} (${age(created)})`) : null,
       features.length ? Detail('Features', features.map((f) => f.toLowerCase().replaceAll('_', ' ')).join(', ')) : null,
       Detail('Community ID', serverId),
     ),
