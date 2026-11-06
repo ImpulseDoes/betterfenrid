@@ -1,7 +1,6 @@
 import { definePlugin } from '../core/plugins'
 import { findProps } from '../core/react'
 import { Selectors } from '../core/selectors'
-import { isDeletedMessage } from './deletedMessages'
 
 const INTERACTIVE = 'a, button, img, video, audio, input, textarea, [contenteditable="true"], [role="button"]'
 
@@ -24,7 +23,7 @@ export default definePlugin({
 
       const item = findProps(row, (props) => typeof props.onStartInlineEdit === 'function' && !!props.message)
 
-      if (!item || item.message.author_id !== item.currentUserId || isDeletedMessage(item.message.id)) return
+      if (!item || item.message.author_id !== item.currentUserId) return
 
       // The double click has just selected a word, which would stay highlighted under the editor
       getSelection()?.removeAllRanges()
