@@ -7,9 +7,7 @@ import bulkLeaveServers from './bulkLeaveServers'
 import cameraQuality from './cameraQuality'
 import clearUrls from './clearUrls'
 import communityStatistics from './communityStatistics'
-import deletedMessages from './deletedMessages'
 import doubleClickEdit from './doubleClickEdit'
-import editHistory from './editHistory'
 import experiments from './experiments'
 import expressionManager from './expressionManager'
 import fakeSurge from './fakeSurge'
@@ -51,9 +49,7 @@ export const plugins = [
     cameraQuality,
     clearUrls,
     communityStatistics,
-    deletedMessages,
     doubleClickEdit,
-    editHistory,
     experiments,
     expressionManager,
     fakeSurge,

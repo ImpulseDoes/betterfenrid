@@ -19,6 +19,8 @@
   },
   "include": [
     "src",
-    "src/**/*.d.ts"
+    "src/**/*.d.ts",
+    "src/plugins/deletedMessages.ts",
+    "src/plugins/editHistory.ts"
   ]
 }
