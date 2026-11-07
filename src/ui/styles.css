@@ -891,7 +891,7 @@
   position: fixed;
   bottom: 24px;
   left: 50%;
-  z-index: 10001;
+  z-index: 2147483646;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -1665,4 +1665,90 @@ a[data-bf-fake-surge],
 
 .bf-bulk-leave-status.bf-bulk-leave-failed {
   color: var(--bf-danger);
+}
+
+/* Image viewer (api/imageViewer.ts): above Fenrid's popouts and dialogs, which may have turned clicks off on body */
+.bf-viewer {
+  position: fixed;
+  inset: 0;
+  z-index: 2147483000;
+  display: grid;
+  place-items: center;
+  padding: 56px 24px 24px;
+  background: rgba(0, 0, 0, 0.82);
+  backdrop-filter: blur(6px);
+  pointer-events: auto;
+  animation: bf-fade-in 140ms ease-out;
+}
+
+.bf-viewer-close {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  color: var(--bf-text-soft);
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.bf-viewer-figure {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  margin: 0;
+  max-width: 100%;
+  max-height: 100%;
+  min-height: 0;
+  opacity: 0;
+  transform: scale(0.96);
+  transition: opacity 160ms ease-out, transform 200ms cubic-bezier(0.2, 0.9, 0.3, 1.2);
+}
+
+.bf-viewer-ready .bf-viewer-figure {
+  opacity: 1;
+  transform: none;
+}
+
+.bf-viewer-image {
+  display: block;
+  max-width: min(92vw, 100%);
+  max-height: calc(100vh - 150px);
+  height: auto;
+  object-fit: contain;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.04);
+  box-shadow: 0 24px 64px rgba(0, 0, 0, 0.5);
+  user-select: none;
+}
+
+.bf-viewer-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 6px 14px;
+  font-size: 14px;
+}
+
+.bf-viewer-title {
+  font-weight: 600;
+  color: var(--bf-text);
+}
+
+.bf-viewer-action {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 10px;
+  border: 0;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--bf-text-soft);
+  font: inherit;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.bf-viewer-action:hover {
+  background: rgba(255, 255, 255, 0.12);
+  color: var(--bf-text);
 }

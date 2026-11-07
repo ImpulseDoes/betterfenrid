@@ -38,9 +38,10 @@ A client mod for [Fenrid](https://fenrid.com). It adds plugins, custom themes an
 | Force Owner Crown | Shows a crown next to the server owner in messages, and in the member list when the server hides it. |
 | Hide Blocked Users | Hides messages from people you blocked: Fenrid shows them in chat as usual. Off by default. |
 | Image Link | Never hides image links in messages, even when the image is all the message has. The link appears above the image. GIFs are optional. Off by default. |
+| Image Zoom | A magnifying lens for pictures you open full size, like Vencord's ImageZoom. Hold the mouse button on the picture; scroll to zoom, Shift + scroll to resize the lens. Can also show on hover, as a square, or with sharp pixels. |
 | Loading Messages | Replaces the messages on Fenrid's loading screen with your own, and the signature under them. Mix them with Fenrid's if you like. Off by default. |
 | Mention Avatars | Shows user avatars inside mentions. |
-| Message Colors | Writes your messages in a color you pick: 9 presets or any #RRGGBB. Other Better Fenrid users see it too, through a few invisible characters added to your messages. Everyone else sees normal text. Off by default. |
+| Message Colors | Writes your messages in a color you pick: 9 presets or any #RRGGBB. Other Better Fenrid users see it too, through a few invisible characters added to your messages. Everyone else sees normal text. Messages that are only emojis stay without the marker, so the emojis stay big. Off by default. |
 | Microphone Quality | Picks the bitrate of your microphone in calls, up to 510 kbps. Works from the next time you join a call. Off by default. |
 | No Link Warning | Opens links straight away, without the *Leaving Fenrid* warning. Works for every link, or only the sites you list. Off by default. |
 | No Reply Mentions | Turns off the reply ping by default. You can still turn it on for a single reply. Off by default. |
@@ -57,6 +58,7 @@ A client mod for [Fenrid](https://fenrid.com). It adds plugins, custom themes an
 | Silent Typing | Hides that you are typing. Off by default. |
 | Translate | Adds *Translate* to the message menu: opens the message in Google Translate. |
 | Typing in Channel List | Shows animated dots next to channels where someone is typing. |
+| View Icons | Click an avatar or banner on a profile to see it full size, like Vencord's ViewIcons, with a link to the original. The user menu also gets *View Avatar* and *View Banner*. |
 | View Raw | Adds *View Raw* to the message, channel, category and user menus: shows the raw JSON, with a copy button. |
 | Voice Timers | Shows how long a call has been going on, as a pill next to the voice channel's name. It counts from the person who has been there longest, with a "≥" (at least) when they were already there as you opened Fenrid. Can also show each person's time. |
 | Wallpaper Manager | Adds a *Wallpapers* tab: pick a wallpaper from the Better Fenrid collection or paste your own link. Your theme's colors stay; on solid themes you choose how much they dim the wallpaper. Off by default. |

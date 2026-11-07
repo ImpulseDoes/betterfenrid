@@ -7,14 +7,11 @@ const RECHECK_MS = 15_000
 type Profile = Record<string, any> | null | undefined
 
 function triggersIn(root: Element): Element[] {
+
   return [...(root.matches(Selectors.profileTrigger) ? [root] : []), ...root.querySelectorAll(Selectors.profileTrigger)]
+
 }
 
-/**
- * Runs `update` for everything that opens a profile card: names in messages and
- * the member list, avatars and mentions. Nothing on the page changes when the
- * data behind them does, so they're also rechecked on a timer
- */
 export function watchProfileTriggers(ctx: PluginContext<any>, update: (trigger: Element) => void): () => void {
 
   const updateAll = () => {
@@ -88,9 +85,8 @@ export function setNameBadge(trigger: Element, className: string, create: (() =>
   if (!existing) firstTextParent(trigger)?.after(create())
 }
 
-export function avatarUrl(profile: Profile): string | null {
-
-  if (typeof profile?.avatarUrl === 'string') return profile.avatarUrl
+// The avatar or banner on Fenrid's CDN, from a profile's assets: { avatar: { key, ext }, banner: { key, ext } }
+function assetUrl(profile: Profile, kind: 'avatar' | 'banner'): string | null {
 
   let assets = profile?.assets
 
@@ -107,7 +103,21 @@ export function avatarUrl(profile: Profile): string | null {
     }
   }
 
-  const avatar = assets?.avatar
+  const asset = assets?.[kind]
 
-  return profile?.id && avatar?.key && avatar?.ext ? `${Selectors.cdn}/profiles/${profile.id}/avatars/${avatar.key}.${avatar.ext}` : null
+  return profile?.id && asset?.key && asset?.ext ? `${Selectors.cdn}/profiles/${profile.id}/${kind}s/${asset.key}.${asset.ext}` : null
+}
+
+export function avatarUrl(profile: Profile): string | null {
+
+  if (typeof profile?.avatarUrl === 'string') return profile.avatarUrl
+
+  return assetUrl(profile, 'avatar')
+}
+
+export function bannerUrl(profile: Profile): string | null {
+
+  if (typeof profile?.bannerUrl === 'string') return profile.bannerUrl
+
+  return assetUrl(profile, 'banner')
 }

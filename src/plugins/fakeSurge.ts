@@ -290,7 +290,7 @@ export default definePlugin({
 
             clone.querySelectorAll(`a[${HIDDEN}], .${IMAGE}`).forEach((el) => el.remove())
 
-            return clone.textContent?.trim() ? INLINE : JUMBO
+            return clone.textContent?.replace(/[\u{E0000}-\u{E007F}]/gu, '').trim() ? INLINE : JUMBO
         }
 
         const render = (root: ParentNode) => {

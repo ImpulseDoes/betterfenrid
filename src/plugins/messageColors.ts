@@ -12,6 +12,14 @@ const TAG = 0xe0000
 const RUN = /[\u{E0020}-\u{E007E}]+/gu
 const MARKER = /^\{c#([0-9a-f]{6})\}$/i
 const LIMITS = [2000, 4000, 6000, 8000]
+const EMOJIS = /<a?:[A-Za-z0-9_]{2,32}:[1-9][0-9]*>|\[[^\]\n]*\]\(https:\/\/cdn\.fenrid\.com\/emojis\/[^)\s]+\)|https:\/\/cdn\.fenrid\.com\/emojis\/\S+|\p{Extended_Pictographic}|\p{Regional_Indicator}|[\u{1F3FB}-\u{1F3FF}‍️⃣]/gu
+
+function onlyEmojis(text: string): boolean {
+
+  const rest = text.replace(EMOJIS, '')
+
+  return rest.length < text.length && !rest.trim()
+}
 
 const PRESETS: Record<string, { label: string; hex: string }> = {
   red: { label: 'Red', hex: '#ff6b6b' },
@@ -113,7 +121,7 @@ export default definePlugin({
         const clean = stripMarker(body.content)
         const color = ctx.settings.shareColor ? ownColor() : null
         const text = clean.trimEnd()
-        const skip = !color || !text || text.startsWith('/') || text.endsWith('```')
+        const skip = !color || !text || text.startsWith('/') || text.endsWith('```') || onlyEmojis(text)
         const tagged = skip ? clean : `${text} ${encode(`{c#${color!.slice(1)}}`)}`
         const limit = LIMITS.find((l) => l >= clean.length) ?? 0
         const content = tagged.length <= limit ? tagged : clean

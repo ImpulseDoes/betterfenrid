@@ -14,6 +14,7 @@ import fakeSurge from './fakeSurge'
 import forceOwnerCrown from './forceOwnerCrown'
 import hideBlocked from './hideBlocked'
 import imageLink from './imageLink'
+import imageZoom from './imageZoom'
 import loadingMessages from './loadingMessages'
 import mentionAvatars from './mentionAvatars'
 import messageColors from './messageColors'
@@ -34,6 +35,7 @@ import silentTyping from './silentTyping'
 import spotifyControls from './spotifyControls'
 import translate from './translate'
 import typingIndicator from './typingIndicator'
+import viewIcons from './viewIcons'
 import viewRaw from './viewRaw'
 import voiceTimers from './voiceTimers'
 import wallpaperManager from './wallpaperManager'
@@ -56,6 +58,7 @@ export const plugins = [
     forceOwnerCrown,
     hideBlocked,
     imageLink,
+    imageZoom,
     loadingMessages,
     mentionAvatars,
     messageColors,
@@ -76,6 +79,7 @@ export const plugins = [
     spotifyControls,
     translate,
     typingIndicator,
+    viewIcons,
     viewRaw,
     voiceTimers,
     wallpaperManager,
