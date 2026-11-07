@@ -1,3 +1,4 @@
+import anonymiseFileNames from './anonymiseFileNames'
 import badgeFaker from './badgeFaker'
 import badges from './badges'
 import betterEmbedFormats from './betterEmbedFormats'
@@ -42,6 +43,7 @@ import wallpaperManager from './wallpaperManager'
 import whoReacted from './whoReacted'
 
 export const plugins = [
+    anonymiseFileNames,
     badgeFaker,
     badges,
     betterEmbedFormats,
