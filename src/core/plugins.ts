@@ -65,6 +65,10 @@ export interface Plugin<S extends SettingsSchema = SettingsSchema> {
   enabledByDefault?: boolean
   // Needs the Better Fenrid desktop app. Can't be turned on in the browser
   desktopOnly?: boolean
+  // Needs the Better Fenrid Android app. Can't be turned on anywhere else
+  androidOnly?: boolean
+  // Always on wherever it's available, there's no switch
+  required?: boolean
   settings?: S
   // Extra controls shown under the plugin's settings. Available while it's stopped too
   panel?(): Node
@@ -89,9 +93,11 @@ export function getPlugins(): Plugin[] {
 
 export const inDesktopApp = () => Boolean(window.BetterFenridNative && window.BetterFenridNative.platform !== 'android')
 
+export const inAndroidApp = () => window.BetterFenridNative?.platform === 'android'
+
 export function isAvailable(plugin: Plugin | undefined): boolean {
 
-  return !!plugin && (!plugin.desktopOnly || inDesktopApp())
+  return !!plugin && (!plugin.desktopOnly || inDesktopApp()) && (!plugin.androidOnly || inAndroidApp())
 }
 
 export function isEnabled(id: string): boolean {
@@ -100,6 +106,8 @@ export function isEnabled(id: string): boolean {
   const state = settings.get().plugins[id]
 
   if (!isAvailable(plugin)) return false
+
+  if (plugin?.required) return true
 
   return state?.enabled ?? plugin?.enabledByDefault ?? false
 }
@@ -203,7 +211,9 @@ export function stopPlugin(id: string) {
 
 export function setEnabled(id: string, enabled: boolean) {
 
-  if (enabled && !isAvailable(registry.get(id))) return
+  const plugin = registry.get(id)
+
+  if (enabled ? !isAvailable(plugin) : plugin?.required) return
 
   settings.update((s) => {
 

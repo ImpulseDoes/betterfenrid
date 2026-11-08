@@ -27,6 +27,21 @@ function startUi() {
   watchAppUpdates()
 }
 
+function whenRootExists(run: () => void) {
+
+  if (document.documentElement) return run()
+
+  const observer = new MutationObserver(() => {
+
+    if (!document.documentElement) return
+
+    observer.disconnect()
+    run()
+  })
+
+  observer.observe(document, { childList: true })
+}
+
 // Runs before Fenrid's scripts, to catch its connections and avoid a flash of the stock theme
 function init() {
 
@@ -35,14 +50,17 @@ function init() {
   startTopics()
   startEntityCache()
 
-  createStyle(css)
-  startThemes()
-  startFonts()
-  startAppIcon()
-  startSounds()
-
   registerPlugins(plugins)
-  syncPlugins()
+
+  whenRootExists(() => {
+
+    createStyle(css)
+    startThemes()
+    startFonts()
+    startAppIcon()
+    startSounds()
+    syncPlugins()
+  })
 
   if (document.body) startUi()
   else document.addEventListener('DOMContentLoaded', startUi, { once: true })

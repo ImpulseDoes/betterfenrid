@@ -1,3 +1,4 @@
+import androidSupport from './androidSupport'
 import anonymiseFileNames from './anonymiseFileNames'
 import badgeFaker from './badgeFaker'
 import badges from './badges'
@@ -43,6 +44,7 @@ import wallpaperManager from './wallpaperManager'
 import whoReacted from './whoReacted'
 
 export const plugins = [
+    androidSupport,
     anonymiseFileNames,
     badgeFaker,
     badges,

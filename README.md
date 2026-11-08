@@ -21,6 +21,7 @@ A client mod for [Fenrid](https://fenrid.com). It adds plugins, custom themes an
 
 | Plugin | What it does |
 | --- | --- |
+| Android Support | Only in the Android app, and always on there. Puts the Better Fenrid pages in Fenrid's phone settings list and lets the back button close them. |
 | Anonymise File Names | Gives files you upload a new name (random, date and time, or a fixed name) and keeps the extension, so the original name never reaches Fenrid. Works for files you pick, paste or drag in. Off by default. |
 | Badge Faker | Shows the Fenrid badges you pick on your own profile. Only you can see them: nothing is sent to Fenrid. Off by default. |
 | Better Fenrid | Polishes Fenrid: animated icons, Discord-style animations (menus, tooltips, popouts, dialogs and settings open and close, channels and servers slide in from the side you moved to, new messages ease in; each with its own style or off, inspired by BetterDiscord's BetterAnimations), smoother motion and tidier details. Can also turn off background blur for older computers. |

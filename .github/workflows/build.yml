@@ -138,7 +138,7 @@ jobs:
           mkdir -p android/app/src/main/assets
           cp dist/betterfenrid.js android/app/src/main/assets/betterfenrid.js
 
-      - uses: actions/setup-java@v4
+      - uses: actions/setup-java@v5
         with:
           distribution: temurin
           java-version: 17

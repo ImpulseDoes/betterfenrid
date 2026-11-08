@@ -26,7 +26,7 @@ export interface PageContext {
   refresh(): void
 }
 
-interface Page {
+export interface Page {
   id: string
   label: string
   title: string
@@ -46,12 +46,14 @@ const ICON_EXTRAS: Record<string, (svg: SVGSVGElement) => SVGSVGElement> = {
   experiments: withBubbles,
 }
 
-function visiblePages(): Page[] {
+export function visiblePages(): Page[] {
 
   return [...PAGES, ...getPlugins().flatMap((plugin) => (plugin.page && isEnabled(plugin.id) ? [plugin.page] : [])), CREDITS]
 }
 
-const pagesKey = () => visiblePages().map((page) => page.id).join()
+export const pagesKey = () => visiblePages().map((page) => page.id).join()
+
+export const pageIcon = (page: Page) => (ICON_EXTRAS[page.id] ?? ((svg: SVGSVGElement) => svg))(fittedIcon(page.icon))
 
 const S = Selectors.settings
 const NAV = 'data-bf-nav'
@@ -256,7 +258,7 @@ function buildItem(template: Element, page: Page): Element {
   row.setAttribute(NAV, page.id)
 
   replaceText(row, S.templateItem, page.label)
-  replaceIcon(row, (ICON_EXTRAS[page.id] ?? ((svg) => svg))(fittedIcon(page.icon)))
+  replaceIcon(row, pageIcon(page))
 
   const open = (e: Event) => {
     e.preventDefault()

@@ -50,7 +50,12 @@ function PluginCard(plugin: Plugin): Node {
 
   const pcOnly = plugin.desktopOnly
     ? tooltip(h('span', { class: 'bf-option-tag' }, 'PC only'), available ? 'Needs the Better Fenrid desktop app' : 'Only works in the Better Fenrid desktop app')
-    : null
+    : plugin.androidOnly
+      ? tooltip(h('span', { class: 'bf-option-tag' }, 'Android only'), available ? 'Needs the Better Fenrid Android app' : 'Only works in the Better Fenrid Android app')
+      : null
+
+  const where = plugin.androidOnly ? 'Android app' : 'desktop app'
+  const switchLabel = !available ? `${plugin.name} only works in the ${where}` : plugin.required ? `${plugin.name} is always on` : `Enable ${plugin.name}`
 
   const hasSettings = schema.length > 0 || !!plugin.panel
 
@@ -78,7 +83,7 @@ function PluginCard(plugin: Plugin): Node {
         h('div', { class: 'bf-option-desc' }, plugin.description),
       ),
       expand,
-      Switch(isEnabled(plugin.id), (v) => setEnabled(plugin.id, v), available ? `Enable ${plugin.name}` : `${plugin.name} only works in the desktop app`, !available),
+      Switch(isEnabled(plugin.id), (v) => setEnabled(plugin.id, v), switchLabel, !available || !!plugin.required),
     ),
   )
 

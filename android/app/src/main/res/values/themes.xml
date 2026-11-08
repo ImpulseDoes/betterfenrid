@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="background">#FF111214</color>
-    <color name="brand">#FF304AC5</color>
+    <color name="brand">#FF2B28A4</color>
 
     <style name="Theme.BetterFenrid" parent="android:Theme.Material.NoActionBar">
         <item name="android:windowBackground">@color/background</item>

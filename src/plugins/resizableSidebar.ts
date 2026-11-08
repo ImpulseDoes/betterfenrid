@@ -31,11 +31,11 @@ export default definePlugin({
 
     start(ctx) {
 
-        const root = document.documentElement
+        const root = () => document.documentElement
 
         const show = (width: number) => {
 
-            root.style.setProperty(VARIABLE, `${width}px`)
+            root()?.style.setProperty(VARIABLE, `${width}px`)
             handle.setAttribute('aria-valuenow', String(width))
         }
 
@@ -60,7 +60,7 @@ export default definePlugin({
 
                 event.preventDefault()
                 handle.setPointerCapture(event.pointerId)
-                root.classList.add(RESIZING)
+                root()?.classList.add(RESIZING)
             },
 
             onPointerMove(event: PointerEvent) {
@@ -73,7 +73,7 @@ export default definePlugin({
                 if (!handle.hasPointerCapture(event.pointerId)) return
 
                 handle.releasePointerCapture(event.pointerId)
-                root.classList.remove(RESIZING)
+                root()?.classList.remove(RESIZING)
                 save(clamp(event.clientX - RAIL_WIDTH))
             },
 
@@ -92,7 +92,10 @@ export default definePlugin({
 
         const mount = () => {
 
-            if (document.body && !handle.isConnected) document.body.append(handle)
+            if (!document.body || handle.isConnected) return
+
+            document.body.append(handle)
+            show(clamp(ctx.settings.width))
         }
 
         ctx.addStyle(css)
@@ -105,8 +108,8 @@ export default definePlugin({
         ctx.onStop(() => {
 
             handle.remove()
-            root.classList.remove(RESIZING)
-            root.style.removeProperty(VARIABLE)
+            root()?.classList.remove(RESIZING)
+            root()?.style.removeProperty(VARIABLE)
         })
     },
 })

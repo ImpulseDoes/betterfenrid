@@ -115,10 +115,13 @@ class MainActivity : ComponentActivity() {
 
             override fun handleOnBackPressed() {
 
-                when {
-                    customView != null -> chrome.onHideCustomView()
-                    webView.canGoBack() -> webView.goBack()
-                    else -> moveTaskToBack(true)
+                if (customView != null) return chrome.onHideCustomView()
+
+                webView.evaluateJavascript(ASK_PAGE_BACK) { handled ->
+
+                    if (handled == "true" || isDestroyed) return@evaluateJavascript
+
+                    if (webView.canGoBack()) webView.goBack() else moveTaskToBack(true)
                 }
             }
         })
@@ -248,9 +251,7 @@ class MainActivity : ComponentActivity() {
     }
 
     private fun isFenrid(uri: Uri?) = uri?.scheme == "https" && uri.host == "fenrid.com"
-
     private fun fenridLink(uri: Uri?) = uri?.takeIf(::isFenrid)?.toString()
-
     private fun openExternal(uri: Uri) {
 
         if (uri.scheme !in EXTERNAL_SCHEMES) return
@@ -286,8 +287,10 @@ class MainActivity : ComponentActivity() {
     }
 
     private fun androidPermission(resource: String) = when (resource) {
+
         PermissionRequest.RESOURCE_AUDIO_CAPTURE -> Manifest.permission.RECORD_AUDIO
         PermissionRequest.RESOURCE_VIDEO_CAPTURE -> Manifest.permission.CAMERA
+        
         else -> null
     }
 
@@ -426,29 +429,40 @@ class MainActivity : ComponentActivity() {
         private const val HOME = "https://fenrid.com/channels/me"
         private const val FIRST_CHECK_MS = 15_000L
         private const val UPDATE_TIMER_MS = 30 * 60_000L
-
         private val ORIGINS = setOf("https://fenrid.com")
         private val EXTERNAL_SCHEMES = setOf("https", "http", "mailto", "tel", "sms", "geo")
+        private const val ASK_PAGE_BACK = "(() => { try { return window.BetterFenridNative?.handleBack?.() === true } catch { return false } })()"
 
         private val BRIDGE = """
             (() => {
+
               const port = window.BetterFenridAndroid
+              
               if (!port || window.BetterFenridNative) return
 
               const waiting = new Map()
               const readyListeners = new Set()
+              const backListeners = []
+
               let nextId = 0
 
               const send = (message) => port.postMessage(JSON.stringify(message))
 
               port.addEventListener('message', (event) => {
+
                 let message
+                
                 try { message = JSON.parse(event.data) } catch { return }
+                
                 if (message.type === 'reply') {
+                
                   waiting.get(message.id)?.(message.result)
                   waiting.delete(message.id)
+                
                 }
+                
                 if (message.type === 'ready') for (const listener of readyListeners) listener({ version: message.version })
+              
               })
 
               Object.defineProperty(window, 'BetterFenridNative', {
@@ -464,10 +478,33 @@ class MainActivity : ComponentActivity() {
                       send({ type: 'check', id })
                     }),
                     onReady(listener) {
+
                       if (typeof listener !== 'function') throw new TypeError('listener must be a function')
+                     
                       readyListeners.add(listener)
+                     
                       return () => readyListeners.delete(listener)
                     },
+                  },
+
+                  onBack(listener) {
+
+                    if (typeof listener !== 'function') throw new TypeError('listener must be a function')
+
+                    backListeners.push(listener)
+
+                    return () => {
+                      const i = backListeners.indexOf(listener)
+                      if (i >= 0) backListeners.splice(i, 1)
+                    }
+                  },
+                  handleBack() {
+
+                    for (const listener of [...backListeners].reverse()) {
+                      try { if (listener() === true) return true } catch (err) { console.error(err) }
+                    }
+
+                    return false
                   },
                 }),
               })

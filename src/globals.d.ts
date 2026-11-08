@@ -30,6 +30,7 @@ interface BetterFenridNative {
     check(): Promise<{ status: 'latest' | 'ready' | 'local' | 'error'; version?: string; error?: string }>;
     onReady(listener: (update: { version: string }) => void): () => void;
   };
+  onBack?(listener: () => boolean): () => void;
 }
 
 interface Window {
