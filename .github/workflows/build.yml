@@ -117,3 +117,74 @@ jobs:
             The newest Better Fenrid desktop app for Windows, built from ${{ github.sha }} with mod v${{ env.BF_VERSION }} inside.
             The mod updates itself, so this only needs downloading again when the app itself changes.
           files: electron/out/Better-Fenrid-Portable.exe
+
+  android:
+    needs: build
+    if: github.event_name == 'push' && contains(github.event.head_commit.message, '--apk')
+    runs-on: ubuntu-latest
+    env:
+      BF_VERSION: ${{ needs.build.outputs.version }}
+      BF_BUILD: ${{ github.run_number }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/download-artifact@v4
+        with:
+          name: better-fenrid
+          path: dist
+
+      - name: Bundle the mod
+        run: |
+          mkdir -p android/app/src/main/assets
+          cp dist/betterfenrid.js android/app/src/main/assets/betterfenrid.js
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
+
+      - uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '8.11.1'
+
+      - name: Load the signing key
+        env:
+          KEYSTORE: ${{ secrets.ANDROID_KEYSTORE }}
+        run: |
+          if [ -n "$KEYSTORE" ]; then
+            echo "$KEYSTORE" | base64 -d > "$RUNNER_TEMP/release.jks"
+            echo "BF_KEYSTORE=$RUNNER_TEMP/release.jks" >> "$GITHUB_ENV"
+          else
+            echo "::warning::No ANDROID_KEYSTORE secret. This APK is signed with a throwaway key and can't update an earlier install"
+          fi
+
+      - name: Build the APK
+        working-directory: android
+        env:
+          BF_KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+        run: gradle assembleRelease --no-daemon
+
+      - run: cp android/app/build/outputs/apk/release/app-release.apk Better-Fenrid.apk
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: better-fenrid-android
+          path: Better-Fenrid.apk
+
+      - name: Attach to this build's release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: v${{ env.BF_VERSION }}
+          files: Better-Fenrid.apk
+
+      - name: Update the Android release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: android
+          name: Better Fenrid for Android
+          target_commitish: ${{ github.sha }}
+          make_latest: 'false'
+          body: |
+            The newest Better Fenrid app for Android, built from ${{ github.sha }} with mod v${{ env.BF_VERSION }} inside.
+            The mod updates itself, so this only needs downloading again when the app itself changes.
+          files: Better-Fenrid.apk

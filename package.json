@@ -12,7 +12,8 @@
     "themes": "node scripts/generate-onyx.mjs",
     "typecheck": "tsc --noEmit",
     "desktop": "npm --prefix electron start",
-    "desktop:dist": "npm --prefix electron run dist"
+    "desktop:dist": "npm --prefix electron run dist",
+    "android:key": "node scripts/android-key.mjs"
   },
   "keywords": [
     "fenrid",

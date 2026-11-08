@@ -77,6 +77,10 @@ Better Fenrid runs as a userscript in your browser.
 
 Your userscript manager keeps it up to date on its own.
 
+### Android
+
+Download `Better-Fenrid.apk` from the [Android release](https://github.com/ImpulseDoes/betterfenrid/releases/tag/android) and open it on your phone. Android asks you to allow installing apps from your browser the first time. The mod inside updates itself. See [android/README.md](android/README.md) for what works and what doesn't
+
 ## Development
 
 Requires Node.js 20 or newer.

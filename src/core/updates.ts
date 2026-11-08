@@ -9,9 +9,10 @@ const NOTICE_DELAY_MS = 4_000
 const FALLBACK_COUNT = 10
 
 const READY_TOAST_MS = 10_000
-const reloadHint = (version: string) => `${NAME} v${version} is downloaded. Press Ctrl+R to switch to it.`
+export const onAndroid = window.BetterFenridNative?.platform === 'android'
 
-// The desktop app updates the mod by itself, the userscript goes through its manager
+const reloadHint = (version: string) => `${NAME} v${version} is downloaded. ${onAndroid ? 'It loads the next time the app starts.' : 'Press Ctrl+R to switch to it.'}`
+
 export const updatesInApp = Boolean(window.BetterFenridNative?.updates)
 
 export async function checkForUpdates() {

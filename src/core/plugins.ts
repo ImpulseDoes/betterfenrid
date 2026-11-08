@@ -87,7 +87,7 @@ export function getPlugins(): Plugin[] {
 
 }
 
-export const inDesktopApp = () => Boolean(window.BetterFenridNative)
+export const inDesktopApp = () => Boolean(window.BetterFenridNative && window.BetterFenridNative.platform !== 'android')
 
 export function isAvailable(plugin: Plugin | undefined): boolean {
 
