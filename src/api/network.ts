@@ -116,30 +116,41 @@ function isBlocked(data: unknown): boolean {
   return false
 }
 
-function showEveryFrame(data: string) {
-
-  try {
-
-    const frame = JSON.parse(data) as GatewayFrame
-
-    for (const hook of everyFrameHooks) hook(frame)
-
-  } catch (err) {
-
-    log.error('Gateway frame hook failed', err)
-
-  }
-}
-
 function rewriteFrame(event: MessageEvent): MessageEvent {
 
-  if (everyFrameHooks.size && typeof event.data === 'string') showEveryFrame(event.data)
+  if (typeof event.data !== 'string') return event
 
-  if (typeof event.data !== 'string' || !WATCHED_FRAME.test(event.data)) return event
+  const watched = WATCHED_FRAME.test(event.data)
+
+  if (!watched && !everyFrameHooks.size) return event
+
+  let frame: GatewayFrame
 
   try {
 
-    const frame = JSON.parse(event.data) as GatewayFrame
+    frame = JSON.parse(event.data)
+
+  } catch {
+
+    return event
+  }
+
+  for (const hook of everyFrameHooks) {
+
+    try {
+
+      hook(frame)
+
+    } catch (err) {
+
+      log.error('Gateway frame hook failed', err)
+    }
+  }
+
+  if (!watched) return event
+
+  try {
+
     const original = frame.t
 
     dispatchOp = frame.op

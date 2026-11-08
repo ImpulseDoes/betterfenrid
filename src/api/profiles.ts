@@ -1,3 +1,4 @@
+import { onDomChange } from '../core/dom'
 import type { PluginContext } from '../core/plugins'
 import { findProps } from '../core/react'
 import { Selectors } from '../core/selectors'
@@ -12,7 +13,36 @@ function triggersIn(root: Element): Element[] {
 
 }
 
-export function watchProfileTriggers(ctx: PluginContext<any>, update: (trigger: Element) => void): () => void {
+type Updater = (trigger: Element) => void
+
+const updaters = new Set<Updater>()
+let stopShared: (() => void) | null = null
+
+function runAll(triggers: Element[]) {
+
+  for (const update of updaters) triggers.forEach(update)
+}
+
+function startShared() {
+
+  const stopDom = onDomChange((added) => runAll(added.flatMap(triggersIn)))
+
+  // Names can change without new elements, so look over the page now and then. Not while it's hidden
+  const timer = setInterval(() => {
+
+    if (!document.hidden && document.body) runAll(triggersIn(document.body))
+
+  }, RECHECK_MS)
+
+  stopShared = () => {
+
+    stopDom()
+    clearInterval(timer)
+    stopShared = null
+  }
+}
+
+export function watchProfileTriggers(ctx: PluginContext<any>, update: Updater): () => void {
 
   const updateAll = () => {
 
@@ -20,11 +50,16 @@ export function watchProfileTriggers(ctx: PluginContext<any>, update: (trigger: 
 
   }
 
-  ctx.onDomChange((added) => added.flatMap(triggersIn).forEach(update))
+  updaters.add(update)
 
-  const timer = setInterval(updateAll, RECHECK_MS)
+  if (!stopShared) startShared()
 
-  ctx.onStop(() => clearInterval(timer))
+  ctx.onStop(() => {
+
+    updaters.delete(update)
+
+    if (!updaters.size) stopShared?.()
+  })
 
   updateAll()
 

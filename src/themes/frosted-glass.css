@@ -113,3 +113,9 @@ body {
 .w-1.rounded-r-full.bg-text-primary {
   background-color: var(--fg-accent);
 }
+
+[role="dialog"]:not(.fenrid-settings-root),
+[data-radix-popper-content-wrapper] {
+  --background: var(--popups-and-modals);
+  --main-chat-area: var(--popups-and-modals);
+}

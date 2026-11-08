@@ -122,3 +122,9 @@ body {
   border-color: var(--translucence-border);
   background: var(--translucence-glass) !important;
 }
+
+[role="dialog"]:not(.fenrid-settings-root),
+[data-radix-popper-content-wrapper] {
+  --background: var(--popups-and-modals);
+  --main-chat-area: var(--popups-and-modals);
+}

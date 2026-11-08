@@ -136,6 +136,20 @@ class MainActivity : ComponentActivity() {
         fenridLink(intent.data)?.let { webView.loadUrl(it) }
     }
 
+    override fun onStart() {
+
+        super.onStart()
+
+        webView.onResume()
+    }
+
+    override fun onStop() {
+
+        webView.onPause()
+
+        super.onStop()
+    }
+
     override fun onResume() {
 
         super.onResume()

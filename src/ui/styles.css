@@ -1755,11 +1755,17 @@ a[data-bf-fake-surge],
   background: rgba(255, 255, 255, 0.12);
   color: var(--bf-text);
 }
-/* On phones Fenrid's chat is a panel that slides over the server list, with its own solid background
-   instead of --main-chat-area. It can't turn see-through (the channel list below would show), so it
-   gets the wallpaper that Wallpaper Manager or the theme puts in --bf-page-background */
+
 @media (max-width: 1023.98px) {
   .dark .dark\:bg-\[\#02030b\] {
     background: var(--bf-page-background, #02030b) !important;
   }
+}
+
+[data-status] [fill="var(--status-cutout-color)"] {
+  fill: rgb(from var(--status-cutout-color) r g b / 1);
+}
+
+[data-status]>.bg-\[var\(--status-cutout-color\)\] {
+  background-color: rgb(from var(--status-cutout-color) r g b / 1) !important;
 }

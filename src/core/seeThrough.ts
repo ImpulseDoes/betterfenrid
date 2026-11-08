@@ -19,4 +19,10 @@ html:root > body .text-main-chat-area {
 [role="menu"] {
   backdrop-filter: blur(8px);
 }
+
+[role="dialog"]:not(.fenrid-settings-root),
+[data-radix-popper-content-wrapper] {
+  --background: var(--popups-and-modals);
+  --main-chat-area: var(--popups-and-modals);
+}
 `

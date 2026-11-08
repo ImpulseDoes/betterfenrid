@@ -19,7 +19,10 @@ const CSS = `
   z-index: 50;
   display: flex;
   flex-direction: column;
-  background: var(--main-chat-area, var(--bf-bg));
+  /* The same background as the settings window it sits in */
+  background: inherit;
+  /* A solid base under it, in case the window's own background lets things show through */
+  background-color: rgb(from var(--popups-and-modals, #111214) r g b / 1);
   animation: bf-fade-in 120ms ease-out;
 }
 
@@ -53,6 +56,19 @@ const CSS = `
   overflow-y: auto;
   overscroll-behavior: contain;
   padding: 4px 16px 32px;
+}
+`
+
+const LIGHTER_EFFECTS = `
+*,
+*::before,
+*::after {
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+html {
+  background-attachment: scroll !important;
 }
 `
 
@@ -94,6 +110,14 @@ export default definePlugin({
   androidOnly: true,
   required: true,
   enabledByDefault: true,
+  settings: {
+    lighterEffects: {
+      type: 'boolean',
+      label: 'Lighter effects',
+      description: 'Turns off background blur and the wallpaper that stays still while you scroll. Both are heavy for a phone\'s graphics chip and make it run hot, glass themes just look a bit less frosted.',
+      default: true,
+    },
+  },
 
   start(ctx) {
 
@@ -189,9 +213,8 @@ export default definePlugin({
 
       if (page && !page.isConnected) page = null
 
-      if (section?.isConnected && builtFor === pagesKey()) return
+      if (section?.isConnected) return
 
-      section?.remove()
       section = null
 
       const nav = findMobileNav()
@@ -199,8 +222,21 @@ export default definePlugin({
       if (nav) inject(nav)
     }
 
+    const rebuild = () => {
+
+      if (builtFor === pagesKey()) return
+
+      section?.remove()
+      section = null
+      check()
+    }
+
     ctx.onDomChange(check)
-    ctx.onStop(settings.subscribe(check))
+    ctx.onStop(settings.subscribe(rebuild))
+
+    const effects = ctx.addStyle(ctx.settings.lighterEffects ? LIGHTER_EFFECTS : '')
+
+    ctx.onSettingsChange(() => effects.set(ctx.settings.lighterEffects ? LIGHTER_EFFECTS : ''))
 
     // Back closes our page first, then steps back through Fenrid's settings
     const offBack = window.BetterFenridNative?.onBack?.(() => {
