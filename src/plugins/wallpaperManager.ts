@@ -71,6 +71,7 @@ function wallpaperCss(url: string, dim: number): string {
 :root { ${vars.map((name) => `--${name}: ${image} !important;`).join(' ')} }
 
 html:root {
+  --bf-page-background: linear-gradient(${tint}, ${tint}), ${image} center / cover no-repeat #000 !important;
   background: linear-gradient(${tint}, ${tint}), ${image} center / cover no-repeat fixed #000 !important;
 }
 `
@@ -82,6 +83,7 @@ html:root {
   return `
 html:root {
   --bf-wall-base: ${base};
+  --bf-page-background: linear-gradient(${shade}, ${shade}), ${image} center / cover no-repeat #000 !important;
   background: linear-gradient(${shade}, ${shade}), ${image} center / cover no-repeat fixed #000 !important;
 }
 ${SEE_THROUGH_CSS}`

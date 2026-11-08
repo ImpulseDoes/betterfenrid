@@ -64,6 +64,7 @@
 }
 
 html {
+  --bf-page-background: linear-gradient(var(--translucence-shade), var(--translucence-shade)), var(--translucence-background) center / cover no-repeat #000;
   background: linear-gradient(var(--translucence-shade), var(--translucence-shade)), var(--translucence-background) center / cover no-repeat fixed #000 !important;
 }
 

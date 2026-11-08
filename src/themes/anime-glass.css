@@ -54,6 +54,7 @@
 }
 
 html {
+  --bf-page-background: linear-gradient(var(--anime-shade), var(--anime-shade)), var(--anime-background) center / cover no-repeat #000;
   background: linear-gradient(var(--anime-shade), var(--anime-shade)), var(--anime-background) center / cover no-repeat fixed #000 !important;
 }
 
