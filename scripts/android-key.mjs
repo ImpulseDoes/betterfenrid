@@ -1,7 +1,3 @@
-// Makes the key that signs the Android APK, once. Every APK has to be signed with the same key,
-// or Android won't install it over the previous one.
-// The key stays in ~/.betterfenrid and never goes into the repo. GitHub gets it as two secrets.
-
 import { execFileSync } from 'node:child_process'
 import { randomBytes } from 'node:crypto'
 import { existsSync, mkdirSync, readdirSync, readFileSync, writeFileSync } from 'node:fs'
@@ -15,7 +11,6 @@ const base64File = join(dir, 'android-release-base64.txt')
 
 const exe = process.platform === 'win32' ? 'keytool.exe' : 'keytool'
 
-// keytool comes with Java. JetBrains IDEs and Android Studio carry their own copy
 function findKeytool() {
 
   const candidates = []
@@ -59,11 +54,3 @@ if (existsSync(keystore)) {
 }
 
 writeFileSync(base64File, readFileSync(keystore).toString('base64'))
-
-console.log(`
-Add two secrets in GitHub (repo Settings > Secrets and variables > Actions > New repository secret):
-
-  ANDROID_KEYSTORE           the contents of ${base64File}
-  ANDROID_KEYSTORE_PASSWORD  the contents of ${passwordFile}
-
-Back up ${dir}. If the key is lost, people have to uninstall the app (and log in again) to get the next version.`)

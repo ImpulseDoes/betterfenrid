@@ -10,6 +10,8 @@ export interface Frame {
   amount: number
   fog: boolean
   quality: number
+  // Cursor location in pixels
+  pointer: { x: number; y: number } | null
 }
 
 export interface Effect {

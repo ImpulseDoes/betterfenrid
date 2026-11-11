@@ -41,7 +41,7 @@ const resultHooks = new Set<ResultHook>()
 const responseHooks = new Set<ResponseHook>()
 const requestBodyHooks = new Set<RequestBodyHook>()
 
-const WATCHED_FRAME = /"t"\s*:\s*"(READY|RESUMED|SUBSCRIBED|REQUEST_ERROR|TOPICS_INVALIDATED|TYPING_|VOICE_STATE_|GUILD_|CHANNEL_|MEMBER_|MESSAGE_|SERVER_)/
+const WATCHED_FRAME = /"t"\s*:\s*"(READY|RESUMED|SUBSCRIBED|REQUEST_ERROR|TOPICS_INVALIDATED|TYPING_|VOICE_STATE_|RELATIONSHIP_|GUILD_|CHANNEL_|MEMBER_|MESSAGE_|SERVER_)/
 
 let gatewaySeen = false
 let dispatchOp = 0

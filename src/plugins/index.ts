@@ -30,6 +30,7 @@ import platformIndicators from './platformIndicators'
 import profileThemes from './profileThemes'
 import quoteMessage from './quoteMessage'
 import readAllButton from './readAllButton'
+import relationshipNotifier from './relationshipNotifier'
 import resizableSidebar from './resizableSidebar'
 import shaders from './shaders'
 import showHiddenThings from './showHiddenThings'
@@ -76,6 +77,7 @@ export const plugins = [
     profileThemes,
     quoteMessage,
     readAllButton,
+    relationshipNotifier,
     resizableSidebar,
     shaders,
     showHiddenThings,

@@ -4,10 +4,16 @@ import { SEE_THROUGH_CSS } from '../../core/seeThrough'
 import { settings } from '../../core/settings'
 import { THEMES } from '../../core/theme'
 import type { Effect, Frame } from './effect'
+import { createFrost } from './frost'
 import { createGlass } from './glass'
+import { createPond } from './pond'
+import { createSnow } from './snow'
 
 const EFFECTS: Record<string, { label: string; create: (gl: WebGLRenderingContext) => Effect }> = {
   glass: { label: 'Rain on glass', create: createGlass },
+  pond: { label: 'Rain on a pond', create: createPond },
+  snow: { label: 'Snowfall', create: createSnow },
+  frost: { label: 'Frozen window', create: createFrost },
 }
 
 const QUALITY: Record<string, number> = { low: 0.5, medium: 0.75, high: 1 }
@@ -37,14 +43,21 @@ function lightning(since: number): number {
 export default definePlugin({
   id: 'shaders',
   name: 'Shaders',
-  description: 'Rain running down a window in front of your wallpaper, drawn by your graphics card behind Fenrid.',
+  description: 'Weather in front of your wallpaper, drawn by your graphics card behind Fenrid: rain running down a window, rain on a pond, snowfall or a window freezing over.',
   authors: ['Better Fenrid'],
   enabledByDefault: false,
   settings: {
+    effect: {
+      type: 'select',
+      label: 'Effect',
+      description: 'On the pond, moving your cursor stirs the water too.',
+      default: 'glass',
+      options: Object.entries(EFFECTS).map(([value, { label }]) => ({ label, value })),
+    },
     amount: {
       type: 'number',
       label: 'Amount',
-      description: 'How heavy the rain is, in percent.',
+      description: 'How heavy the rain or snow is, or how far the frost reaches, in percent.',
       default: 50,
       min: 5,
       max: 100,
@@ -62,13 +75,13 @@ export default definePlugin({
     fog: {
       type: 'boolean',
       label: 'Fogged glass',
-      description: 'Blurs the wallpaper around the drops.',
+      description: 'Blurs the wallpaper behind the effect.',
       default: true,
     },
     lightning: {
       type: 'boolean',
       label: 'Lightning',
-      description: 'A soft flash every now and then. Leave it off if flashing light bothers you.',
+      description: 'A soft flash every now and then, with rain on glass. Leave it off if flashing light bothers you.',
       default: false,
     },
     fps: {
@@ -117,7 +130,7 @@ export default definePlugin({
 
       if (!gl || gl.isContextLost()) return
 
-      const id = 'glass'
+      const id = ctx.settings.effect in EFFECTS ? ctx.settings.effect : 'glass'
 
       if (effect && effectId === id) return
 
@@ -148,6 +161,14 @@ export default definePlugin({
     }
 
     let frame = 0
+    let pointer: Frame['pointer'] = null
+
+    const onPointer = (e: PointerEvent) => {
+
+      pointer = { x: e.clientX, y: e.clientY }
+    }
+
+    window.addEventListener('pointermove', onPointer, { passive: true })
     let lastDraw = 0
     let time = 0
     let strikeAt = -1
@@ -195,10 +216,11 @@ export default definePlugin({
         scale: width / window.innerWidth,
         step: real * speed,
         time,
-        flash: ctx.settings.lightning && strikeAt >= 0 ? lightning(time - strikeAt) : 0,
+        flash: effectId === 'glass' && ctx.settings.lightning && strikeAt >= 0 ? lightning(time - strikeAt) : 0,
         amount: (Number(ctx.settings.amount) || 0) / 100,
         fog: ctx.settings.fog,
         quality,
+        pointer,
       }
 
       effect.draw(f)
@@ -226,6 +248,7 @@ export default definePlugin({
     ctx.onStop(() => {
 
       cancelAnimationFrame(frame)
+      window.removeEventListener('pointermove', onPointer)
       effect?.destroy()
       gl?.getExtension('WEBGL_lose_context')?.loseContext()
       canvas.remove()
