@@ -180,4 +180,4 @@ Bump `version` in `package.json` for bigger milestones.
 
 ## License
 
-[MIT](LICENSE) 
+[MIT](LICENSE)
