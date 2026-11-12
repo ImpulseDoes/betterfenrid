@@ -2,6 +2,7 @@ import { installNetworkHooks } from './api/network'
 import { startTopics } from './api/topics'
 import { startObserver } from './core/dom'
 import { startEntityCache } from './core/entities'
+import { addCustomPlugin, customPluginApi, reportCustomPluginError } from './core/customPlugins'
 import { createLogger } from './core/logger'
 import { installModuleHooks, moduleStatus } from './core/modules'
 import { registerPlugins, syncPlugins } from './core/plugins'
@@ -65,7 +66,14 @@ function init() {
   if (document.body) startUi()
   else document.addEventListener('DOMContentLoaded', startUi, { once: true })
 
-  window.BetterFenrid = { version: VERSION, settings, modules: moduleStatus }
+  window.BetterFenrid = {
+    version: VERSION,
+    settings,
+    modules: moduleStatus,
+    addCustomPlugin,
+    reportCustomPluginError,
+    api: customPluginApi,
+  }
 
   log.info(`${NAME} v${VERSION} loaded`)
 }

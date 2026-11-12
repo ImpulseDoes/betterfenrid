@@ -74,6 +74,8 @@ export interface Plugin<S extends SettingsSchema = SettingsSchema> {
   panel?(): Node
   // Its settings move here from the plugin's card
   page?: PluginPage
+  // File name, for plugins the desktop app loaded from the plugins folder
+  source?: string
   start(ctx: PluginContext<S>): void | (() => void)
 }
 
@@ -110,6 +112,10 @@ export function isEnabled(id: string): boolean {
   if (plugin?.required) return true
 
   return state?.enabled ?? plugin?.enabledByDefault ?? false
+}
+
+export function hasPlugin(id: string): boolean {
+  return registry.has(id)
 }
 
 export function isRunning(id: string): boolean {

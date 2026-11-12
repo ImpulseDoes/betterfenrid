@@ -31,6 +31,9 @@ interface BetterFenridNative {
     onReady(listener: (update: { version: string }) => void): () => void;
   };
   onBack?(listener: () => boolean): () => void;
+  plugins?: {
+    openFolder(): void;
+  };
 }
 
 interface Window {

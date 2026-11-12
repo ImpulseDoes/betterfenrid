@@ -1,7 +1,8 @@
 import { h } from '../../core/dom'
 import { getPlugins, getPluginSetting, isAvailable, isEnabled, setEnabled, setPluginSetting, type Plugin } from '../../core/plugins'
+import { customPluginFiles } from '../../core/customPlugins'
 import { tooltip } from '../tooltip'
-import { Section, SettingControl, Switch } from '../components'
+import { Button, Section, SettingControl, Switch } from '../components'
 import { icon } from '../icons'
 
 export function PluginsPage(): Node {
@@ -38,6 +39,28 @@ export function PluginsPage(): Node {
       h('div', { class: 'bf-search' }, icon('search', 18), search),
       list,
     ),
+    CustomPlugins(),
+  )
+}
+
+function CustomPlugins(): Node | null {
+
+  const native = window.BetterFenridNative?.plugins
+
+  if (!native) return null
+
+  const broken = customPluginFiles().filter((f) => f.error)
+
+  return Section(
+    'Custom plugins',
+    'Put .js files in the plugins folder, then reload. They run with full access to your account, so only add plugins you trust.',
+    h(
+      'div',
+      { class: 'bf-custom-plugins' },
+      Button('Open plugins folder', () => native.openFolder(), 'secondary'),
+      Button('Reload', () => location.reload(), 'secondary'),
+    ),
+    ...broken.map((f) => h('div', { class: 'bf-custom-plugin-error' }, h('strong', {}, f.file), ` could not be loaded: ${f.error}`)),
   )
 }
 
@@ -48,7 +71,9 @@ function PluginCard(plugin: Plugin): Node {
   const available = isAvailable(plugin)
   const card = h('div', { class: available ? 'bf-option' : 'bf-option bf-option-unavailable' })
 
-  const pcOnly = plugin.desktopOnly
+  const tag = plugin.source
+    ? tooltip(h('span', { class: 'bf-option-tag' }, 'Custom'), `Loaded from ${plugin.source} in the plugins folder`)
+    : plugin.desktopOnly
     ? tooltip(h('span', { class: 'bf-option-tag' }, 'PC only'), available ? 'Needs the Better Fenrid desktop app' : 'Only works in the Better Fenrid desktop app')
     : plugin.androidOnly
       ? tooltip(h('span', { class: 'bf-option-tag' }, 'Android only'), available ? 'Needs the Better Fenrid Android app' : 'Only works in the Better Fenrid Android app')
@@ -79,7 +104,7 @@ function PluginCard(plugin: Plugin): Node {
       h(
         'div',
         { class: 'bf-option-text' },
-        h('div', { class: 'bf-option-title' }, plugin.name, pcOnly),
+        h('div', { class: 'bf-option-title' }, plugin.name, tag),
         h('div', { class: 'bf-option-desc' }, plugin.description),
       ),
       expand,

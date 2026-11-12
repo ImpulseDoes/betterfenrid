@@ -628,6 +628,26 @@
   font-weight: 600;
 }
 
+.bf-custom-plugins {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.bf-custom-plugin-error {
+  margin-top: 10px;
+  padding: 10px 12px;
+  border-radius: 8px;
+  background: color-mix(in srgb, var(--bf-danger) 12%, transparent);
+  color: var(--bf-text-muted);
+  font-size: 13px;
+  overflow-wrap: anywhere;
+}
+
+.bf-custom-plugin-error strong {
+  color: var(--bf-danger);
+}
+
 .bf-empty {
   padding: 32px;
   color: var(--bf-text-muted);

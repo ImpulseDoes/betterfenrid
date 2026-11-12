@@ -294,6 +294,95 @@ function readMod() {
   return updater.load()?.code ?? null
 }
 
+const PLUGINS_DIR = () => path.join(app.getPath('userData'), 'plugins')
+const MAX_PLUGIN_BYTES = 2 * 1024 * 1024
+const PLUGINS_README = `Put Better Fenrid plugins here, one .js file each, then reload Fenrid (Ctrl+R).
+They show up under Better Fenrid > Plugins with a "Custom" tag and start switched off.
+
+Plugins run inside Fenrid with full access to your account. Only add files you trust.
+
+Example (hello.js):
+
+definePlugin({
+  id: 'hello',
+  name: 'Hello',
+  description: 'Says hi when it starts.',
+  authors: ['you'],
+  settings: {
+    text: { type: 'string', label: 'Text', default: 'Hi!' },
+  },
+  start(ctx) {
+    BetterFenrid.api.toast(ctx.settings.text)
+    return () => ctx.log.info('Stopped')
+  },
+})
+`
+
+function pluginsFolder() {
+
+  const dir = PLUGINS_DIR()
+
+  try {
+
+    if (!fs.existsSync(dir)) {
+
+      fs.mkdirSync(dir, { recursive: true })
+      fs.writeFileSync(path.join(dir, 'README.txt'), PLUGINS_README)
+
+    }
+
+  } catch (err) {
+
+    console.error('Could not create the plugins folder', err)
+
+  }
+
+  return dir
+}
+
+function readPlugins() {
+
+  const dir = pluginsFolder()
+  const plugins = []
+
+  let names = []
+
+  try {
+
+    names = fs.readdirSync(dir).filter((name) => name.toLowerCase().endsWith('.js')).sort((a, b) => a.localeCompare(b))
+
+  } catch {
+
+    return plugins
+
+  }
+
+  for (const file of names) {
+
+    try {
+
+      const stat = fs.statSync(path.join(dir, file))
+
+      if (!stat.isFile()) continue
+      if (stat.size > MAX_PLUGIN_BYTES) {
+
+        plugins.push({ file, error: 'the file is over 2 MB' })
+        continue
+
+      }
+
+      plugins.push({ file, code: fs.readFileSync(path.join(dir, file), 'utf8') })
+
+    } catch (err) {
+
+      plugins.push({ file, error: `could not read it (${err.code ?? err.message})` })
+
+    }
+  }
+
+  return plugins
+}
+
 // helpers
 
 function isInternal(url) {
@@ -674,6 +763,18 @@ function setUpIpc() {
 
   ipcMain.on('bf:open-external', (_event, url) => openExternal(url))
 
+  ipcMain.on('bf:plugins', (event) => {
+
+    event.returnValue = isInternal(event.sender.getURL()) ? readPlugins() : []
+
+  })
+
+  ipcMain.on('bf:plugins:open-folder', (event) => {
+
+    if (view && event.sender === view.webContents) shell.openPath(pluginsFolder())
+
+  })
+
   ipcMain.on('bf:default-icon', (event) => {
 
     event.returnValue = defaultIcon()
@@ -795,6 +896,7 @@ function createTray() {
     { type: 'separator' },
     { label: 'Reload', click: () => view?.webContents.reload() },
     { label: 'Open data folder', click: () => shell.openPath(app.getPath('userData')) },
+    { label: 'Open plugins folder', click: () => shell.openPath(pluginsFolder()) },
     { type: 'separator' },
     { label: 'Quit', click: () => { quitting = true; app.quit() } },
   ])

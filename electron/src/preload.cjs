@@ -330,6 +330,10 @@ if (location.hostname === 'fenrid.com') {
 
     },
 
+    plugins: {
+      openFolder: () => ipcRenderer.send('bf:plugins:open-folder'),
+    },
+
     updates: {
       check: () => ipcRenderer.invoke('bf:mod-check'),
 
@@ -380,6 +384,63 @@ if (location.hostname === 'fenrid.com') {
   // Same as a userscript at document-start, but no extension needed
   const code = ipcRenderer.sendSync('bf:mod')
 
-  if (code) webFrame.executeJavaScript(`${code}\n//# sourceURL=betterfenrid.js`).catch((err) => console.error('[Better Fenrid Desktop] Mod failed to start', err))
-  else console.warn('[Better Fenrid Desktop] Mod bundle not found, run "npm run build" in the repo root')
+  if (code) {
+
+    webFrame.executeJavaScript(`${code}\n//# sourceURL=betterfenrid.js`)
+      .then(loadPlugins, (err) => console.error('[Better Fenrid Desktop] Mod failed to start', err))
+
+  } else console.warn('[Better Fenrid Desktop] Mod bundle not found, run "npm run build" in the repo root')
+}
+
+function pluginScript(file, code) {
+
+  const source = code.replace(/^\s*export\s+default\s+/m, 'module.exports = ')
+  const name = JSON.stringify(file)
+
+  return `(() => {
+const BF = window.BetterFenrid
+if (!BF || !BF.addCustomPlugin) return
+const definePlugin = (plugin) => { BF.addCustomPlugin(plugin, ${name}); return plugin }
+const module = { exports: {} }
+const exports = module.exports
+try {
+  (function () {
+${source}
+  }).call(window)
+} catch (err) {
+  console.error('[Better Fenrid] Plugin ' + ${name} + ' failed', err)
+  BF.reportCustomPluginError(${name}, (err && err.message) || err)
+  return
+}
+const result = module.exports && module.exports.default ? module.exports.default : module.exports
+if (result && typeof result === 'object' && 'id' in result) definePlugin(result)
+})()
+//# sourceURL=betterfenrid-plugins/${encodeURIComponent(file)}`
+}
+
+async function loadPlugins() {
+
+  const report = (file, error) => webFrame.executeJavaScript(`window.BetterFenrid?.reportCustomPluginError?.(${JSON.stringify(file)}, ${JSON.stringify(String(error))})`).catch(() => { })
+
+  for (const { file, code, error } of ipcRenderer.sendSync('bf:plugins') ?? []) {
+
+    if (error) {
+
+      report(file, error)
+      continue
+
+    }
+
+    try {
+
+      await webFrame.executeJavaScript(pluginScript(file, code))
+
+    } catch (err) {
+
+      // Syntax errors land here, the whole file failed to parse
+      console.error(`[Better Fenrid Desktop] Plugin ${file} failed`, err)
+      report(file, err?.message ?? err)
+
+    }
+  }
 }
