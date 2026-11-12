@@ -1,9 +1,13 @@
+import { extractText } from '../api/contextMenu'
 import { openModal } from '../api/modal'
-import { onApiRequest, onApiResponse, onApiResult, onGatewayFrame, onGatewaySend } from '../api/network'
+import { injectGatewayEvent, isGatewaySeen, onApiRequest, onApiResponse, onApiResult, onGatewayFrame, onGatewaySend } from '../api/network'
 import { currentUserId } from '../api/profiles'
 import { toast } from '../api/toast'
+import { Button } from '../ui/components'
 import { h } from './dom'
+import { getChannel, getMessage, getUser, onMessageEdit } from './entities'
 import { createLogger } from './logger'
+import { Selectors } from './selectors'
 import { hasPlugin, isEnabled, registerPlugins, startPlugin, type Plugin, type SettingDef } from './plugins'
 
 export interface CustomPluginFile {
@@ -90,12 +94,23 @@ export function reportCustomPluginError(file: string, error: unknown) {
 // What a plugin file can reach through BetterFenrid.api
 export const customPluginApi = {
   h,
+  Button,
   toast,
   openModal,
+  extractText,
+  createLogger,
+  Selectors,
   currentUserId,
+  getMessage,
+  getChannel,
+  getUser,
+  onMessageEdit,
   onGatewayFrame,
   onGatewaySend,
   onApiRequest,
   onApiResult,
   onApiResponse,
+  injectGatewayEvent,
+  isGatewaySeen,
+  shared: {} as Record<string, unknown>,
 }
