@@ -13,7 +13,6 @@ import { tooltip } from '../ui/tooltip'
 const BADGE = 'bf-user-badge'
 const ME = '/api/users/me'
 const SYNC_DELAY_MS = 8_000
-const TEAM: BadgeId[] = ['developer', 'contributor']
 
 function holdersOf(ids: Set<string>): BadgeId[] {
   return [...new Set([...ids].flatMap((id) => BADGE_HOLDERS[id] ?? []))]
@@ -96,7 +95,7 @@ export default definePlugin({
 
       const badges = holdersOf(ids)
 
-      if (!badges.some((id) => TEAM.includes(id)) && (self ? ctx.settings.advertise : isUser(ids))) badges.push('user')
+      if (self ? ctx.settings.advertise : isUser(ids)) badges.push('user')
 
       return badges.map((id) => ({ key: id, create: () => CardBadge(id) }))
     })
