@@ -70,12 +70,17 @@ export function memberOf(trigger: Element): Record<string, any> | null {
   return findProps(trigger, (props) => !!props.member)?.member ?? null
 }
 
-/** Your own id, as Fenrid passes it to names on the page. Null until a name is on screen */
+/** Your own id, as Fenrid passes it to names and messages on the page. Null until one is on screen */
 export function currentUserId(): string | null {
 
-  const trigger = document.querySelector(Selectors.profileTrigger)
+  for (const el of document.querySelectorAll(`${Selectors.profileTrigger}, ${Selectors.message}`)) {
 
-  return trigger ? (findProps(trigger, (props) => typeof props.currentUserId === 'string')?.currentUserId ?? null) : null
+    const id = findProps(el, (props) => props.currentUserId != null && props.currentUserId !== '')?.currentUserId
+
+    if (id != null) return String(id)
+  }
+
+  return null
 }
 
 function firstTextParent(root: Element): Element | null {

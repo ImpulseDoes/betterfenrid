@@ -1,3 +1,4 @@
+import { BIO_LIMIT, decode, editRuns, encode, RUN } from '../api/bioTags'
 import { onApiRequestBody } from '../api/network'
 import { currentUserId } from '../api/profiles'
 import { toast } from '../api/toast'
@@ -6,12 +7,9 @@ import { definePlugin } from '../core/plugins'
 
 const media = exportHook<(user: any) => any>('resolveProfileClientMedia')
 
-const TAG = 0xe0000
-const RUN = /[\u{E0020}-\u{E007E}]+/gu
 const COLORS = /\[#([0-9a-f]{1,6}),#([0-9a-f]{1,6})\]/i
 const BANNER = /\{([^{}\s]+)\}/
 const HEX = /^#?([0-9a-f]{6})$/i
-const BIO_LIMIT = 190
 
 const BANNER_HOSTS = ['cdn.fenrid.com', 'i.imgur.com', 'media.discordapp.net', 'cdn.discordapp.com']
 const BANNER_DOMAINS = ['.tenor.com', '.giphy.com', '.klipy.com']
@@ -21,9 +19,6 @@ interface Theme {
   secondary?: string
   banner?: string
 }
-
-const encode = (text: string) => String.fromCodePoint(...[...text].map((c) => TAG + c.charCodeAt(0)))
-const decode = (run: string) => String.fromCharCode(...[...run].map((c) => c.codePointAt(0)! - TAG))
 
 function bannerUrl(value: string): string | null {
 
@@ -68,15 +63,11 @@ function readTheme(bio: string): Theme | null {
   return null
 }
 
-// Takes out our runs only, other invisible characters stay
+const COLORS_ALL = new RegExp(COLORS.source, 'gi')
+const BANNER_ALL = new RegExp(BANNER.source, 'g')
+
 function stripTheme(bio: string): string {
-
-  return bio.replace(RUN, (run) => {
-
-    const text = decode(run)
-
-    return COLORS.test(text) || BANNER.test(text) ? '' : run
-  })
+  return editRuns(bio, (text) => text.replace(COLORS_ALL, '').replace(BANNER_ALL, ''))
 }
 
 export default definePlugin({

@@ -10,6 +10,7 @@ export const BADGE_TYPES = {
   developer: { label: 'Better Fenrid Developer', icon: 'verified', color: '#3f56f5' },
   contributor: { label: 'Better Fenrid Contributor', icon: 'plugins', color: '#4756ef' },
   fencordDeveloper: { label: 'Fencord Developer', icon: 'code', color: '#4756ef' },
+  user: { label: 'Better Fenrid User', icon: 'betterFenrid', color: '#5b5ef5' },
 } satisfies Record<string, BadgeType>
 
 export type BadgeId = keyof typeof BADGE_TYPES

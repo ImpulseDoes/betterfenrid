@@ -246,6 +246,7 @@ export default definePlugin({
 
     // Lists are saved per account, so nothing is compared before we know whose they are
     const startedAt = Date.now()
+    let warned = false
 
     const findAccount = () => {
 
@@ -255,8 +256,16 @@ export default definePlugin({
 
       if (id) return begin(id)
 
-      if (Date.now() - startedAt < ACCOUNT_WAIT_MS) timers.set('account', window.setTimeout(findAccount, 2_000))
-      else ctx.log.warn('Could not tell which account this is, so nothing is being watched')
+      const waited = Date.now() - startedAt
+
+      if (waited >= ACCOUNT_WAIT_MS && !warned) {
+
+        warned = true
+        ctx.log.info('No account found on this page yet, still looking')
+
+      }
+
+      timers.set('account', window.setTimeout(findAccount, waited < ACCOUNT_WAIT_MS ? 2_000 : 10_000))
     }
 
     timers.set('account', window.setTimeout(findAccount, START_DELAY_MS))
