@@ -28,6 +28,7 @@ A client mod for [Fenrid](https://fenrid.com). It adds plugins, custom themes an
 | Better Fenrid Badges | Shows a badge next to Better Fenrid developers and contributors. The list lives in `src/badges.ts`. |
 | Better Embed Formats | Turns Spotify, YouTube and GitHub links into Discord-style cards. |
 | Better Folders | Shows the servers of open folders in their own sidebar next to the server list, like Vencord's plugin. Closed folders get a folder icon instead of small server icons, and folder settings offer six colors in place of Fenrid's picker. Options can close or open folders as you move between servers. |
+| Better Sessions | Restyles *My Devices* like Vencord's BetterSessions: a colored icon for each system with a badge for the browser or app, names like *Windows · Chrome*, a red **NEW** tag on devices you hadn't seen before, and a *Rename* button for names that stay in your browser. Every 10 minutes it checks for devices that signed in since, and tells you about them. |
 | Camera Quality | Picks the resolution, frame rate and bitrate of your camera in calls, up to 1440p at 60 FPS. Works from the next time you turn your camera on. Off by default. |
 | Clear URLs | Removes tracking parameters (`utm_*`, `fbclid`, `si=`…) from links you send or paste. |
 | Community Statistics | Adds *Community Statistics* to the server menu: members, online count, channels, roles, emojis and owner in a modal. |

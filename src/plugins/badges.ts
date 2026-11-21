@@ -1,7 +1,7 @@
 import { BIO_LIMIT, usesBetterFenrid, withMarker, withoutMarker } from '../api/bioTags'
 import { onApiRequestBody } from '../api/network'
 import { addCardBadges, CARD_BADGE, expandIds, memberIds } from '../api/profileBadges'
-import { findNameBadge, isMention, memberOf, setNameBadge, watchProfileTriggers } from '../api/profiles'
+import { currentUserId, findNameBadge, isMention, memberOf, setNameBadge, watchProfileTriggers } from '../api/profiles'
 import { BADGE_HOLDERS, BADGE_TYPES, type BadgeId } from '../badges'
 import { h } from '../core/dom'
 import { getUser } from '../core/entities'
@@ -13,6 +13,7 @@ import { tooltip } from '../ui/tooltip'
 const BADGE = 'bf-user-badge'
 const ME = '/api/users/me'
 const SYNC_DELAY_MS = 8_000
+const RETRY_MS = 10_000
 
 function holdersOf(ids: Set<string>): BadgeId[] {
   return [...new Set([...ids].flatMap((id) => BADGE_HOLDERS[id] ?? []))]
@@ -22,16 +23,40 @@ function isUser(ids: Set<string>): boolean {
   return [...ids].some((id) => usesBetterFenrid(getUser(id)?.bio))
 }
 
+function findBio(value: unknown, depth = 0): string | undefined {
+
+  if (!value || typeof value !== 'object' || depth > 4) return undefined
+
+  if (!Array.isArray(value) && 'bio' in value) return String((value as { bio: unknown }).bio ?? '')
+
+  for (const child of Object.values(value)) {
+
+    const bio = findBio(child, depth + 1)
+
+    if (bio !== undefined) return bio
+  }
+
+  return undefined
+}
+
+async function bioFrom(url: string): Promise<string | undefined> {
+
+  const response = await fetch(url, { credentials: 'include', cache: 'no-store', headers: { Accept: 'application/json' } })
+
+  return response.ok ? findBio(await response.json().catch(() => null)) : undefined
+}
+
 async function readOwnBio(): Promise<string | undefined> {
 
-  const response = await fetch(ME, { credentials: 'include', cache: 'no-store' })
+  const id = currentUserId()
 
-  if (!response.ok) return undefined
+  if (!id) return undefined
 
-  const data = await response.json().catch(() => null)
-  const profile = [data?.profile, data?.user, data].find((p) => p && typeof p === 'object' && 'bio' in p)
+  const cached = getUser(id)?.bio
 
-  return profile ? String(profile.bio ?? '') : undefined
+  if (typeof cached === 'string') return cached
+
+  return (await bioFrom(`/api/users/${encodeURIComponent(id)}`)) ?? (await bioFrom(ME))
 }
 
 function NameBadges(badges: BadgeId[]): Element {
@@ -120,11 +145,17 @@ export default definePlugin({
 
     let stopped = false
 
-    const sync = async () => {
+    const sync = async (tries = 6) => {
 
       const bio = await readOwnBio().catch(() => undefined)
 
       if (stopped) return
+
+      if (bio === undefined && tries > 1) {
+
+        return void window.setTimeout(() => void sync(tries - 1).catch((error) => ctx.log.warn('Could not update your bio', error)), RETRY_MS)
+
+      }
 
       if (bio === undefined) return void ctx.log.info('Could not read your bio, the marker is added the next time you save your profile')
 

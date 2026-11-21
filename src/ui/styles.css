@@ -1885,3 +1885,115 @@ a[data-bf-fake-surge],
 [data-status]>.bg-\[var\(--status-cutout-color\)\] {
   background-color: rgb(from var(--status-cutout-color) r g b / 1) !important;
 }
+
+[data-bf-session] {
+  min-height: 72px !important;
+  padding: 10px 8px !important;
+  border-color: transparent !important;
+  border-radius: 12px !important;
+  background: transparent !important;
+}
+
+[data-bf-session]:hover {
+  background: var(--color-hover-overlay, rgb(255 255 255 / 4%)) !important;
+}
+
+[data-bf-session-hidden] {
+  display: none !important;
+}
+
+[data-bf-session-icon] {
+  position: relative;
+  overflow: visible !important;
+  border-radius: 28% !important;
+  background: var(--bf-os-color) !important;
+}
+
+[data-bf-session-icon]>svg {
+  display: none;
+}
+
+.bf-session-glyph {
+  display: flex;
+  color: #fff;
+}
+
+[data-bf-session="ios"] .bf-session-glyph,
+[data-bf-session="linux"] .bf-session-glyph {
+  color: #1b1c20;
+}
+
+.bf-session-client {
+  position: absolute;
+  right: -4px;
+  bottom: -4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  border: 2px solid var(--color-background-primary, #0f0f12);
+  border-radius: 50%;
+  background: #4b4d55;
+  color: #fff;
+}
+
+.bf-session-name {
+  overflow: hidden;
+  color: var(--color-text-primary, #fff);
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 24px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.bf-session-new {
+  padding: 1px 6px;
+  border-radius: 6px;
+  background: #da373c;
+  color: #fff;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  line-height: 16px;
+}
+
+.bf-session-rename {
+  margin-left: 4px;
+  padding: 3px 10px;
+  border: 1px solid var(--color-borders-and-separators, rgb(255 255 255 / 10%));
+  border-radius: 6px;
+  background: var(--color-secondary-button, rgb(255 255 255 / 6%));
+  color: var(--color-text-primary, #fff);
+  font-size: 12px;
+  line-height: 16px;
+  cursor: pointer;
+}
+
+.bf-session-rename:hover {
+  background: var(--color-hover-overlay, rgb(255 255 255 / 10%));
+}
+
+.bf-session-rename-input {
+  min-width: 0;
+  width: 220px;
+  padding: 3px 8px;
+  border: 1px solid var(--color-brand, #3f56f5);
+  border-radius: 6px;
+  outline: none;
+  background: var(--color-background-secondary, #1a1b20);
+  color: var(--color-text-primary, #fff);
+  font-size: 14px;
+}
+
+.bf-session-place {
+  color: var(--color-text-secondary, #a1a1aa);
+}
+
+.bf-session-seen {
+  padding: 0 5px;
+  border-radius: 4px;
+  background: rgb(255 255 255 / 7%);
+  font-size: 13px;
+}
