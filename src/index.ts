@@ -2,7 +2,7 @@ import { installNetworkHooks } from './api/network'
 import { startTopics } from './api/topics'
 import { startObserver } from './core/dom'
 import { startEntityCache } from './core/entities'
-import { addCustomPlugin, customPluginApi, reportCustomPluginError } from './core/customPlugins'
+import { addCustomPlugin, customPluginApi, reportCustomPluginError, startPluginGate } from './core/customPlugins'
 import { createLogger } from './core/logger'
 import { installModuleHooks, moduleStatus } from './core/modules'
 import { registerPlugins, syncPlugins } from './core/plugins'
@@ -14,6 +14,7 @@ import { startSounds } from './core/sounds'
 import { startThemes } from './core/theme'
 import { showUpdateNotice, watchAppUpdates } from './core/updates'
 import { NAME, VERSION } from './meta'
+import { exposeApi } from './core/pluginGate'
 import { plugins } from './plugins'
 import { startSettingsInjection } from './ui/settingsSidebar'
 import css from './ui/styles.css'
@@ -66,14 +67,16 @@ function init() {
   if (document.body) startUi()
   else document.addEventListener('DOMContentLoaded', startUi, { once: true })
 
-  window.BetterFenrid = {
+  startPluginGate()
+
+  exposeApi({
     version: VERSION,
     settings,
     modules: moduleStatus,
     addCustomPlugin,
     reportCustomPluginError,
     api: customPluginApi,
-  }
+  })
 
   log.info(`${NAME} v${VERSION} loaded`)
 }

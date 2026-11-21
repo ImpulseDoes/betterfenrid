@@ -1,6 +1,7 @@
 import { h } from '../../core/dom'
 import { getPlugins, getPluginSetting, isAvailable, isEnabled, setEnabled, setPluginSetting, type Plugin } from '../../core/plugins'
-import { customPluginFiles } from '../../core/customPlugins'
+import { customPluginFiles, reviewBlockedPlugin } from '../../core/customPlugins'
+import { blockedPlugins } from '../../core/pluginGate'
 import { tooltip } from '../tooltip'
 import { Button, Section, SettingControl, Switch } from '../components'
 import { icon } from '../icons'
@@ -49,7 +50,9 @@ function CustomPlugins(): Node | null {
 
   if (!native) return null
 
-  const broken = customPluginFiles().filter((f) => f.error)
+  const blocked = blockedPlugins()
+  const held = new Set(blocked.map((p) => p.file))
+  const broken = customPluginFiles().filter((f) => f.error && !held.has(f.file))
 
   return Section(
     'Custom plugins',
@@ -59,6 +62,14 @@ function CustomPlugins(): Node | null {
       { class: 'bf-custom-plugins' },
       Button('Open plugins folder', () => native.openFolder(), 'secondary'),
       Button('Reload', () => location.reload(), 'secondary'),
+    ),
+    ...blocked.map((p) =>
+      h(
+        'div',
+        { class: 'bf-custom-plugin-error bf-custom-plugin-blocked' },
+        h('span', {}, h('strong', {}, p.file), p.changed ? ' changed since you allowed it and is blocked until you allow it again.' : ' looks suspicious and is blocked until you allow it.'),
+        Button('Review', () => reviewBlockedPlugin(p), 'secondary'),
+      ),
     ),
     ...broken.map((f) => h('div', { class: 'bf-custom-plugin-error' }, h('strong', {}, f.file), ` could not be loaded: ${f.error}`)),
   )

@@ -7,6 +7,7 @@ import { Button } from '../ui/components'
 import { h } from './dom'
 import { getChannel, getMessage, getUser, onMessageEdit } from './entities'
 import { createLogger } from './logger'
+import { allowPlugin, type BlockedPlugin, dismissPlugin, isDismissed, onPluginBlocked } from './pluginGate'
 import { Selectors } from './selectors'
 import { hasPlugin, isEnabled, registerPlugins, startPlugin, type Plugin, type SettingDef } from './plugins'
 
@@ -113,4 +114,86 @@ export const customPluginApi = {
   injectGatewayEvent,
   isGatewaySeen,
   shared: {} as Record<string, unknown>,
+}
+
+const queue: BlockedPlugin[] = []
+let showing = false
+
+export function reviewBlockedPlugin(plugin: BlockedPlugin, onClose?: () => void) {
+
+  const findings = h('ul', { class: 'bf-plugin-findings' }, ...plugin.findings.map((f) => h('li', {}, f)))
+
+  const close = openModal({
+    title: `Allow ${plugin.file}?`,
+    body: h(
+      'div',
+      { class: 'bf-plugin-gate' },
+      h(
+        'p',
+        {},
+        plugin.changed
+          ? 'This plugin changed since you allowed it, and the new version does things plugins use to steal accounts. Better Fenrid did not run it.'
+          : 'This plugin does things plugins use to steal accounts, so Better Fenrid did not run it. It may be harmless, but only allow it if you trust whoever made it.',
+      ),
+      findings,
+      h('p', { class: 'bf-plugin-gate-note' }, 'Plugins run with full access to your Fenrid account. Allowing it covers this exact version of the file. If it changes, you will be asked again.'),
+    ),
+    footer: [
+      Button('Keep it off', () => {
+
+        dismissPlugin(plugin)
+        close()
+
+      }, 'secondary'),
+      Button('Allow and reload', () => {
+
+        allowPlugin(plugin)
+        location.reload()
+
+      }, 'danger'),
+    ],
+  })
+
+  const watch = new MutationObserver(() => {
+
+    if (findings.isConnected) return
+
+    watch.disconnect()
+    onClose?.()
+
+  })
+
+  watch.observe(document.body, { childList: true })
+}
+
+function showNext() {
+
+  const plugin = queue.shift()
+
+  if (!plugin) {
+
+    showing = false
+    return
+
+  }
+
+  showing = true
+  reviewBlockedPlugin(plugin, showNext)
+}
+
+export function startPluginGate() {
+
+  onPluginBlocked((plugin) => {
+
+    fail(plugin.file, 'blocked until you allow it, see Settings > Plugins')
+
+    if (isDismissed(plugin)) return
+
+    queue.push(plugin)
+
+    if (showing) return
+
+    if (document.body) showNext()
+    else document.addEventListener('DOMContentLoaded', showNext, { once: true })
+  })
 }

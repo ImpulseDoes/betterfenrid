@@ -648,6 +648,32 @@
   color: var(--bf-danger);
 }
 
+.bf-custom-plugin-blocked {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.bf-plugin-gate p {
+  margin: 0 0 12px;
+  line-height: 1.5;
+}
+
+.bf-plugin-findings {
+  margin: 0 0 12px;
+  padding: 10px 12px 10px 28px;
+  border-radius: 8px;
+  background: color-mix(in srgb, var(--bf-danger) 10%, transparent);
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+.bf-plugin-gate-note {
+  color: var(--bf-text-muted);
+  font-size: 13px;
+}
+
 .bf-empty {
   padding: 32px;
   color: var(--bf-text-muted);
