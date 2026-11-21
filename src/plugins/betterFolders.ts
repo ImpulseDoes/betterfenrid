@@ -62,6 +62,8 @@ function findFolders(rail: Element): Folder[] {
 }
 
 // The element that decides how wide the rail is: Fenrid wraps it in a fixed width column
+const widthTransition = (timing: string) => `width ${timing}`
+
 function findColumn(rail: HTMLElement): HTMLElement {
 
   const { width } = rail.getBoundingClientRect()
@@ -196,8 +198,12 @@ export default definePlugin({
       if (collapsing.style === null) collapsing.column.removeAttribute('style')
       else collapsing.column.setAttribute('style', collapsing.style)
 
-      collapsing.rail?.style.removeProperty('padding-right')
-      collapsing.rail?.style.removeProperty('transition')
+      if (collapsing.rail !== collapsing.column) {
+
+        collapsing.rail?.style.removeProperty('padding-right')
+        collapsing.rail?.style.removeProperty('transition')
+
+      }
 
       collapsing = null
     }
@@ -227,7 +233,7 @@ export default definePlugin({
         // Shrinks with the column, so the space left for the server icons, and the icons, stay put
         if (sliding) {
 
-          railEl.style.setProperty('transition', `padding-right ${after}`)
+          railEl.style.setProperty('transition', railEl === column ? `${widthTransition(after)}, padding-right ${after}` : `padding-right ${after}`)
           railEl.style.setProperty('padding-right', '0px')
 
         } else {
@@ -242,10 +248,8 @@ export default definePlugin({
 
         const width = `${closedWidth}px`
 
-        column.style.setProperty('transition', `width ${after}, min-width ${after}, flex-basis ${after}`)
-        column.style.setProperty('width', width, 'important')
-        column.style.setProperty('min-width', width, 'important')
-        column.style.setProperty('flex-basis', width, 'important')
+        if (column !== railEl) column.style.setProperty('transition', widthTransition(after))
+        column.style.setProperty('width', width)
 
         collapsing = { column, rail: railEl, style: columnStyle, width: closedWidth, timer: window.setTimeout(finishCollapse, WIDTH_MS + COLLAPSE_DELAY_MS + 40) }
 
@@ -293,11 +297,25 @@ export default definePlugin({
 
       const width = `${closedWidth + COLUMN_PX}px`
 
-      column!.style.setProperty('transition', animate() ? `width ${WIDTH_MS}ms ${EASE}, min-width ${WIDTH_MS}ms ${EASE}, flex-basis ${WIDTH_MS}ms ${EASE}` : 'none')
-      column!.style.setProperty('width', width, 'important')
-      column!.style.setProperty('min-width', width, 'important')
-      column!.style.setProperty('flex-basis', width, 'important')
-      rail.style.setProperty('transition', animate() ? `padding-right ${WIDTH_MS}ms ${EASE}` : 'none')
+      const timing = `${WIDTH_MS}ms ${EASE}`
+
+      if (!animate()) {
+
+        column!.style.setProperty('transition', 'none')
+        rail.style.setProperty('transition', 'none')
+
+      } else if (column === rail) {
+
+        rail.style.setProperty('transition', `${widthTransition(timing)}, padding-right ${timing}`)
+
+      } else {
+
+        column!.style.setProperty('transition', widthTransition(timing))
+        rail.style.setProperty('transition', `padding-right ${timing}`)
+
+      }
+
+      column!.style.setProperty('width', width)
       rail.style.setProperty('padding-right', `${COLUMN_PX}px`)
       rail.setAttribute(OPEN_RAIL, '')
 
