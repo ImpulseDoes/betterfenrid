@@ -8,6 +8,11 @@ const OPEN_RAIL = 'data-bf-folder-rail'
 const ICON = 'data-bf-folder-icon'
 const HIDDEN_PICKER = 'data-bf-hidden-picker'
 const SWATCHES = 'bf-folder-colors'
+const ANIM = 'data-bf-folder-anim'
+const GHOST = 'data-bf-folder-ghost'
+const WIDTH_MS = 240
+const COLLAPSE_DELAY_MS = 90
+const EASE = 'cubic-bezier(0.2, 0.8, 0.2, 1)'
 const COLORS = [
   { name: 'Blue', value: '#3F56F5' },
   { name: 'Purple', value: '#A855F7' },
@@ -177,25 +182,74 @@ export default definePlugin({
     let columnStyle: string | null = null
     let lastServer = currentServer()
     let lastOpen: Set<string> | null = null
+    let ready = false
+    let collapsing: { column: HTMLElement; rail: HTMLElement | null; style: string | null; width: number; timer: number } | null = null
 
-    const reset = () => {
+    const animate = () => ctx.settings.sidebarAnim && !matchMedia('(prefers-reduced-motion: reduce)').matches
+
+    const finishCollapse = () => {
+
+      if (!collapsing) return
+
+      clearTimeout(collapsing.timer)
+
+      if (collapsing.style === null) collapsing.column.removeAttribute('style')
+      else collapsing.column.setAttribute('style', collapsing.style)
+
+      collapsing.rail?.style.removeProperty('padding-right')
+      collapsing.rail?.style.removeProperty('transition')
+
+      collapsing = null
+    }
+
+    const reset = (slide = false) => {
 
       document.querySelectorAll<HTMLElement>(`[${SERVERS}]`).forEach((el) => {
 
         el.removeAttribute(SERVERS)
+        el.removeAttribute(ANIM)
         el.style.removeProperty('top')
         el.style.removeProperty('--bf-folder-tint')
 
       })
 
+      const sliding = !!column && slide && animate()
+
+      if (sliding) finishCollapse()
+
+      // A moment after the list starts folding away, so the list goes first and the column follows
+      const after = `${WIDTH_MS}ms ${EASE} ${COLLAPSE_DELAY_MS}ms`
+
       if (railEl) {
 
         railEl.removeAttribute(OPEN_RAIL)
-        railEl.style.removeProperty('padding-right')
 
+        // Shrinks with the column, so the space left for the server icons, and the icons, stay put
+        if (sliding) {
+
+          railEl.style.setProperty('transition', `padding-right ${after}`)
+          railEl.style.setProperty('padding-right', '0px')
+
+        } else {
+
+          railEl.style.removeProperty('padding-right')
+          railEl.style.removeProperty('transition')
+
+        }
       }
 
-      if (column) {
+      if (column && sliding) {
+
+        const width = `${closedWidth}px`
+
+        column.style.setProperty('transition', `width ${after}, min-width ${after}, flex-basis ${after}`)
+        column.style.setProperty('width', width, 'important')
+        column.style.setProperty('min-width', width, 'important')
+        column.style.setProperty('flex-basis', width, 'important')
+
+        collapsing = { column, rail: railEl, style: columnStyle, width: closedWidth, timer: window.setTimeout(finishCollapse, WIDTH_MS + COLLAPSE_DELAY_MS + 40) }
+
+      } else if (column) {
 
         if (columnStyle === null) column.removeAttribute('style')
         else column.setAttribute('style', columnStyle)
@@ -208,7 +262,7 @@ export default definePlugin({
 
     const layout = (rail: HTMLElement, open: Folder[]) => {
 
-      if (!ctx.settings.sidebar || mobile.matches || !open.length) return reset()
+      if (!ctx.settings.sidebar || mobile.matches || !open.length) return reset(true)
 
       // Measured once, before widening it: mid animation it would read any width in between
       if (railEl !== rail) {
@@ -216,18 +270,34 @@ export default definePlugin({
         reset()
 
         column = findColumn(rail)
-        columnStyle = column.getAttribute('style')
-        closedWidth = rail.getBoundingClientRect().width
+
+        // Opened again while it was still sliding back: keep what was measured before it widened
+        if (collapsing?.column === column) {
+
+          clearTimeout(collapsing.timer)
+          columnStyle = collapsing.style
+          closedWidth = collapsing.width
+          collapsing = null
+
+        } else {
+
+          finishCollapse()
+          columnStyle = column.getAttribute('style')
+          closedWidth = rail.getBoundingClientRect().width
+
+        }
+
         railEl = rail
 
       }
 
       const width = `${closedWidth + COLUMN_PX}px`
 
-      column!.style.setProperty('transition', ctx.settings.sidebarAnim ? 'width 150ms ease, min-width 150ms ease, flex-basis 150ms ease' : 'none')
+      column!.style.setProperty('transition', animate() ? `width ${WIDTH_MS}ms ${EASE}, min-width ${WIDTH_MS}ms ${EASE}, flex-basis ${WIDTH_MS}ms ${EASE}` : 'none')
       column!.style.setProperty('width', width, 'important')
       column!.style.setProperty('min-width', width, 'important')
       column!.style.setProperty('flex-basis', width, 'important')
+      rail.style.setProperty('transition', animate() ? `padding-right ${WIDTH_MS}ms ${EASE}` : 'none')
       rail.style.setProperty('padding-right', `${COLUMN_PX}px`)
       rail.setAttribute(OPEN_RAIL, '')
 
@@ -242,6 +312,15 @@ export default definePlugin({
         if (!servers) continue
 
         const parent = servers.offsetParent ?? rail
+
+        // Unfolds the first time it shows up, each server dropping in a moment after the one above
+        if (!servers.hasAttribute(SERVERS) && ready && animate()) {
+
+          servers.setAttribute(ANIM, '')
+            ;[...servers.children].forEach((child, i) => (child as HTMLElement).style.setProperty('--bf-i', String(i)))
+          servers.addEventListener('animationend', (e) => e.target === servers && servers.removeAttribute(ANIM), { once: false })
+
+        }
 
         servers.setAttribute(SERVERS, '')
         // Relative to the folder, which Fenrid positions, so it has to be converted from the rail's top
@@ -336,6 +415,39 @@ export default definePlugin({
       layout(rail, folders.filter((folder) => folder.open))
     }
 
+    const foldAway = (event: MouseEvent) => {
+
+      const toggle = (event.target as Element | null)?.closest?.(Selectors.folderToggle)
+
+      if (!toggle || toggle.getAttribute('aria-expanded') !== 'true' || !animate()) return
+
+      const servers = toggle.parentElement?.nextElementSibling as HTMLElement | null
+
+      if (!servers?.hasAttribute(SERVERS)) return
+
+      const rect = servers.getBoundingClientRect()
+      const ghost = servers.cloneNode(true) as HTMLElement
+
+      ghost.removeAttribute(SERVERS)
+      ghost.removeAttribute(ANIM)
+      ghost.querySelectorAll('[id]').forEach((el) => el.removeAttribute('id'))
+      ghost.setAttribute(GHOST, '')
+      ghost.setAttribute('aria-hidden', 'true')
+      Object.assign(ghost.style, { left: `${rect.left}px`, top: `${rect.top}px`, width: `${rect.width}px`, height: `${rect.height}px` })
+
+      document.body.append(ghost)
+
+      const remove = () => ghost.remove()
+
+      ghost.addEventListener('animationend', remove, { once: true })
+      window.setTimeout(remove, 600)
+    }
+
+    document.addEventListener('click', foldAway, true)
+    ctx.onStop(() => document.removeEventListener('click', foldAway, true))
+    ctx.onStop(() => document.querySelectorAll(`[${GHOST}]`).forEach((el) => el.remove()))
+    ctx.onStop(finishCollapse)
+
     ctx.onDomChange(sync)
     ctx.onDomChange(addColorChoice)
     ctx.onSettingsChange(sync)
@@ -349,5 +461,6 @@ export default definePlugin({
 
     sync()
     addColorChoice()
+    window.setTimeout(() => (ready = true), 600)
   },
 })
