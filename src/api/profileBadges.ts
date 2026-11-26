@@ -54,18 +54,23 @@ export function memberIds(member: Props | null | undefined): unknown[] {
   return [member?.profile_id, member?.profiles?.id, member?.profiles?.public_id, member?.public_id]
 }
 
+function hasId(value: unknown): boolean {
+  return (typeof value === 'string' && value !== '') || typeof value === 'number'
+}
+
 function identify(el: Element): Pick<Card, 'ids' | 'self'> {
 
-  const match = (p: Props) =>
-    typeof p.profileId === 'string' ||
-    typeof p.userId === 'string' ||
-    !!p.data?.profileId ||
+  const matchTarget = (p: Props) =>
+    hasId(p.profileId) ||
+    hasId(p.userId) ||
+    hasId(p.data?.profileId) ||
     !!p.member?.profile_id ||
     !!p.profile?.id ||
     !!p.user?.id ||
-    !!p.currentUser?.id
+    !!p.data?.profile?.id ||
+    !!p.data?.user?.id
 
-  let props = findProps(el, match)
+  let props = findProps(el, matchTarget)
 
   if (!props) {
 
@@ -75,12 +80,19 @@ function identify(el: Element): Pick<Card, 'ids' | 'self'> {
 
       if (surface && surface !== el) {
 
-        props = findProps(surface, match)
+        props = findProps(surface, matchTarget)
 
         if (props) break
 
       }
     }
+  }
+
+  if (!props && el.closest(Selectors.accountCard)) {
+
+    const accountProps = findProps(el, (p) => !!p.currentUser?.id)
+
+    if (accountProps) return { ids: expandIds([accountProps.currentUser?.id, accountProps.currentUser?.public_id]), self: true }
   }
 
   if (!props) return { ids: new Set(), self: false }
@@ -94,14 +106,16 @@ function identify(el: Element): Pick<Card, 'ids' | 'self'> {
     props.profile?.public_id,
     props.user?.id,
     props.user?.public_id,
+    props.data?.profile?.id,
+    props.data?.profile?.public_id,
+    props.data?.user?.id,
+    props.data?.user?.public_id,
     ...memberIds(props.member),
   ])
 
-  // The account panel's card has nothing but the signed-in user to go on. Anywhere else
-  // that prop is who's looking, not who's being looked at
-  if (!ids.size) return { ids: expandIds([props.currentUser?.id, props.currentUser?.public_id]), self: true }
+  if (!ids.size) return { ids, self: false }
 
-  me = findProps(el, (p) => typeof p.currentUserId === 'string')?.currentUserId ?? currentUserId() ?? me
+  me = findProps(el, (p) => hasId(p.currentUserId))?.currentUserId?.toString() ?? currentUserId() ?? me
 
   return { ids, self: props.data?.isSelf === true || (me != null && ids.has(me)) }
 }
