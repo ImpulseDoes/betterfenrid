@@ -20,7 +20,7 @@ export const Selectors = {
     },
     user: {
       anchors: ['Copy User ID'],
-      markers: ['Copy Username', 'Block', 'Unblock'],
+      markers: ['Copy Username', 'Block', 'Unblock', 'View Profile'],
     },
     dm: {
       anchors: ['Mute Conversation', 'Unmute Conversation'],
