@@ -159,7 +159,6 @@ function updateCards(root: Element) {
 
     if (accountCard) updateOwnRow(line, accountCard, ACCOUNT_ROW_CLASS, (row) => accountCard.prepend(row))
     else if (line.parentElement?.classList.contains('flex-wrap')) updateOwnRow(line, line.parentElement, ROW_CLASS, (row) => line.after(row))
-    else if (line.closest('[role="dialog"]') && line.parentElement) updateOwnRow(line, line.parentElement, ROW_CLASS, (row) => line.after(row))
   }
 }
 
