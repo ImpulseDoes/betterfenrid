@@ -60,53 +60,30 @@ function hasId(value: unknown): boolean {
 
 function identify(el: Element): Pick<Card, 'ids' | 'self'> {
 
-  const matchTarget = (p: Props) =>
+  const props = findProps(el, (p) =>
     hasId(p.profileId) ||
-    hasId(p.userId) ||
+    hasId(p.surface?.profileId) ||
     hasId(p.data?.profileId) ||
     !!p.member?.profile_id ||
     !!p.profile?.id ||
     !!p.user?.id ||
     !!p.data?.profile?.id ||
-    !!p.data?.user?.id
-
-  let props = findProps(el, matchTarget)
-
-  if (!props) {
-
-    for (const sel of ['[data-animated-media-hover-root]', '[role="dialog"]']) {
-
-      const surface = el.closest(sel)
-
-      if (surface && surface !== el) {
-
-        props = findProps(surface, matchTarget)
-
-        if (props) break
-
-      }
-    }
-  }
+    !!p.data?.user?.id,
+  )
 
   if (!props && el.closest(Selectors.accountCard)) {
 
-    const accountProps = findProps(el, (p) => !!p.currentUser?.id)
+    const account = findProps(el, (p) => !!p.currentUser?.id)
 
-    if (accountProps) return { ids: expandIds([accountProps.currentUser?.id, accountProps.currentUser?.public_id]), self: true }
-  }
-
-  if (!props && el.closest(Selectors.accountCard)) {
-
-    const accountProps = findProps(el, (p) => !!p.currentUser?.id)
-
-    if (accountProps) return { ids: expandIds([accountProps.currentUser?.id, accountProps.currentUser?.public_id]), self: true }
+    if (account) return { ids: expandIds([account.currentUser.id, account.currentUser.public_id]), self: true }
   }
 
   if (!props) return { ids: new Set(), self: false }
 
   const ids = expandIds([
     props.profileId,
-    props.userId,
+    props.surface?.profileId,
+    props.surface?.publicId,
     props.data?.profileId,
     props.data?.publicId,
     props.profile?.id,
@@ -124,7 +101,7 @@ function identify(el: Element): Pick<Card, 'ids' | 'self'> {
 
   me = findProps(el, (p) => hasId(p.currentUserId))?.currentUserId?.toString() ?? currentUserId() ?? me
 
-  return { ids, self: props.data?.isSelf === true || (me != null && ids.has(me)) }
+  return { ids, self: props.data?.isSelf === true || props.surface?.isSelf === true || (me != null && ids.has(me)) }
 }
 
 function badgesFor(el: Element, shown: string[]): CardBadge[] {
