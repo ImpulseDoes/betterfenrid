@@ -56,14 +56,32 @@ export function memberIds(member: Props | null | undefined): unknown[] {
 
 function identify(el: Element): Pick<Card, 'ids' | 'self'> {
 
-  const props = findProps(el, (p) =>
+  const match = (p: Props) =>
     typeof p.profileId === 'string' ||
+    typeof p.userId === 'string' ||
     !!p.data?.profileId ||
     !!p.member?.profile_id ||
     !!p.profile?.id ||
     !!p.user?.id ||
-    !!p.currentUser?.id,
-  )
+    !!p.currentUser?.id
+
+  let props = findProps(el, match)
+
+  if (!props) {
+
+    for (const sel of ['[data-animated-media-hover-root]', '[role="dialog"]']) {
+
+      const surface = el.closest(sel)
+
+      if (surface && surface !== el) {
+
+        props = findProps(surface, match)
+
+        if (props) break
+
+      }
+    }
+  }
 
   if (!props) return { ids: new Set(), self: false }
 
