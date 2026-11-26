@@ -95,6 +95,13 @@ function identify(el: Element): Pick<Card, 'ids' | 'self'> {
     if (accountProps) return { ids: expandIds([accountProps.currentUser?.id, accountProps.currentUser?.public_id]), self: true }
   }
 
+  if (!props && el.closest(Selectors.accountCard)) {
+
+    const accountProps = findProps(el, (p) => !!p.currentUser?.id)
+
+    if (accountProps) return { ids: expandIds([accountProps.currentUser?.id, accountProps.currentUser?.public_id]), self: true }
+  }
+
   if (!props) return { ids: new Set(), self: false }
 
   const ids = expandIds([
